@@ -29,8 +29,8 @@
                 <includes>
                     <include>src/**/*.java</include>
                 </includes>
-                <source>1.11</source>
-                <target>1.11</target>
+                <source>14</source>
+                <target>14</target>
             </configuration>
         </plugin>
         <plugin>

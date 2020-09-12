@@ -1,39 +1,68 @@
 package breakout;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+
 public class Paddle{
-  private int speed;
+  private int speed = 5;
   private int width;
   private int height;
-  private int x;
   private Rectangle paddle;
   private Paint paddleColor = Color.HOTPINK;
+  public static final int PADDLE_EDGE = 15;
+  public int PADDLE_WIDTH;
+  public int PADDLE_HEIGHT;
 
-
-  public Paddle(int X, int width, int height){
-      x = X;
-      paddle = new Rectangle(width/2, height);
+  /**
+   * Initialized based on width of screen and height. Creates the rectangular paddle
+   *
+   * @param width
+   * @param height
+   */
+  public Paddle(int width, int height){
+      PADDLE_WIDTH= width/5;
+      PADDLE_HEIGHT = height/25;
+      paddle = new Rectangle(width/2-PADDLE_WIDTH/2, height-PADDLE_HEIGHT-height/35, PADDLE_WIDTH, PADDLE_HEIGHT);
       paddle.setFill(paddleColor);
+    paddle.setArcWidth(PADDLE_EDGE);
+    paddle.setArcHeight(PADDLE_EDGE);
+    paddle.setWidth(PADDLE_WIDTH);
+    paddle.setHeight(PADDLE_HEIGHT);
   }
+
+  /**
+   * returns the rectangular object. Can be changed to image in the future
+   * @return
+   */
   public Rectangle getShape(){
     return this.paddle;
 
   }
 
+  /**
+   * changes color. Maybe level up?
+   * @param color
+   */
   public void changeColor(Paint color){
     paddleColor = color;
+  }
+  public void moveRight(){
+    this.paddle.setX(this.paddle.getX() + speed);
+  }
+  public void moveLeft(){
+    this.paddle.setX(this.paddle.getX() - speed);
+  }
+
+  public void speedUp(){
+    this.speed = this.speed + 5;
+    System.out.println(speed);
+  }
+
+  public void setX(double X){
+    this.paddle.setX(X);
+  }
+  public double getX(){
+    return this.paddle.getX();
   }
 
 }
