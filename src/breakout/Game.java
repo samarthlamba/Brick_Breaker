@@ -84,6 +84,9 @@ public class Game extends Application {
     if (gameBall.getY() > myScene.getHeight() || gameBall.getY() < 0){
       gameBall.changeYDirection(elapsedTime);
     }
+    if ( gamePaddle.getBounds().intersects(gameBall.getBounds())){
+      gameBall.changeYDirection(elapsedTime);
+    }
   }
 
 

@@ -65,4 +65,8 @@ public class Paddle{
     return this.paddle.getX();
   }
 
+  public javafx.geometry.Bounds getBounds(){
+    return this.paddle.getBoundsInParent();
+  }
+
 }

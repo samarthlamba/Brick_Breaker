@@ -46,6 +46,9 @@ public class Ball {
     return this.ball.getCenterY();
 
   }
+  public javafx.geometry.Bounds getBounds(){
+    return this.ball.getBoundsInParent();
+  }
   /**
    * returns the rectangular object. Can be changed to image in the future
    * @return
