@@ -27,6 +27,7 @@ public class Game extends Application {
 
   private Scene myScene;
   private Paddle gamePaddle;
+  private Ball gameBall;
 
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -45,7 +46,9 @@ public class Game extends Application {
     // create one top level collection to organize the things in the scene
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
-    root.getChildren().add(gamePaddle.getShape());
+    gameBall = new Ball(width, height);
+    root.getChildren().add(gamePaddle.getObject());
+    root.getChildren().add(gameBall.getObject());
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -60,7 +63,7 @@ public class Game extends Application {
    * @param elapsedTime
    */
   void step (double elapsedTime){
-
+    updateShape(elapsedTime);
   }
 
   private void handleKeyInput (KeyCode code) {
@@ -70,6 +73,17 @@ public class Game extends Application {
       case S -> gamePaddle.speedUp();
     }
 
+  }
+  public void updateShape(double elapsedTime) {
+    gameBall.move(elapsedTime);
+    if (gameBall.getX() > myScene.getWidth() || gameBall.getX() < 0){
+
+      gameBall.changeXDirection(elapsedTime);
+    }
+    System.out.println(gameBall.getY());
+    if (gameBall.getY() > myScene.getHeight() || gameBall.getY() < 0){
+      gameBall.changeYDirection(elapsedTime);
+    }
   }
 
 

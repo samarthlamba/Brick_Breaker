@@ -34,7 +34,7 @@ public class Paddle{
    * returns the rectangular object. Can be changed to image in the future
    * @return
    */
-  public Rectangle getShape(){
+  public Rectangle getObject(){
     return this.paddle;
 
   }
