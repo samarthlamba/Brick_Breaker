@@ -8,9 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,6 +25,13 @@ public class Game extends Application {
   private Scene myScene;
   private Paddle gamePaddle;
   private Ball gameBall;
+
+  /**
+   * Start the program.
+   */
+  public static void main(String[] args) {
+    launch(args);
+  }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -60,13 +64,14 @@ public class Game extends Application {
 
   /**
    * // Handle the game's "rules" for every "moment"
+   *
    * @param elapsedTime
    */
-  void step (double elapsedTime){
+  void step(double elapsedTime) {
     updateShape(elapsedTime);
   }
 
-  private void handleKeyInput (KeyCode code) {
+  private void handleKeyInput(KeyCode code) {
     switch (code) {
       case LEFT -> gamePaddle.moveLeft();
       case RIGHT -> gamePaddle.moveRight();
@@ -74,29 +79,22 @@ public class Game extends Application {
     }
 
   }
+
   public void updateShape(double elapsedTime) {
     gameBall.move(elapsedTime);
-    if (gameBall.getX() > WIDTH || gameBall.getX() < 0){
+    if (gameBall.getX() > WIDTH || gameBall.getX() < 0) {
 
       gameBall.changeXDirection(elapsedTime);
     }
     System.out.println(gameBall.getY());
-    if (gameBall.getY() < 0){
+    if (gameBall.getY() < 0) {
       gameBall.changeYDirection(elapsedTime);
     }
-    if (gameBall.getY() > HEIGHT){
+    if (gameBall.getY() > HEIGHT) {
       gameBall.reset();
     }
-    if ( gamePaddle.getBounds().intersects(gameBall.getBounds())){
+    if (gamePaddle.getBounds().intersects(gameBall.getBounds())) {
       gameBall.changeYDirection(elapsedTime);
     }
-  }
-
-
-  /**
-   * Start the program.
-   */
-  public static void main (String[] args) {
-    launch(args);
   }
 }
