@@ -83,17 +83,17 @@ public class GameTest extends DukeApplicationTest {
 
     @Test
     public void testBallBouncesOnPaddleCollision() {
-        gamePaddle.setY(Game.HEIGHT/2);
-        gamePaddle.setX(Game.HEIGHT/2);
-        final double initialXPos = gamePaddle.getX()+120;
-        final double initialYPos = gamePaddle.getY()+120;
+        gamePaddle.setY(Game.HEIGHT / 2);
+        gamePaddle.setX(Game.HEIGHT / 2);
+        final double initialXPos = gamePaddle.getX() + 120;
+        final double initialYPos = gamePaddle.getY() + 120;
         gameBall.setCenterX(initialXPos);
         gameBall.setCenterY(initialYPos);
 
         myGame.step(1.00);
         myGame.step(1.00);
 
-        assertEquals(initialXPos - 240,gameBall.getCenterX());
-        assertEquals(initialYPos,gameBall.getCenterY());
+        assertEquals(initialXPos - 240, gameBall.getCenterX());
+        assertEquals(initialYPos, gameBall.getCenterY());
     }
 }
