@@ -23,6 +23,7 @@ public class Ball {
   public Ball(int width, int height){
     BALL_RADIUS = width/60;
     ball = new Circle(width/2, height/2, BALL_RADIUS);
+    ball.setId("ball");
     ball.setFill(ballColor);
 
   }

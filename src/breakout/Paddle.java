@@ -23,6 +23,7 @@ public class Paddle{
       PADDLE_WIDTH= width/5;
       PADDLE_HEIGHT = height/25;
       paddle = new Rectangle(width/2-PADDLE_WIDTH/2, height-PADDLE_HEIGHT-height/35, PADDLE_WIDTH, PADDLE_HEIGHT);
+      paddle.setId("paddle");
       paddle.setFill(paddleColor);
     paddle.setArcWidth(PADDLE_EDGE);
     paddle.setArcHeight(PADDLE_EDGE);

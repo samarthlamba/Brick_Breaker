@@ -76,12 +76,12 @@ public class Game extends Application {
   }
   public void updateShape(double elapsedTime) {
     gameBall.move(elapsedTime);
-    if (gameBall.getX() > myScene.getWidth() || gameBall.getX() < 0){
+    if (gameBall.getX() > WIDTH || gameBall.getX() < 0){
 
       gameBall.changeXDirection(elapsedTime);
     }
     System.out.println(gameBall.getY());
-    if (gameBall.getY() > myScene.getHeight() || gameBall.getY() < 0){
+    if (gameBall.getY() > HEIGHT || gameBall.getY() < 0){
       gameBall.changeYDirection(elapsedTime);
     }
     if ( gamePaddle.getBounds().intersects(gameBall.getBounds())){
