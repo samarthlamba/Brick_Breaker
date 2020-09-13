@@ -108,4 +108,24 @@ public class GameTest extends DukeApplicationTest {
         assertEquals(119,gameBall.getCenterX());
         assertEquals(119,gameBall.getCenterY());
     }
+
+    @Test
+    public void testSKeySpeedUpPaddle() {
+        final double initialXPos = gamePaddle.getX();
+        final double initialYPos = gamePaddle.getY();
+
+        press(myScene,KeyCode.RIGHT);
+
+        assertEquals(initialXPos+5, gamePaddle.getX());
+        assertEquals(initialYPos,gamePaddle.getY());
+
+        gamePaddle.setX(initialXPos);
+        gamePaddle.setY(initialYPos);
+
+        press(myScene,KeyCode.S);
+        press(myScene,KeyCode.RIGHT);
+
+        assertEquals(initialXPos+10,gamePaddle.getX());
+        assertEquals(initialYPos,gamePaddle.getY());
+    }
 }
