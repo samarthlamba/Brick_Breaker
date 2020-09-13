@@ -7,6 +7,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import util.DukeApplicationTest;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest extends DukeApplicationTest {
@@ -76,5 +79,21 @@ public class GameTest extends DukeApplicationTest {
 
         assertEquals(initialXPos-5, gamePaddle.getX());
         assertEquals(initialYPos, gamePaddle.getY());
+    }
+
+    @Test
+    public void testBallBouncesOnPaddleCollision() {
+        gamePaddle.setY(Game.HEIGHT/2);
+        gamePaddle.setX(Game.HEIGHT/2);
+        final double initialXPos = gamePaddle.getX()+120;
+        final double initialYPos = gamePaddle.getY()+120;
+        gameBall.setCenterX(initialXPos);
+        gameBall.setCenterY(initialYPos);
+
+        myGame.step(1.00);
+        myGame.step(1.00);
+
+        assertEquals(initialXPos - 240,gameBall.getCenterX());
+        assertEquals(initialYPos,gameBall.getCenterY());
     }
 }
