@@ -7,6 +7,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import util.DukeApplicationTest;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest extends DukeApplicationTest {
@@ -76,5 +79,53 @@ public class GameTest extends DukeApplicationTest {
 
         assertEquals(initialXPos-5, gamePaddle.getX());
         assertEquals(initialYPos, gamePaddle.getY());
+    }
+
+    @Test
+    public void testBallBouncesOnPaddleCollision() {
+        gamePaddle.setY(Game.HEIGHT / 2);
+        gamePaddle.setX(Game.HEIGHT / 2);
+        final double initialXPos = gamePaddle.getX() + 120;
+        final double initialYPos = gamePaddle.getY() + 120;
+        gameBall.setCenterX(initialXPos);
+        gameBall.setCenterY(initialYPos);
+
+        myGame.step(1.00);
+        myGame.step(1.00);
+
+        assertEquals(initialXPos - 240, gameBall.getCenterX());
+        assertEquals(initialYPos, gameBall.getCenterY());
+    }
+
+    @Test
+    public void testBallBounceOnCorner() {
+        gameBall.setCenterX(119);
+        gameBall.setCenterY(119);
+
+        myGame.step(1.00);
+        myGame.step(1.00);
+
+        assertEquals(119,gameBall.getCenterX());
+        assertEquals(119,gameBall.getCenterY());
+    }
+
+    @Test
+    public void testSKeySpeedUpPaddle() {
+        final double initialXPos = gamePaddle.getX();
+        final double initialYPos = gamePaddle.getY();
+
+        press(myScene,KeyCode.RIGHT);
+
+        assertEquals(initialXPos+5, gamePaddle.getX());
+        assertEquals(initialYPos,gamePaddle.getY());
+
+        gamePaddle.setX(initialXPos);
+        gamePaddle.setY(initialYPos);
+
+        press(myScene,KeyCode.S);
+        press(myScene,KeyCode.RIGHT);
+
+        assertEquals(initialXPos+10,gamePaddle.getX());
+        assertEquals(initialYPos,gamePaddle.getY());
     }
 }
