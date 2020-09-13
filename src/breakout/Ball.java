@@ -13,6 +13,8 @@ public class Ball {
   public int BALL_RADIUS;
   private int currentXDirection = 1;
   private int currentYDirection = 1;
+  private int initialWidth;
+  private int initialHeight;
 
   /**
    * Initialized based on width of screen and height. Creates the circular ball
@@ -22,6 +24,8 @@ public class Ball {
    */
   public Ball(int width, int height){
     BALL_RADIUS = width/60;
+    initialWidth = width;
+    initialHeight = height;
     ball = new Circle(width/2, height/2, BALL_RADIUS);
     ball.setId("ball");
     ball.setFill(ballColor);
@@ -30,6 +34,10 @@ public class Ball {
   public void move(double time){
     this.ball.setCenterY(this.ball.getCenterY()-speed*time*currentYDirection);
     this.ball.setCenterX(this.ball.getCenterX()-speed*time*currentXDirection);
+  }
+  public void reset(){
+    ball.setCenterX(initialWidth/2);
+    ball.setCenterY(initialHeight/2);
   }
   public void changeXDirection(double time){
       this.currentXDirection = this.currentXDirection*-1;
