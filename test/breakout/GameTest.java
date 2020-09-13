@@ -96,4 +96,16 @@ public class GameTest extends DukeApplicationTest {
         assertEquals(initialXPos - 240, gameBall.getCenterX());
         assertEquals(initialYPos, gameBall.getCenterY());
     }
+
+    @Test
+    public void testBallBounceOnCorner() {
+        gameBall.setCenterX(119);
+        gameBall.setCenterY(119);
+
+        myGame.step(1.00);
+        myGame.step(1.00);
+
+        assertEquals(119,gameBall.getCenterX());
+        assertEquals(119,gameBall.getCenterY());
+    }
 }
