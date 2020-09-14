@@ -2,6 +2,8 @@ package breakout;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -10,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -54,11 +57,7 @@ public class Game extends Application {
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
-    try {
-      setupLevel(root);
-    } catch (IOException e) {
-    } catch (URISyntaxException e) {
-    }
+    setupLevel(root);
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
     // make some shapes and set their properties
@@ -79,9 +78,18 @@ public class Game extends Application {
     updateShape(elapsedTime);
   }
 
-  private void setupLevel(Group root) throws IOException, URISyntaxException {
-    Level level = new Level("level1.txt");
-    root.getChildren().addAll(level.getBlockObjectsToDraw());
+  private void setupLevel(Group root) {
+    Level level = null;
+    List<Rectangle> blocksForLevel;
+    try {
+      level = new Level("level1.txt");
+      blocksForLevel = level.getBlockObjectsToDraw();
+    } catch (IOException e) {
+      blocksForLevel = Collections.emptyList();
+    } catch (URISyntaxException e) {
+      blocksForLevel = Collections.emptyList();
+    }
+    root.getChildren().addAll(blocksForLevel);
 
   }
   private void handleKeyInput(KeyCode code) {
