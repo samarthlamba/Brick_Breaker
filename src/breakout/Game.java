@@ -1,5 +1,7 @@
 package breakout;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -25,6 +27,7 @@ public class Game extends Application {
   private Scene myScene;
   private Paddle gamePaddle;
   private Ball gameBall;
+  private int level = 1;
 
   /**
    * Start the program.
@@ -51,6 +54,11 @@ public class Game extends Application {
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
+    try {
+      setupLevel(root);
+    } catch (IOException e) {
+    } catch (URISyntaxException e) {
+    }
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
     // make some shapes and set their properties
@@ -71,6 +79,11 @@ public class Game extends Application {
     updateShape(elapsedTime);
   }
 
+  private void setupLevel(Group root) throws IOException, URISyntaxException {
+    Level level = new Level("level1.txt");
+    root.getChildren().addAll(level.getBlockObjectsToDraw());
+
+  }
   private void handleKeyInput(KeyCode code) {
     switch (code) {
       case LEFT -> gamePaddle.moveLeft();
