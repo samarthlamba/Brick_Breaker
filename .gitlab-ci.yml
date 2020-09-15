@@ -1,8 +1,8 @@
 image: maven
 
 stages:
-  - validate
   - build
+  - validate
 
 checkstyle_analysis:
   stage: validate
