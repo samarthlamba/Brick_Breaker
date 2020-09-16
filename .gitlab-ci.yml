@@ -1,7 +1,7 @@
 image: maven
 
 stages:
-  - build
+  - analyze
   - validate
 
 checkstyle_analysis:
@@ -9,7 +9,7 @@ checkstyle_analysis:
   script: mvn validate
 
 sonar_analysis:
-  stage: build
+  stage: analyze
   script:
     - java -version
     - mvn -version
