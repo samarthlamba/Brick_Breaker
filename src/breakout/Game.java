@@ -162,6 +162,7 @@ public class Game extends Application {
       k.getBoundsInLocal();
     }
     currentGroup.getChildren().removeAll(nodesToRemove);
+    currentLevel.cycleAllShieldBlocks();
   }
 
   private void checkBlockCollision(double elapsedTime) {

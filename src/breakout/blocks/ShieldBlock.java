@@ -35,5 +35,12 @@ public class ShieldBlock extends BasicBlock{
     }
   }
 
-
+  public void cycleShields(){
+    cycleCount++;
+    if (cycleCount > NUM_CYCLES){
+      isShielded = !isShielded;
+      cycleCount = 0;
+      this.setColors(Color.BLUE,strokeColorMap.get(isShielded));
+    }
+  }
 }
