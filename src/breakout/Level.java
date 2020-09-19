@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
@@ -30,9 +31,13 @@ public class Level {
   }
 
   public List<Node> getObjectsToDraw() {
-    return this.blockList.stream()
+    List<Node> objectsToDraw =  this.blockList.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
+    if(objectsToDraw==null){
+      return Collections.EMPTY_LIST;
+    }
+    return objectsToDraw;
   }
 
   public AbstractBlock getBlockAtBallPosition(Ball ball){

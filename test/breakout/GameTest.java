@@ -1,6 +1,7 @@
 package breakout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.concurrent.TimeUnit;
 import javafx.scene.Scene;
@@ -27,6 +28,7 @@ public class GameTest extends DukeApplicationTest {
   public void start(Stage stage) {
     // create game's scene with all shapes in their initial positions and show it
     myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT, Game.BACKGROUND);
+    myGame.setLevel("empty.txt");
     stage.setScene(myScene);
     stage.show();
 
@@ -115,16 +117,28 @@ public class GameTest extends DukeApplicationTest {
     final double initialYPos = 75;
     gameBall.setCenterX(initialXPos);
     gameBall.setCenterY(initialYPos);
+    javafxRun(() -> myGame.setLevel("level1.txt"));
 
-    sleep(1, TimeUnit.SECONDS);
-    myGame.step(1.00);
-    sleep(1, TimeUnit.SECONDS);
-    myGame.step(1.00);
-    sleep(1, TimeUnit.SECONDS);
+    javafxRun(() -> myGame.step(1));
+    javafxRun(() -> myGame.step(1));
 
     assertEquals(initialXPos,gameBall.getCenterX(),.1);
     assertEquals(initialYPos,gameBall.getCenterY(),.1);
+  }
 
+  @Test
+  public void testBrokenBlocksAreRemoved() {
+    javafxRun(() -> myGame.setLevel("testBlocksRemoved.txt"));
+
+    javafxRun(() -> myGame.step(1));
+    javafxRun(() -> myGame.step(1));
+    final double bounceXPos = gameBall.getCenterX();
+    final double bounceYPos = gameBall.getCenterY();
+    javafxRun(() -> myGame.step(1));
+    javafxRun(() -> myGame.step(1));
+
+    assertNotEquals(bounceXPos,gameBall.getCenterX(),.1);
+    assertNotEquals(bounceYPos,gameBall.getCenterY(),.1);
   }
 
   @Test

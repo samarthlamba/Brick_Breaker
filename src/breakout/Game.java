@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -30,6 +31,7 @@ public class Game extends Application {
   public static final Paint HIGHLIGHT = Color.OLIVEDRAB;
 
   private Scene myScene;
+  private Group currentGroup;
   private Level currentLevel;
   private Paddle gamePaddle;
   private Ball gameBall;
@@ -60,9 +62,10 @@ public class Game extends Application {
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
-    setupLevel(root);
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
+    this.currentGroup = root;
+    setLevel("level1.txt");
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -72,6 +75,26 @@ public class Game extends Application {
     return scene;
   }
 
+  public void setLevel(String fileSource){
+    Level level = null;
+    List<Node> blocksForLevel;
+    try {
+      level = new Level(fileSource);
+      blocksForLevel = level.getObjectsToDraw();
+    } catch (IOException e) {
+      blocksForLevel = Collections.emptyList();
+    } catch (URISyntaxException e) {
+      blocksForLevel = Collections.emptyList();
+    }
+    if(currentLevel!=null) {
+      currentGroup.getChildren().removeAll(currentLevel.getObjectsToDraw());
+    }
+    if(!blocksForLevel.isEmpty()){
+      currentGroup.getChildren().addAll(blocksForLevel);
+    }
+    this.currentLevel = level;
+  }
+
   /**
    * // Handle the game's "rules" for every "moment"
    *
@@ -79,23 +102,9 @@ public class Game extends Application {
    */
   void step(double elapsedTime) {
     updateShape(elapsedTime);
-    //updateBlocks(elapsedTime);
+    updateBlocks();
   }
 
-  private void setupLevel(Group root) {
-    Level level = null;
-    List<Node> blocksForLevel;
-    try {
-      level = new Level("level1.txt");
-      blocksForLevel = level.getObjectsToDraw();
-    } catch (IOException e) {
-      blocksForLevel = Collections.emptyList();
-    } catch (URISyntaxException e) {
-      blocksForLevel = Collections.emptyList();
-    }
-    root.getChildren().addAll(blocksForLevel);
-    this.currentLevel = level;
-  }
 
   private void handleKeyInput(KeyCode code) {
     if (code.equals(KeyCode.LEFT)) {
@@ -116,7 +125,6 @@ public class Game extends Application {
 
       gameBall.changeXDirection(elapsedTime);
     }
-    System.out.println(gameBall.getY());
     if (gameBall.getY() < 0) {
       gameBall.changeYDirection(elapsedTime);
     }
@@ -126,6 +134,14 @@ public class Game extends Application {
     if (gamePaddle.getBounds().intersects(gameBall.getBounds())) {
       gameBall.changeYDirection(elapsedTime);
     }
+  }
+
+  public void updateBlocks() {
+    List<AbstractBlock> brokenBlocks = currentLevel.removeBrokenBlocks();
+    List<Node> nodesToRemove = brokenBlocks.stream()
+        .map(block -> block.getDisplayObject())
+        .collect(Collectors.toList());
+    currentGroup.getChildren().removeAll(nodesToRemove);
   }
 
   private void checkBlockCollision(double elapsedTime) {
