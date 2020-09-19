@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import breakout.blocks.AbstractBlock;
+import breakout.blocks.ShieldBlock;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class LevelTest {
       }
     }
     assertEquals(3, rectanglesToDraw.size());
-    assertEquals(Color.BURLYWOOD,rectanglesToDraw.get(0).getFill());
+    assertEquals(Color.YELLOW,rectanglesToDraw.get(0).getFill());
     assertEquals(Color.BLUE,rectanglesToDraw.get(1).getFill());
     assertEquals(Color.CRIMSON,rectanglesToDraw.get(2).getFill());
   }
@@ -60,4 +61,17 @@ public class LevelTest {
     assertEquals(initialSize-1,blockList.size());
     assertFalse(blockList.contains(basicBlock));
   }
+
+  @Test
+  public void testCycleAllShieldBlocks() {
+    ShieldBlock shieldBlock = (ShieldBlock) testLevel.getBlockList().get(1);
+    shieldBlock.hit();
+    assertFalse(shieldBlock.isBroken());
+    for(int k=0; k < 1001;k++) {
+      testLevel.cycleAllShieldBlocks();
+    }
+    shieldBlock.hit();
+    assertTrue(shieldBlock.isBroken());
+  }
+
 }
