@@ -64,14 +64,6 @@ public class Level {
     return brokenBlocks;
   }
 
-  public void cycleAllShieldBlocks() {
-    List<ShieldBlock> shieldBlocks = this.getBlockList().stream()
-        .filter(block -> block instanceof ShieldBlock)
-        .map(block -> (ShieldBlock) block)
-        .collect(Collectors.toList());
-    shieldBlocks.stream().forEach(shieldBlock -> shieldBlock.cycleShields());
-  }
-
   private void convertLinesToBlocks(List<String> allLines) {
     for (int row = 0; row < allLines.size(); row++) {
       String line = allLines.get(row);

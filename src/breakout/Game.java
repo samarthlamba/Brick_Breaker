@@ -69,11 +69,11 @@ public class Game extends Application {
     gameBall = new Ball(width, height);
 
     String livesString = "Lives left: " + gamePaddle.getLives();
-    lives = new Text(10, height-height/30, livesString);
-    lives.setFont(new Font(height/30));
-    winLoss = new Text(width/2, height/2, "You won");
+    lives = new Text(10, height - height / 30, livesString);
+    lives.setFont(new Font(height / 30));
+    winLoss = new Text(width / 2, height / 2, "You won");
     //winLoss.setTextAlignment(TextAlignment.CENTER);
-    winLoss.setFont(new Font(height/10));
+    winLoss.setFont(new Font(height / 10));
     winLoss.setVisible(false);
     root.getChildren().add(winLoss);
     root.getChildren().add(gamePaddle.getObject());
@@ -92,7 +92,7 @@ public class Game extends Application {
     return scene;
   }
 
-  public void setLevel(String fileSource){
+  public void setLevel(String fileSource) {
     Level level = null;
     List<Node> blocksForLevel;
     try {
@@ -103,10 +103,10 @@ public class Game extends Application {
     } catch (URISyntaxException e) {
       blocksForLevel = Collections.emptyList();
     }
-    if(currentLevel!=null) {
+    if (currentLevel != null) {
       currentGroup.getChildren().removeAll(currentLevel.getObjectsToDraw());
     }
-    if(!blocksForLevel.isEmpty()){
+    if (!blocksForLevel.isEmpty()) {
       currentGroup.getChildren().addAll(blocksForLevel);
     }
     this.currentLevel = level;
@@ -122,7 +122,7 @@ public class Game extends Application {
     updateBlocks();
   }
 
-  private void handleMouseInput (double x, double y) {
+  private void handleMouseInput(double x, double y) {
     System.out.println("keypad");
     gameBall.start();
   }
@@ -151,13 +151,13 @@ public class Game extends Application {
     }
   }
 
-  public void updateBlocks(){
+  public void updateBlocks() {
     List<AbstractBlock> brokenBlocks = currentLevel.removeBrokenBlocks();
     List<Node> nodesToRemove = brokenBlocks.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
     currentLevel.cycleAllShieldBlocks();
-    for (Node k : nodesToRemove){
+    for (Node k : nodesToRemove) {
       //random.ra
       k.getBoundsInLocal();
     }
@@ -167,10 +167,11 @@ public class Game extends Application {
 
   private void checkBlockCollision(double elapsedTime) {
     AbstractBlock blockHit = currentLevel.getBlockAtBallPosition(gameBall);
-    if (blockHit!=null){
+    if (blockHit != null) {
       blockHit.hit();
       gameBall.changeXDirection(elapsedTime);
       gameBall.changeYDirection(elapsedTime);
+
     }
   }
 }

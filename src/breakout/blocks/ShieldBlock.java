@@ -18,14 +18,7 @@ public class ShieldBlock extends BasicBlock{
     this.getDisplayObject().setStrokeWidth(5.00);
     this.isShielded = true;
   }
-  public void cycleShields(){
-    cycleCount++;
-    if (cycleCount > NUM_CYCLES){
-      isShielded = !isShielded;
-      cycleCount = 0;
-      this.setColors(Color.BLUE,strokeColorMap.get(isShielded));
-    }
-  }
+
 
 
   @Override
