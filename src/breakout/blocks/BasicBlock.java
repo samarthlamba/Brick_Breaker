@@ -5,27 +5,28 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class BasicBlock extends AbstractBlock {
-  private Rectangle displayRectangle;
-  
+  private Rectangle displayObject;
+
   public BasicBlock(int row, int column, int numRows, int numColumns) {
     super(row, column, numRows, numColumns);
     final int blockWidth = Game.WIDTH / numColumns;
     final int blockHeight = Game.HEIGHT / (2*numRows);
-    this.displayRectangle = new Rectangle(column*blockWidth,row*blockHeight,
+    this.displayObject = new Rectangle(column*blockWidth,row*blockHeight,
         blockWidth, blockHeight);
-    this.setColors(Color.BROWN,Color.BLACK);
+    this.setColors(Color.BURLYWOOD,Color.BLACK);
   }
 
   @Override
   public void hit() {
+    this.breakBlock();
   }
 
   public void setColors(Color fill, Color stroke){
-    this.displayRectangle.setFill(fill);
-    this.displayRectangle.setStroke(stroke);
+    this.displayObject.setFill(fill);
+    this.displayObject.setStroke(stroke);
   }
 
-  public Rectangle getDisplayRectangle(){
-    return this.displayRectangle;
+  public Rectangle getDisplayObject(){
+    return this.displayObject;
   }
 }

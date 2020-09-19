@@ -2,6 +2,7 @@ package breakout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.concurrent.TimeUnit;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
@@ -106,6 +107,24 @@ public class GameTest extends DukeApplicationTest {
 
     assertEquals(119, gameBall.getCenterX());
     assertEquals(119, gameBall.getCenterY());
+  }
+
+  @Test
+  public void testBallBounceOnBlockHit() {
+    final double initialXPos = 50;
+    final double initialYPos = 75;
+    gameBall.setCenterX(initialXPos);
+    gameBall.setCenterY(initialYPos);
+
+    sleep(1, TimeUnit.SECONDS);
+    myGame.step(1.00);
+    sleep(1, TimeUnit.SECONDS);
+    myGame.step(1.00);
+    sleep(1, TimeUnit.SECONDS);
+
+    assertEquals(initialXPos,gameBall.getCenterX(),.1);
+    assertEquals(initialYPos,gameBall.getCenterY(),.1);
+
   }
 
   @Test

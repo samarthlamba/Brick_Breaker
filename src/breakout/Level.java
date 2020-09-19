@@ -1,5 +1,6 @@
 package breakout;
 
+import breakout.blocks.AbstractBlock;
 import breakout.blocks.BasicBlock;
 import breakout.blocks.BossBlock;
 import breakout.blocks.ShieldBlock;
@@ -12,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.Node;
 
 public class Level {
 
-  private final List<BasicBlock> basicBlockList = new ArrayList<>();
+  private final List<AbstractBlock> blockList = new ArrayList<>();
 
   public Level(String fileSource) throws IOException, URISyntaxException {
     Path pathToFile = Paths.get(ClassLoader.getSystemResource(fileSource).toURI());
@@ -24,14 +25,23 @@ public class Level {
     convertLinesToBlocks(allLines);
   }
 
-  public List<BasicBlock> getBasicBlockList() {
-    return this.basicBlockList;
+  public List<AbstractBlock> getBlockList() {
+    return this.blockList;
   }
 
-  public List<Rectangle> getRectanglesToDraw() {
-    return this.basicBlockList.stream()
-        .map(block -> block.getDisplayRectangle())
+  public List<Node> getObjectsToDraw() {
+    return this.blockList.stream()
+        .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
+  }
+
+  public AbstractBlock getBlockAtBallPosition(Ball ball){
+    for(AbstractBlock eachBlock : this.getBlockList()){
+      if(eachBlock.getDisplayObject().getBoundsInLocal().intersects(ball.getBounds())) {
+        return eachBlock;
+      }
+    }
+    return null;
   }
 
   private void convertLinesToBlocks(List<String> allLines) {
@@ -46,14 +56,14 @@ public class Level {
   private void convertSingleLineToRow(List<String> blockPositionsInRow, int row, int numberRows) {
     for (int column = 0; column < blockPositionsInRow.size(); column++) {
       String blockType = blockPositionsInRow.get(column);
-      BasicBlock thisBlock = createBlockOfCorrectType(blockType,row,column,numberRows,blockPositionsInRow.size());
+      AbstractBlock thisBlock = createBlockOfCorrectType(blockType,row,column,numberRows,blockPositionsInRow.size());
       if(thisBlock != null) {
-        basicBlockList.add(thisBlock);
+        blockList.add(thisBlock);
       }
     }
   }
 
-  private BasicBlock createBlockOfCorrectType(String blockType, int row, int column, int numberRows, int numberColumns) {
+  private AbstractBlock createBlockOfCorrectType(String blockType, int row, int column, int numberRows, int numberColumns) {
     if(blockType.equals("1")){
       return new BasicBlock(row, column, numberRows, numberColumns);
     }

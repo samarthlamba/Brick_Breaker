@@ -1,5 +1,6 @@
 package breakout;
 
+import breakout.blocks.AbstractBlock;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -28,6 +30,7 @@ public class Game extends Application {
   public static final Paint HIGHLIGHT = Color.OLIVEDRAB;
 
   private Scene myScene;
+  private Level currentLevel;
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
@@ -40,7 +43,7 @@ public class Game extends Application {
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
     primaryStage.setScene(myScene);
     primaryStage.setTitle(TITLE);
@@ -80,18 +83,19 @@ public class Game extends Application {
 
   private void setupLevel(Group root) {
     Level level = null;
-    List<Rectangle> blocksForLevel;
+    List<Node> blocksForLevel;
     try {
       level = new Level("level1.txt");
-      blocksForLevel = level.getRectanglesToDraw();
+      blocksForLevel = level.getObjectsToDraw();
     } catch (IOException e) {
       blocksForLevel = Collections.emptyList();
     } catch (URISyntaxException e) {
       blocksForLevel = Collections.emptyList();
     }
     root.getChildren().addAll(blocksForLevel);
-
+    this.currentLevel = level;
   }
+
   private void handleKeyInput(KeyCode code) {
     if (code.equals(KeyCode.LEFT)) {
       gamePaddle.moveLeft();
@@ -106,6 +110,7 @@ public class Game extends Application {
 
   public void updateShape(double elapsedTime) {
     gameBall.move(elapsedTime);
+    checkBlockCollision(elapsedTime);
     if (gameBall.getX() > WIDTH || gameBall.getX() < 0) {
 
       gameBall.changeXDirection(elapsedTime);
@@ -118,6 +123,15 @@ public class Game extends Application {
       gameBall.reset();
     }
     if (gamePaddle.getBounds().intersects(gameBall.getBounds())) {
+      gameBall.changeYDirection(elapsedTime);
+    }
+  }
+
+  private void checkBlockCollision(double elapsedTime) {
+    AbstractBlock blockHit = currentLevel.getBlockAtBallPosition(gameBall);
+    if (blockHit!=null){
+      blockHit.hit();
+      gameBall.changeXDirection(elapsedTime);
       gameBall.changeYDirection(elapsedTime);
     }
   }
