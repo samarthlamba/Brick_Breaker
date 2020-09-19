@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -36,6 +38,9 @@ public class Game extends Application {
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
+  private Text lives;
+  private Text winLoss;
+
 
   /**
    * Start the program.
@@ -62,8 +67,19 @@ public class Game extends Application {
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
+
+    String livesString = "Lives left: " + gamePaddle.getLives();
+    lives = new Text(10, height-height/30, livesString);
+    lives.setFont(new Font(height/30));
+    winLoss = new Text(width/2, height/2, "You won");
+    //winLoss.setTextAlignment(TextAlignment.CENTER);
+    winLoss.setFont(new Font(height/10));
+    winLoss.setVisible(false);
+    root.getChildren().add(winLoss);
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
+    root.getChildren().add(lives);
+
     this.currentGroup = root;
     setLevel("level1.txt");
     // make some shapes and set their properties
@@ -72,6 +88,7 @@ public class Game extends Application {
     Scene scene = new Scene(root, width, height, background);
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+    scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
     return scene;
   }
 
@@ -105,6 +122,11 @@ public class Game extends Application {
     updateBlocks();
   }
 
+  private void handleMouseInput (double x, double y) {
+    System.out.println("keypad");
+    gameBall.start();
+  }
+
 
   private void handleKeyInput(KeyCode code) {
     if (code.equals(KeyCode.LEFT)) {
@@ -119,28 +141,26 @@ public class Game extends Application {
   }
 
   public void updateShape(double elapsedTime) {
-    gameBall.move(elapsedTime);
+    gameBall.move(elapsedTime, gamePaddle);
     checkBlockCollision(elapsedTime);
-    if (gameBall.getX() > WIDTH || gameBall.getX() < 0) {
+    lives.setText("Lives left: " + gamePaddle.getLives());
+    if (gamePaddle.gameOver()) {
+      winLoss.setText("You lose");
+      winLoss.setVisible(true);
 
-      gameBall.changeXDirection(elapsedTime);
-    }
-    if (gameBall.getY() < 0) {
-      gameBall.changeYDirection(elapsedTime);
-    }
-    if (gameBall.getY() > HEIGHT) {
-      gameBall.reset();
-    }
-    if (gamePaddle.getBounds().intersects(gameBall.getBounds())) {
-      gameBall.changeYDirection(elapsedTime);
     }
   }
 
-  public void updateBlocks() {
+  public void updateBlocks(){
     List<AbstractBlock> brokenBlocks = currentLevel.removeBrokenBlocks();
     List<Node> nodesToRemove = brokenBlocks.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
+    currentLevel.cycleAllShieldBlocks();
+    for (Node k : nodesToRemove){
+      //random.ra
+      k.getBoundsInLocal();
+    }
     currentGroup.getChildren().removeAll(nodesToRemove);
   }
 

@@ -14,6 +14,9 @@ public class Paddle {
   private int height;
   private Rectangle paddle;
   private Paint paddleColor = Color.HOTPINK;
+  private int INCREASE_PADDLE_LENGTH = 10;
+  private int lives = 3;
+
 
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
@@ -65,6 +68,27 @@ public class Paddle {
     this.speed = this.speed + 5;
     System.out.println(speed);
   }
+  public int getLives(){
+    return this.lives;
+  }
+
+  public void increaseLives(){
+    this.lives = this.lives + 1;
+  }
+
+  public boolean gameOver(){
+    return (this.lives <= 0);
+  }
+
+  public void decreaseLives(){
+    this.lives = this.lives -1;
+    System.out.println("low");
+  }
+
+  public void increaseLength(){
+    this.paddle.setWidth(this.paddle.getWidth()+INCREASE_PADDLE_LENGTH);
+  }
+
 
   public double getX() {
     return this.paddle.getX();
@@ -75,7 +99,7 @@ public class Paddle {
   }
 
   public javafx.geometry.Bounds getBounds() {
-    return this.paddle.getBoundsInParent();
+    return this.paddle.getBoundsInLocal();
   }
 
 }
