@@ -15,6 +15,8 @@ public class Ball {
   private int currentYDirection = 1;
   private int initialWidth;
   private int initialHeight;
+  private int sceneWidth;
+  private int sceneHeight;
 
   /**
    * Initialized based on width of screen and height. Creates the circular ball
@@ -23,6 +25,8 @@ public class Ball {
    * @param height
    */
   public Ball(int width, int height) {
+    sceneWidth = width;
+    sceneHeight = height;
     BALL_RADIUS = width / 60;
     initialWidth = width;
     initialHeight = height;
@@ -32,14 +36,39 @@ public class Ball {
 
   }
 
-  public void move(double time) {
+  public void move(double time, Paddle p) {
     this.ball.setCenterY(this.ball.getCenterY() - speed * time * currentYDirection);
     this.ball.setCenterX(this.ball.getCenterX() - speed * time * currentXDirection);
+    if (this.ball.getCenterX()> sceneWidth|| this.ball.getCenterX() < 0) {
+
+      changeXDirection(time);
+    }
+    if (this.ball.getCenterY() < 0) {
+      changeYDirection(time);
+    }
+    if (this.ball.getCenterY() > sceneHeight) {
+      reset();
+      p.decreaseLives();
+    }
+    if (p.getBounds().intersects(this.ball.getBoundsInParent())) {
+      changeYDirection(time);
+    }
+
+  }
+
+  public void decreaseSpeed(){
+    this.speed = this.speed - 10;
+  }
+
+  public void start(){
+    this.speed = 120;
   }
 
   public void reset() {
     ball.setCenterX(initialWidth / 2);
     ball.setCenterY(initialHeight / 2);
+    this.speed = 0;
+
   }
 
   public void changeXDirection(double time) {

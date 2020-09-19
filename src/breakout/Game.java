@@ -13,6 +13,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -31,6 +33,7 @@ public class Game extends Application {
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
+  private Text lives;
 
   /**
    * Start the program.
@@ -57,15 +60,20 @@ public class Game extends Application {
     Group root = new Group();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
+    String livesString = "Lives left: " + gamePaddle.getLives();
+    lives = new Text(10, height/30, livesString);
+    lives.setFont(new Font(height/30));
     setupLevel(root);
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
+    root.getChildren().add(lives);
     // make some shapes and set their properties
 
     // create a place to see the shapes
     Scene scene = new Scene(root, width, height, background);
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+    scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
     return scene;
   }
 
@@ -97,25 +105,18 @@ public class Game extends Application {
       case LEFT -> gamePaddle.moveLeft();
       case RIGHT -> gamePaddle.moveRight();
       case S -> gamePaddle.speedUp();
+      case K -> gamePaddle.speedUp();
     }
+  }
 
+    private void handleMouseInput (double x, double y) {
+    System.out.println("keypad");
+      gameBall.start();
   }
 
   public void updateShape(double elapsedTime) {
-    gameBall.move(elapsedTime);
-    if (gameBall.getX() > WIDTH || gameBall.getX() < 0) {
+    gameBall.move(elapsedTime, gamePaddle);
+    lives.setText("Lives left: " + gamePaddle.getLives());
 
-      gameBall.changeXDirection(elapsedTime);
-    }
-    System.out.println(gameBall.getY());
-    if (gameBall.getY() < 0) {
-      gameBall.changeYDirection(elapsedTime);
-    }
-    if (gameBall.getY() > HEIGHT) {
-      gameBall.reset();
-    }
-    if (gamePaddle.getBounds().intersects(gameBall.getBounds())) {
-      gameBall.changeYDirection(elapsedTime);
-    }
   }
 }

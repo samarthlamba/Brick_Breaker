@@ -27,6 +27,9 @@ public class Block {
       this.block.setFill(Color.AQUA);
     }
   }
+  public int getHeight(){
+    return this.getHeight();
+  }
 
   public String getBlockType() {
     return blockType;

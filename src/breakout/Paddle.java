@@ -14,6 +14,8 @@ public class Paddle {
   private int height;
   private Rectangle paddle;
   private Paint paddleColor = Color.HOTPINK;
+  private int INCREASE_PADDLE_LENGTH = 10;
+  private int lives = 3;
 
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
@@ -44,6 +46,19 @@ public class Paddle {
 
   }
 
+  public int getLives(){
+    return this.lives;
+  }
+
+  public void increaseLives(){
+      this.lives = this.lives + 1;
+  }
+
+  public void decreaseLives(){
+    this.lives = this.lives -1;
+    System.out.println("low");
+  }
+
   /**
    * changes color. Maybe level up?
    *
@@ -55,6 +70,10 @@ public class Paddle {
 
   public void moveRight() {
     this.paddle.setX(this.paddle.getX() + speed);
+  }
+
+  public void increaseLength(){
+    this.paddle.setWidth(this.paddle.getWidth()+INCREASE_PADDLE_LENGTH);
   }
 
   public void moveLeft() {
