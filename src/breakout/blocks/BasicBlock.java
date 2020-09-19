@@ -13,7 +13,7 @@ public class BasicBlock extends AbstractBlock {
     final int blockHeight = Game.HEIGHT / (2*numRows);
     this.displayObject = new Rectangle(column*blockWidth,row*blockHeight,
         blockWidth, blockHeight);
-    this.setColors(Color.BURLYWOOD,Color.BLACK);
+    this.setColors(Color.YELLOW,Color.BLACK);
   }
 
   @Override

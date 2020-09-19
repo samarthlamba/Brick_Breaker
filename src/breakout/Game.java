@@ -142,6 +142,7 @@ public class Game extends Application {
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
     currentGroup.getChildren().removeAll(nodesToRemove);
+    currentLevel.cycleAllShieldBlocks();
   }
 
   private void checkBlockCollision(double elapsedTime) {
