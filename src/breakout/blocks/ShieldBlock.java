@@ -12,12 +12,21 @@ public class ShieldBlock extends BasicBlock{
 
   public ShieldBlock(int row, int column, int numRows, int numColumns) {
     super(row, column, numRows, numColumns);
-    strokeColorMap.put(true,Color.GREEN);
-    strokeColorMap.put(false,Color.NAVY);
-    this.setColors(Color.BLUE,Color.GREEN);
+    strokeColorMap.put(true, Color.GREEN);
+    strokeColorMap.put(false, Color.NAVY);
+    this.setColors(Color.BLUE, Color.GREEN);
     this.getDisplayObject().setStrokeWidth(5.00);
     this.isShielded = true;
   }
+  public void cycleShields(){
+    cycleCount++;
+    if (cycleCount > NUM_CYCLES){
+      isShielded = !isShielded;
+      cycleCount = 0;
+      this.setColors(Color.BLUE,strokeColorMap.get(isShielded));
+    }
+  }
+
 
   @Override
   public void hit(){

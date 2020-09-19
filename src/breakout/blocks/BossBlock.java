@@ -18,4 +18,5 @@ public class BossBlock extends BasicBlock {
       this.breakBlock();
     }
   }
+
 }

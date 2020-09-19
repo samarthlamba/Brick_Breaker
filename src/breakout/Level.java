@@ -49,6 +49,13 @@ public class Level {
     return null;
   }
 
+  public void cycleAllShieldBlocks() {
+    List<ShieldBlock> shieldBlocks = this.getBlockList().stream()
+        .filter(block -> block instanceof ShieldBlock)
+        .map(block -> (ShieldBlock) block)
+        .collect(Collectors.toList());
+    shieldBlocks.stream().forEach(shieldBlock -> shieldBlock.cycleShields());
+  }
   public List<AbstractBlock> removeBrokenBlocks(){
     List<AbstractBlock> brokenBlocks = this.getBlockList().stream()
         .filter(block -> block.isBroken()).collect(
