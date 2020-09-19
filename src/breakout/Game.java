@@ -83,7 +83,7 @@ public class Game extends Application {
     List<Rectangle> blocksForLevel;
     try {
       level = new Level("level1.txt");
-      blocksForLevel = level.getBlockObjectsToDraw();
+      blocksForLevel = level.getRectanglesToDraw();
     } catch (IOException e) {
       blocksForLevel = Collections.emptyList();
     } catch (URISyntaxException e) {
@@ -93,12 +93,15 @@ public class Game extends Application {
 
   }
   private void handleKeyInput(KeyCode code) {
-    switch (code) {
-      case LEFT -> gamePaddle.moveLeft();
-      case RIGHT -> gamePaddle.moveRight();
-      case S -> gamePaddle.speedUp();
+    if (code.equals(KeyCode.LEFT)) {
+      gamePaddle.moveLeft();
     }
-
+    if (code.equals(KeyCode.RIGHT)) {
+      gamePaddle.moveRight();
+    }
+    if (code.equals(KeyCode.S)) {
+      gamePaddle.speedUp();
+    }
   }
 
   public void updateShape(double elapsedTime) {
