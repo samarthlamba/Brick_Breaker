@@ -44,6 +44,14 @@ public class Level {
     return null;
   }
 
+  public List<AbstractBlock> removeBrokenBlocks(){
+    List<AbstractBlock> brokenBlocks = this.getBlockList().stream()
+        .filter(block -> block.isBroken()).collect(
+        Collectors.toList());
+    this.blockList.removeAll(brokenBlocks);
+    return brokenBlocks;
+  }
+
   private void convertLinesToBlocks(List<String> allLines) {
     for (int row = 0; row < allLines.size(); row++) {
       String line = allLines.get(row);

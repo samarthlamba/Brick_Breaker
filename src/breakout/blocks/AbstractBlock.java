@@ -15,7 +15,7 @@ public abstract class AbstractBlock {
     this.column = column;
     this.numRows = numRows;
     this.numColumns = numColumns;
-    this.isBroken = true;
+    this.isBroken = false;
   }
 
   public abstract void hit();

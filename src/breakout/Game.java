@@ -79,6 +79,7 @@ public class Game extends Application {
    */
   void step(double elapsedTime) {
     updateShape(elapsedTime);
+    //updateBlocks(elapsedTime);
   }
 
   private void setupLevel(Group root) {
