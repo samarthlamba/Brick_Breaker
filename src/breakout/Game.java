@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -14,7 +15,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,6 +38,7 @@ public class Game extends Application {
   private Ball gameBall;
   private int level = 1;
   private Text lives;
+  private Text winLoss;
 
   /**
    * Start the program.
@@ -63,10 +68,17 @@ public class Game extends Application {
     String livesString = "Lives left: " + gamePaddle.getLives();
     lives = new Text(10, height/30, livesString);
     lives.setFont(new Font(height/30));
+    winLoss = new Text(width/2, height/2, "You won");
+
+    //winLoss.setTextAlignment(TextAlignment.CENTER);
+    winLoss.setFont(new Font(height/10));
+    winLoss.setVisible(false);
+
     setupLevel(root);
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
     root.getChildren().add(lives);
+    root.getChildren().add(winLoss);
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -105,7 +117,7 @@ public class Game extends Application {
       case LEFT -> gamePaddle.moveLeft();
       case RIGHT -> gamePaddle.moveRight();
       case S -> gamePaddle.speedUp();
-      case K -> gamePaddle.speedUp();
+      case L -> gamePaddle.increaseLives();
     }
   }
 
@@ -117,6 +129,11 @@ public class Game extends Application {
   public void updateShape(double elapsedTime) {
     gameBall.move(elapsedTime, gamePaddle);
     lives.setText("Lives left: " + gamePaddle.getLives());
+    if (gamePaddle.gameOver()){
+      winLoss.setText("You lose");
+      winLoss.setVisible(true);
+
+    }
 
   }
 }

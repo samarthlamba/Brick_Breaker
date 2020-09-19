@@ -54,6 +54,10 @@ public class Paddle {
       this.lives = this.lives + 1;
   }
 
+  public boolean gameOver(){
+    return (this.lives <= 0);
+  }
+
   public void decreaseLives(){
     this.lives = this.lives -1;
     System.out.println("low");
