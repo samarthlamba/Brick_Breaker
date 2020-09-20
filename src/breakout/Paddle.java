@@ -14,7 +14,7 @@ public class Paddle {
   private int height;
   private Rectangle paddle;
   private Paint paddleColor = Color.HOTPINK;
-  private int INCREASE_PADDLE_LENGTH = 10;
+  private int INCREASE_PADDLE_LENGTH = 2;
   private int lives = 3;
 
 
@@ -65,7 +65,7 @@ public class Paddle {
   }
 
   public void speedUp() {
-    this.speed = this.speed + 5;
+    this.speed = this.speed + 1;
     System.out.println(speed);
   }
   public int getLives(){
