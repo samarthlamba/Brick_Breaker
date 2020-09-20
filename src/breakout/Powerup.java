@@ -1,7 +1,6 @@
 package breakout;
 
-import breakout.blocks.AbstractBlock;
-import java.util.List;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -9,23 +8,22 @@ import java.util.Map;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
-public class Powerups {
+public class Powerup {
 
   private Circle powerup;
   public String chosenPower;
   private final Map <Integer, Paint> powerupColor = Map.of(1, Color.RED, 2, Color.GREEN, 3, Color.BLACK);
   private final Map <Integer, String> powerupOptions= Map.of(1, "increaseLength", 2, "increaseSpeed", 3, "slowBallDown");
   private final int dropSpeed = 1;
-  public Powerups(Node BlockToRemove){
-    powerup = new Circle(BlockToRemove.getBoundsInLocal().getCenterX(), BlockToRemove.getBoundsInLocal().getCenterY(), 10);///block.getHeight());
+  public Powerup(Node blockToRemove){
+    Bounds blockBounds = blockToRemove.getBoundsInLocal();
+    this.powerup = new Circle(blockBounds.getCenterX(), blockBounds.getCenterY(), blockBounds.getWidth()/10);///block.getHeight());
     //powerup = new Circle(200, 200, 20);
-    System.out.println(powerup);
     randomPowerUp();
   }
   public void randomPowerUp(){
     int randomNumber = (int)(Math.random() * (powerupColor.size()))+1;
     powerup.setFill(powerupColor.get(randomNumber));
-    System.out.println(randomNumber);
     chosenPower = powerupOptions.get(randomNumber);
   }
 
@@ -35,7 +33,6 @@ public class Powerups {
   }
 
   public void startPowerUp(Paddle p, Ball b, Group currentGroup){
-    System.out.println(chosenPower);
     if (chosenPower.equals("increaseLength")){
 
       increasePaddleLength(p);

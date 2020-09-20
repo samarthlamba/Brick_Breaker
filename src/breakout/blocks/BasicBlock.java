@@ -32,7 +32,4 @@ public class BasicBlock extends AbstractBlock {
     return this.displayObject;
   }
 
-  public int getHeight() {
-    return this.blockHeight;
-  }
 }

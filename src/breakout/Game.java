@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -31,12 +30,11 @@ public class Game extends Application {
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
-  public static final Paint HIGHLIGHT = Color.OLIVEDRAB;
 
   private Scene myScene;
   private Group currentGroup;
   private Level currentLevel;
-  private ArrayList<Powerups> powerupsInGame = new ArrayList<>();
+  private final ArrayList<Powerup> powerUps = new ArrayList<>();
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
@@ -120,12 +118,12 @@ public class Game extends Application {
    * @param elapsedTime
    */
   void step(double elapsedTime) {
-    updateShape(elapsedTime);
+    updateBallAndPaddle(elapsedTime);
     updateBlocks();
+    updatePowerups();
   }
 
   private void handleMouseInput(double x, double y) {
-    System.out.println("keypad");
     gameBall.start();
   }
 
@@ -145,7 +143,7 @@ public class Game extends Application {
     }
   }
 
-  public void updateShape(double elapsedTime) {
+  public void updateBallAndPaddle(double elapsedTime) {
     gameBall.move(elapsedTime, gamePaddle);
     checkBlockCollision(elapsedTime);
     lives.setText("Lives left: " + gamePaddle.getLives());
@@ -153,9 +151,6 @@ public class Game extends Application {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
 
-    }
-    if (powerupsInGame != null && powerupsInGame.size()>0) {
-      UpdatePowerups();
     }
   }
 
@@ -167,21 +162,19 @@ public class Game extends Application {
     for (Node k : nodesToRemove){
       int randomNumber = (int)(Math.random() * 100);
       if (randomNumber < probablityOfPowerup){
-        Powerups current = new Powerups(k);
-        powerupsInGame.add(current);
+        Powerup current = new Powerup(k);
+        powerUps.add(current);
         currentGroup.getChildren().add(current.getObject());
       }
     }
-
     currentLevel.cycleAllShieldBlocks();
     currentGroup.getChildren().removeAll(nodesToRemove);
-    currentLevel.cycleAllShieldBlocks();
   }
 
-  public void UpdatePowerups(){
+  public void updatePowerups(){
     //System.out.println(powerupsInGame.size());
 
-    for (Powerups k : powerupsInGame){
+    for (Powerup k : powerUps){
       k.move();
       if (k.getObject().getBoundsInLocal().intersects(gamePaddle.getBounds())){
         k.startPowerUp(gamePaddle, gameBall, currentGroup);

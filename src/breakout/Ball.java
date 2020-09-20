@@ -59,7 +59,6 @@ public class Ball {
   }
 
   public void decreaseSpeed(){
-    this.speed = this.speed;
     this.speedDecrease = 0.02;
   }
 
