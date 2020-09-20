@@ -23,8 +23,9 @@ public class Powerups {
     randomPowerUp();
   }
   public void randomPowerUp(){
-    int randomNumber = (int)(Math.random() * (powerupColor.size()));
+    int randomNumber = (int)(Math.random() * (powerupColor.size()))+1;
     powerup.setFill(powerupColor.get(randomNumber));
+    System.out.println(randomNumber);
     chosenPower = powerupOptions.get(randomNumber);
   }
 

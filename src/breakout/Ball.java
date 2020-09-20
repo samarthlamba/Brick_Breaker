@@ -59,8 +59,8 @@ public class Ball {
   }
 
   public void decreaseSpeed(){
-    this.speed = this.speed*0.88;
-    this.speedDecrease = 0.2;
+    this.speed = this.speed;
+    this.speedDecrease = 0.02;
   }
 
   public void start(){
