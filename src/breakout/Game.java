@@ -3,6 +3,7 @@ package breakout;
 import breakout.blocks.AbstractBlock;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,12 +36,13 @@ public class Game extends Application {
   private Scene myScene;
   private Group currentGroup;
   private Level currentLevel;
+  private ArrayList<Powerups> powerupsInGame = new ArrayList<>();
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
   private Text lives;
   private Text winLoss;
-
+  private final int probablityOfPowerup = 100;
 
   /**
    * Start the program.
@@ -138,6 +140,9 @@ public class Game extends Application {
     if (code.equals(KeyCode.S)) {
       gamePaddle.speedUp();
     }
+    if (code.equals(KeyCode.L)){
+      gamePaddle.increaseLives();
+    }
   }
 
   public void updateShape(double elapsedTime) {
@@ -149,6 +154,9 @@ public class Game extends Application {
       winLoss.setVisible(true);
 
     }
+    if (powerupsInGame != null && powerupsInGame.size()>0) {
+      UpdatePowerups();
+    }
   }
 
   public void updateBlocks() {
@@ -156,13 +164,34 @@ public class Game extends Application {
     List<Node> nodesToRemove = brokenBlocks.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
-    currentLevel.cycleAllShieldBlocks();
-    for (Node k : nodesToRemove) {
-      //random.ra
-      k.getBoundsInLocal();
+    for (Node k : nodesToRemove){
+      int randomNumber = (int)(Math.random() * 100);
+      if (randomNumber < probablityOfPowerup){
+        Powerups current = new Powerups(k);
+        powerupsInGame.add(current);
+        currentGroup.getChildren().add(current.getObject());
+      }
     }
+
+    currentLevel.cycleAllShieldBlocks();
     currentGroup.getChildren().removeAll(nodesToRemove);
     currentLevel.cycleAllShieldBlocks();
+  }
+
+  public void UpdatePowerups(){
+    //System.out.println(powerupsInGame.size());
+
+    for (Powerups k : powerupsInGame){
+      k.move();
+      if (k.getObject().getBoundsInLocal().intersects(gamePaddle.getBounds())){
+        k.startPowerUp(gamePaddle, gameBall, currentGroup);
+      }
+      if (k.getObject().getCenterY()> HEIGHT){
+        currentGroup.getChildren().remove(k);
+      }
+
+    }
+
   }
 
   private void checkBlockCollision(double elapsedTime) {

@@ -8,7 +8,7 @@ public class Ball {
 
   public static final int PADDLE_EDGE = 15;
   public int BALL_RADIUS;
-  private int speed = 120;
+  private double speed = 120;
   private Circle ball;
   private Paint ballColor = Color.RED;
   private int currentXDirection = 1;
@@ -17,6 +17,7 @@ public class Ball {
   private int initialHeight;
   private int sceneWidth;
   private int sceneHeight;
+  private double speedDecrease = 0;
 
 
   /**
@@ -38,8 +39,8 @@ public class Ball {
   }
 
   public void move(double time, Paddle p) {
-    this.ball.setCenterY(this.ball.getCenterY() - speed * time * currentYDirection);
-    this.ball.setCenterX(this.ball.getCenterX() - speed * time * currentXDirection);
+    this.ball.setCenterY(this.ball.getCenterY() - speed * time * currentYDirection+ currentXDirection*speedDecrease);
+    this.ball.setCenterX(this.ball.getCenterX() - speed * time * currentXDirection +speedDecrease*currentXDirection);
     if (this.ball.getCenterX()> sceneWidth|| this.ball.getCenterX() < 0) {
 
       changeXDirection(time);
@@ -58,7 +59,8 @@ public class Ball {
   }
 
   public void decreaseSpeed(){
-    this.speed = this.speed - 10;
+    this.speed = this.speed*0.88;
+    this.speedDecrease = 0.2;
   }
 
   public void start(){

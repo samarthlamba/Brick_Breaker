@@ -1,6 +1,9 @@
 package breakout;
 
 import breakout.blocks.AbstractBlock;
+import java.util.List;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import java.util.Map;
 import javafx.scene.paint.Paint;
@@ -8,27 +11,32 @@ import javafx.scene.shape.Circle;
 
 public class Powerups {
 
-  private AbstractBlock block;
   private Circle powerup;
   public String chosenPower;
   private final Map <Integer, Paint> powerupColor = Map.of(1, Color.RED, 2, Color.GREEN, 3, Color.BLACK);
   private final Map <Integer, String> powerupOptions= Map.of(1, "increaseLength", 2, "increaseSpeed", 3, "slowBallDown");
-  public Powerups(AbstractBlock b, int X, int Y){
-    block = b;
-    powerup = new Circle(X, Y, 200);///block.getHeight());
+  private final int dropSpeed = 1;
+  public Powerups(Node BlockToRemove){
+    powerup = new Circle(BlockToRemove.getBoundsInLocal().getCenterX(), BlockToRemove.getBoundsInLocal().getCenterY(), 10);///block.getHeight());
+    //powerup = new Circle(200, 200, 20);
+    System.out.println(powerup);
+    randomPowerUp();
   }
   public void randomPowerUp(){
-    int randomNumber = (int)Math.random() * (powerupColor.size() + 1);
+    int randomNumber = (int)(Math.random() * (powerupColor.size()));
     powerup.setFill(powerupColor.get(randomNumber));
     chosenPower = powerupOptions.get(randomNumber);
   }
 
-  public String getChosenPower(){
-    return this.chosenPower;
+  public void move(){
+    this.powerup.setCenterY(this.powerup.getCenterY()+dropSpeed);
+   // System.out.println(this.powerup.getCenterX());
   }
 
-  public void startPowerUp(Paddle p, Ball b){
+  public void startPowerUp(Paddle p, Ball b, Group currentGroup){
+    System.out.println(chosenPower);
     if (chosenPower.equals("increaseLength")){
+
       increasePaddleLength(p);
     }
     else if (chosenPower.equals("increaseSpeed")){
@@ -37,6 +45,7 @@ public class Powerups {
     else if (chosenPower.equals("slowBallDown")){
       decreaseBallSpeed(b);
     }
+    currentGroup.getChildren().remove(this.powerup);
   }
   public void increasePaddleLength(Paddle p){
     p.increaseLength();
@@ -49,4 +58,7 @@ public class Powerups {
   }
 
 
+  public Circle getObject() {
+    return this.powerup;
+  }
 }
