@@ -9,7 +9,7 @@ public class Paddle {
   public static final int PADDLE_EDGE = 15;
   public int PADDLE_WIDTH;
   public int PADDLE_HEIGHT;
-  private int speed = 5;
+  private int speed = 20;
   private int width;
   private int height;
   private Rectangle paddle;

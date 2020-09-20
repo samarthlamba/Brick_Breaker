@@ -25,8 +25,8 @@ import javafx.util.Duration;
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
-  public static final int WIDTH = 600;
-  public static final int HEIGHT = 400;
+  public static final int WIDTH = 1200;
+  public static final int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
@@ -192,5 +192,8 @@ public class Game extends Application {
         currentGroup.getChildren().remove(k);
       }
     }
+  }
+  public Ball getBall(){
+    return gameBall;
   }
 }
