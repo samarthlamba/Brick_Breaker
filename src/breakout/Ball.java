@@ -38,24 +38,9 @@ public class Ball {
 
   }
 
-  public void move(double time, Paddle p) {
+  public void move(double time) {
     this.ball.setCenterY(this.ball.getCenterY() - speed * time * currentYDirection+ currentXDirection*speedDecrease);
     this.ball.setCenterX(this.ball.getCenterX() - speed * time * currentXDirection +speedDecrease*currentXDirection);
-    if (this.ball.getCenterX()> sceneWidth|| this.ball.getCenterX() < 0) {
-
-      changeXDirection(time);
-    }
-    if (this.ball.getCenterY() < 0) {
-      changeYDirection(time);
-    }
-    if (this.ball.getCenterY() > sceneHeight) {
-      reset();
-      p.decreaseLives();
-    }
-    if (p.getBounds().intersects(this.ball.getBoundsInLocal())) { //local or parent???
-      changeYDirection(time);
-    }
-
   }
 
   public void decreaseSpeed(){
@@ -73,12 +58,12 @@ public class Ball {
     this.speed = 0;
   }
 
-  public void changeXDirection(double time) {
+  public void changeXDirection() {
     this.currentXDirection = this.currentXDirection * -1;
 
   }
 
-  public void changeYDirection(double time) {
+  public void changeYDirection() {
     this.currentYDirection = this.currentYDirection * -1;
 
   }

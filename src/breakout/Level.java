@@ -40,15 +40,6 @@ public class Level {
     return objectsToDraw;
   }
 
-  public AbstractBlock getBlockAtBallPosition(Ball ball){
-    for(AbstractBlock eachBlock : this.getBlockList()){
-      if(eachBlock.getDisplayObject().getBoundsInLocal().intersects(ball.getBounds())) {
-        return eachBlock;
-      }
-    }
-    return null;
-  }
-
   public void cycleAllShieldBlocks() {
     List<ShieldBlock> shieldBlocks = this.getBlockList().stream()
         .filter(block -> block instanceof ShieldBlock)

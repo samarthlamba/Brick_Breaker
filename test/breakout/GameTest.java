@@ -3,7 +3,6 @@ package breakout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.util.concurrent.TimeUnit;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
@@ -83,63 +82,6 @@ public class GameTest extends DukeApplicationTest {
     assertEquals(initialYPos, gamePaddle.getY());
   }
 
-  @Test
-  public void testBallBouncesOnPaddleCollision() {
-    gamePaddle.setY(Game.HEIGHT / 2);
-    gamePaddle.setX(Game.HEIGHT / 2);
-    final double initialXPos = gamePaddle.getX() + 120;
-    final double initialYPos = gamePaddle.getY() + 120;
-    gameBall.setCenterX(initialXPos);
-    gameBall.setCenterY(initialYPos);
-
-    myGame.step(1.00);
-    myGame.step(1.00);
-
-    assertEquals(initialXPos - 240, gameBall.getCenterX());
-    assertEquals(initialYPos, gameBall.getCenterY());
-  }
-
-  @Test
-  public void testBallBounceOnCorner() {
-    gameBall.setCenterX(119);
-    gameBall.setCenterY(119);
-
-    myGame.step(1.00);
-    myGame.step(1.00);
-
-    assertEquals(119, gameBall.getCenterX());
-    assertEquals(119, gameBall.getCenterY());
-  }
-
-  @Test
-  public void testBallBounceOnBlockHit() {
-    final double initialXPos = 50;
-    final double initialYPos = 75;
-    gameBall.setCenterX(initialXPos);
-    gameBall.setCenterY(initialYPos);
-    javafxRun(() -> myGame.setLevel("level1.txt"));
-
-    javafxRun(() -> myGame.step(1));
-    javafxRun(() -> myGame.step(1));
-
-    assertEquals(initialXPos,gameBall.getCenterX(),.1);
-    assertEquals(initialYPos,gameBall.getCenterY(),.1);
-  }
-
-  @Test
-  public void testBrokenBlocksAreRemoved() {
-    javafxRun(() -> myGame.setLevel("testBlocksRemoved.txt"));
-
-    javafxRun(() -> myGame.step(1));
-    javafxRun(() -> myGame.step(1));
-    final double bounceXPos = gameBall.getCenterX();
-    final double bounceYPos = gameBall.getCenterY();
-    javafxRun(() -> myGame.step(1));
-    javafxRun(() -> myGame.step(1));
-
-    assertNotEquals(bounceXPos,gameBall.getCenterX(),.1);
-    assertNotEquals(bounceYPos,gameBall.getCenterY(),.1);
-  }
 
   @Test
   public void testSKeySpeedUpPaddle() {

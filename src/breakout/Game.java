@@ -40,6 +40,7 @@ public class Game extends Application {
   private int level = 1;
   private Text lives;
   private Text winLoss;
+  private PhysicsEngine physicsEngine;
   private final int probablityOfPowerup = 100;
 
   /**
@@ -52,6 +53,7 @@ public class Game extends Application {
   @Override
   public void start(Stage primaryStage) {
     myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
+
     primaryStage.setScene(myScene);
     primaryStage.setTitle(TITLE);
     primaryStage.show();
@@ -68,7 +70,7 @@ public class Game extends Application {
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
 
-    String livesString = "Lives left: " + gamePaddle.getLives();
+    String livesString = String.format("Lives left: %d",gamePaddle.getLives());
     lives = new Text(10, height - height / 30, livesString);
     lives.setFont(new Font(height / 30));
     winLoss = new Text(width / 2, height / 2, "You won");
@@ -82,6 +84,7 @@ public class Game extends Application {
 
     this.currentGroup = root;
     setLevel("level1.txt");
+    this.physicsEngine = new PhysicsEngine(WIDTH,HEIGHT,gamePaddle,currentLevel.getBlockList());
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -121,6 +124,7 @@ public class Game extends Application {
     updateBallAndPaddle(elapsedTime);
     updateBlocks();
     updatePowerups();
+    updateStatusTest();
   }
 
   private void handleMouseInput(double x, double y) {
@@ -143,18 +147,24 @@ public class Game extends Application {
     }
   }
 
-  public void updateBallAndPaddle(double elapsedTime) {
-    gameBall.move(elapsedTime, gamePaddle);
-    checkBlockCollision(elapsedTime);
-    lives.setText("Lives left: " + gamePaddle.getLives());
+  private void updateStatusTest(){
+    lives.setText(String.format("Lives left: %d",gamePaddle.getLives()));
+    if(currentLevel.getBlockList().isEmpty()){
+      winLoss.setText("You win!");
+      winLoss.setVisible(true);
+    }
     if (gamePaddle.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
-
     }
   }
 
-  public void updateBlocks() {
+  private void updateBallAndPaddle(double elapsedTime) {
+    physicsEngine.ballBounce(gameBall);
+    gameBall.move(elapsedTime);
+  }
+
+  private void updateBlocks() {
     List<AbstractBlock> brokenBlocks = currentLevel.removeBrokenBlocks();
     List<Node> nodesToRemove = brokenBlocks.stream()
         .map(block -> block.getDisplayObject())
@@ -171,29 +181,16 @@ public class Game extends Application {
     currentGroup.getChildren().removeAll(nodesToRemove);
   }
 
-  public void updatePowerups(){
-    //System.out.println(powerupsInGame.size());
-
+  private void updatePowerups(){
     for (Powerup k : powerUps){
+      Node powerupCircle = k.getObject();
       k.move();
-      if (k.getObject().getBoundsInLocal().intersects(gamePaddle.getBounds())){
+      if (physicsEngine.collides(powerupCircle,gamePaddle.getObject())){
         k.startPowerUp(gamePaddle, gameBall, currentGroup);
       }
-      if (k.getObject().getCenterY()> HEIGHT){
+      if (physicsEngine.atBottom(powerupCircle)){
         currentGroup.getChildren().remove(k);
       }
-
-    }
-
-  }
-
-  private void checkBlockCollision(double elapsedTime) {
-    AbstractBlock blockHit = currentLevel.getBlockAtBallPosition(gameBall);
-    if (blockHit != null) {
-      blockHit.hit();
-      gameBall.changeXDirection(elapsedTime);
-      gameBall.changeYDirection(elapsedTime);
-
     }
   }
 }
