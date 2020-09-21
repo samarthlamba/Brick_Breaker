@@ -102,4 +102,14 @@ public class GameTest extends DukeApplicationTest {
     assertEquals(initialXPos + 10, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
   }
+
+  @Test
+  public void ballTouchesEdgeOfPaddle(){
+    gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);
+    gameBall.setCenterY(gamePaddle.getBoundsInLocal().getCenterY()+gamePaddle.getHeight());
+    double speedXBeforeImpact = gameBall.getCenterX();
+    myGame.step(1);
+    assertEquals(true, speedXBeforeImpact < (gameBall.getCenterX()));
+  }
+
 }

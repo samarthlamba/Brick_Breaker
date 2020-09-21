@@ -1,5 +1,7 @@
 package breakout;
 
+import static java.lang.Math.sqrt;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -8,7 +10,7 @@ public class Ball {
 
   public static final int PADDLE_EDGE = 15;
   public int BALL_RADIUS;
-  private double speed = 120;
+  private double speed = 480000;
   private Circle ball;
   private Paint ballColor = Color.RED;
   private int currentXDirection = 1;
@@ -18,7 +20,8 @@ public class Ball {
   private int sceneWidth;
   private int sceneHeight;
   private double speedDecrease = 0;
-
+  private double speedX = sqrt(speed/2);
+  private double speedY = sqrt(speed/2);
 
   /**
    * Initialized based on width of screen and height. Creates the circular ball
@@ -39,23 +42,45 @@ public class Ball {
   }
 
   public void move(double time) {
-    this.ball.setCenterY(this.ball.getCenterY() - speed * time * currentYDirection+ currentXDirection*speedDecrease);
-    this.ball.setCenterX(this.ball.getCenterX() - speed * time * currentXDirection +speedDecrease*currentXDirection);
+    this.ball.setCenterY(this.ball.getCenterY() - speedY * time * currentYDirection+ currentYDirection*speedDecrease);
+    this.ball.setCenterX(this.ball.getCenterX() - speedX * time * currentXDirection +speedDecrease*currentXDirection);
   }
 
   public void decreaseSpeed(){
-    this.speedDecrease = 0.02;
+    this.speedDecrease = 0.02; //need to fix, temporary. was goin backwards when changing speed
   }
 
   public void start(){
-    this.speed = 120;
+    this.speedX = sqrt(speed/2);
+    this.speedY = sqrt(speed/2);
   }
 
 
   public void reset() {
     ball.setCenterX(initialWidth / 2);
     ball.setCenterY(initialHeight / 2);
-    this.speed = 0;
+    this.speedX = 0;
+    this.speedY = 0;
+  }
+
+  public double getSpeedX(){
+    return this.speedX;
+  }
+  public double getSpeedY(){
+    return this.speedY;
+  }
+
+  public void reinitializeSpeed(){
+    speedX = sqrt(speed/2);
+    speedY = sqrt(speed/2);
+  }
+  public void changeSpeedY(double change){
+    this.speedY = this.speedY + change;
+    this.speedX = sqrt(this.speed-this.speedY*this.speedY);
+  }
+  public void changeSpeedX(double change){
+    this.speedX = this.speedX + change;
+    this.speedY = sqrt(this.speed-this.speedX*this.speedX);
   }
 
   public void changeXDirection() {

@@ -25,23 +25,24 @@ import javafx.util.Duration;
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
-  public static final int WIDTH = 600;
-  public static final int HEIGHT = 400;
+  public static final int WIDTH = 1200;
+  public static final int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
-
+  private final ArrayList<Powerup> powerUps = new ArrayList<>();
+  private final int probablityOfPowerup = 100;
   private Scene myScene;
   private Group currentGroup;
   private Level currentLevel;
-  private final ArrayList<Powerup> powerUps = new ArrayList<>();
   private Paddle gamePaddle;
   private Ball gameBall;
-  private int level = 1;
+  private int level = 2;
   private Text lives;
+  private Text score;
   private Text winLoss;
   private PhysicsEngine physicsEngine;
-  private final int probablityOfPowerup = 100;
+  private int currentScore = 0;
 
   /**
    * Start the program.
@@ -70,9 +71,12 @@ public class Game extends Application {
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
 
-    String livesString = String.format("Lives left: %d",gamePaddle.getLives());
+    String livesString = String.format("Lives left: %d", gamePaddle.getLives());
     lives = new Text(10, height - height / 30, livesString);
+    score = new Text(10, height - height / 30 - height / 30,
+        String.format("Score: %d", this.currentScore));
     lives.setFont(new Font(height / 30));
+    score.setFont(new Font(height / 30));
     winLoss = new Text(width / 2, height / 2, "You won");
     //winLoss.setTextAlignment(TextAlignment.CENTER);
     winLoss.setFont(new Font(height / 10));
@@ -81,10 +85,11 @@ public class Game extends Application {
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
     root.getChildren().add(lives);
+    root.getChildren().add(score);
 
     this.currentGroup = root;
     setLevel("level1.txt");
-    this.physicsEngine = new PhysicsEngine(WIDTH,HEIGHT,gamePaddle,currentLevel.getBlockList());
+    this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, gamePaddle, currentLevel.getBlockList());
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -142,14 +147,18 @@ public class Game extends Application {
     if (code.equals(KeyCode.S)) {
       gamePaddle.speedUp();
     }
-    if (code.equals(KeyCode.L)){
+    if (code.equals(KeyCode.L)) {
       gamePaddle.increaseLives();
+    }
+    if (code.equals(KeyCode.R)) {
+      gameBall.reset();
     }
   }
 
-  private void updateStatusTest(){
-    lives.setText(String.format("Lives left: %d",gamePaddle.getLives()));
-    if(currentLevel.getBlockList().isEmpty()){
+  private void updateStatusTest() {
+    lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
+    score.setText(String.format("Score: %d", this.currentScore));
+    if (currentLevel.getBlockList().isEmpty()) {
       winLoss.setText("You win!");
       winLoss.setVisible(true);
     }
@@ -169,9 +178,10 @@ public class Game extends Application {
     List<Node> nodesToRemove = brokenBlocks.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
-    for (Node k : nodesToRemove){
-      int randomNumber = (int)(Math.random() * 100);
-      if (randomNumber < probablityOfPowerup){
+    for (Node k : nodesToRemove) {
+      this.currentScore += 1;
+      int randomNumber = (int) (Math.random() * 100);
+      if (randomNumber < probablityOfPowerup) {
         Powerup current = new Powerup(k);
         powerUps.add(current);
         currentGroup.getChildren().add(current.getObject());
@@ -181,16 +191,20 @@ public class Game extends Application {
     currentGroup.getChildren().removeAll(nodesToRemove);
   }
 
-  private void updatePowerups(){
-    for (Powerup k : powerUps){
+  private void updatePowerups() {
+    for (Powerup k : powerUps) {
       Node powerupCircle = k.getObject();
       k.move();
-      if (physicsEngine.collides(powerupCircle,gamePaddle.getObject())){
+      if (physicsEngine.collides(powerupCircle, gamePaddle.getObject())) {
         k.startPowerUp(gamePaddle, gameBall, currentGroup);
       }
-      if (physicsEngine.atBottom(powerupCircle)){
+      if (physicsEngine.atBottom(powerupCircle)) {
         currentGroup.getChildren().remove(k);
       }
     }
+  }
+
+  public Ball getBall() {
+    return gameBall;
   }
 }

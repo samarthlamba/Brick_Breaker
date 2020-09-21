@@ -1,5 +1,7 @@
 package breakout;
 
+import static java.lang.Math.abs;
+
 import breakout.blocks.AbstractBlock;
 import java.util.List;
 import javafx.geometry.BoundingBox;
@@ -35,8 +37,27 @@ public class PhysicsEngine {
 
   private void checkPaddleCollision(Ball ball){
     if(collides(ball.getObject(),paddle.getObject())) {
+
       ball.changeYDirection();
+      edgeOfObject(ball, paddle.getObject());
     }
+  }
+  private void edgeOfObject(Ball ball, Node object){
+
+    Bounds nodeObject = object.getBoundsInLocal();
+    double posRelativeToCenterOfObject = abs(nodeObject.getCenterX()- ball.getX());
+    if (posRelativeToCenterOfObject>(nodeObject.getWidth()/3)) {
+      double normDifference =
+          (posRelativeToCenterOfObject - (nodeObject.getWidth() / 3)) / nodeObject.getWidth();
+      if (ball.getSpeedX() / 2 < ball.getSpeedY()) {
+        ball.changeSpeedX(normDifference * 150);
+        System.out.println(ball.getSpeedX());
+      }
+    }
+    else{
+       ball.reinitializeSpeed();
+    }
+    System.out.println((ball.getSpeedX())+ "   " + ball.getSpeedY());
   }
 
 
@@ -46,6 +67,7 @@ public class PhysicsEngine {
       blockHit.hit();
       ball.changeYDirection();
       ball.changeXDirection();
+      edgeOfObject(ball, blockHit.getDisplayObject());
     }
   }
 
