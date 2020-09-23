@@ -9,7 +9,7 @@ public class Paddle {
   public static final int PADDLE_EDGE = 15;
   public int PADDLE_WIDTH;
   public int PADDLE_HEIGHT;
-  private int speed = 20;
+  private double speed = 20;
   private int width;
   private int height;
   private Rectangle paddle;
@@ -65,8 +65,7 @@ public class Paddle {
   }
 
   public void speedUp() {
-    this.speed = this.speed + 1;
-    System.out.println(speed);
+    this.speed = this.speed*1.5;
   }
   public int getLives(){
     return this.lives;
@@ -82,7 +81,6 @@ public class Paddle {
 
   public void decreaseLives(){
     this.lives = this.lives -1;
-    System.out.println("low");
   }
 
   public void increaseLength(){

@@ -3,6 +3,7 @@ package breakout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.List;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
@@ -27,7 +28,7 @@ public class GameTest extends DukeApplicationTest {
   public void start(Stage stage) {
     // create game's scene with all shapes in their initial positions and show it
     myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT, Game.BACKGROUND);
-    myGame.setLevel("empty.txt");
+    myGame.setLevelList(List.of("empty.txt"));
     stage.setScene(myScene);
     stage.show();
 
@@ -48,15 +49,17 @@ public class GameTest extends DukeApplicationTest {
 
   @Test
   public void testInitialBallVelocity() {
+    final double initialXVelocity = myGame.getBall().getSpeedX();
+    final double initialYVelocity = myGame.getBall().getSpeedY();
     final double initialXPos = gameBall.getCenterX();
     final double initialYPos = gameBall.getCenterY();
     assertEquals(Game.WIDTH / 2, initialXPos);
     assertEquals(Game.HEIGHT / 2, initialYPos);
 
-    myGame.step(1.00);
+    javafxRun(() -> myGame.step(1.00));
 
-    assertEquals(initialXPos - 120, gameBall.getCenterX(), .1);
-    assertEquals(initialYPos - 120, gameBall.getCenterY(), .1);
+    assertEquals(initialXPos - initialXVelocity, gameBall.getCenterX(), .1);
+    assertEquals(initialYPos - initialYVelocity, gameBall.getCenterY(), .1);
   }
 
   @Test
@@ -68,7 +71,7 @@ public class GameTest extends DukeApplicationTest {
 
     press(myScene, KeyCode.RIGHT);
 
-    assertEquals(initialXPos + 5, gamePaddle.getX());
+    assertEquals(initialXPos + 20, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
 
     press(myScene, KeyCode.LEFT);
@@ -78,7 +81,7 @@ public class GameTest extends DukeApplicationTest {
 
     press(myScene, KeyCode.LEFT);
 
-    assertEquals(initialXPos - 5, gamePaddle.getX());
+    assertEquals(initialXPos - 20, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
   }
 
@@ -90,7 +93,7 @@ public class GameTest extends DukeApplicationTest {
 
     press(myScene, KeyCode.RIGHT);
 
-    assertEquals(initialXPos + 5, gamePaddle.getX());
+    assertEquals(initialXPos + 20, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
 
     gamePaddle.setX(initialXPos);
@@ -99,7 +102,7 @@ public class GameTest extends DukeApplicationTest {
     press(myScene, KeyCode.S);
     press(myScene, KeyCode.RIGHT);
 
-    assertEquals(initialXPos + 10, gamePaddle.getX());
+    assertEquals(initialXPos + 30, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
   }
 
@@ -108,8 +111,19 @@ public class GameTest extends DukeApplicationTest {
     gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);
     gameBall.setCenterY(gamePaddle.getBoundsInLocal().getCenterY()+gamePaddle.getHeight());
     double speedXBeforeImpact = gameBall.getCenterX();
-    myGame.step(1);
+    javafxRun(() -> myGame.step(1.00));
     assertEquals(true, speedXBeforeImpact < (gameBall.getCenterX()));
+  }
+
+  @Test
+  public void testLevelMovesToNextInList() {
+    javafxRun(() -> myGame.setLevelList(List.of("empty.txt","testBlocksRemoved.txt")));
+    Level firstlevel = myGame.getCurrentLevel();
+
+    javafxRun(() -> myGame.step(1.00));
+
+    Level secondLevel = myGame.getCurrentLevel();
+    assertNotEquals(secondLevel,firstlevel);
   }
 
 }

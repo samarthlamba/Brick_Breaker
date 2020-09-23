@@ -35,6 +35,10 @@ public class PhysicsEngine {
     return null;
   }
 
+  public void setBlockList(Level level) {
+    this.blockList = level.getBlockList();
+  }
+
   private void checkPaddleCollision(Ball ball){
     if(collides(ball.getObject(),paddle.getObject())) {
 
@@ -51,13 +55,11 @@ public class PhysicsEngine {
           (posRelativeToCenterOfObject - (nodeObject.getWidth() / 3)) / nodeObject.getWidth();
       if (ball.getSpeedX() / 2 < ball.getSpeedY()) {
         ball.changeSpeedX(normDifference * 150);
-        System.out.println(ball.getSpeedX());
       }
     }
     else{
        ball.reinitializeSpeed();
     }
-    System.out.println((ball.getSpeedX())+ "   " + ball.getSpeedY());
   }
 
 
