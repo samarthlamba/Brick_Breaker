@@ -60,6 +60,7 @@ public class LevelTest {
     Group group = new Group();
     group.getChildren().add(basicBlock.getDisplayObject());
     basicBlock.hit();
+    basicBlock.update();
     assertTrue(basicBlock.isBroken());
     assertEquals(1,group.getChildren().size());
 
@@ -77,9 +78,10 @@ public class LevelTest {
     shieldBlock.hit();
     assertFalse(shieldBlock.isBroken());
     for(int k=0; k < 1001;k++) {
-      testLevel.cycleAllShieldBlocks();
+      testLevel.updateAllBlocks();
     }
     shieldBlock.hit();
+    shieldBlock.update();
     assertTrue(shieldBlock.isBroken());
   }
 
@@ -88,7 +90,10 @@ public class LevelTest {
     Group group = new Group();
     List<PowerUp> currentPowerUps = new ArrayList<>();
     List<AbstractBlock> blockList = testLevel.getBlockList();
-    blockList.forEach(block -> block.hit());
+    blockList.forEach(block -> {
+      block.hit();
+      block.update();
+    });
     testLevel.spawnPowerUps(group,currentPowerUps);
     assertEquals(1,group.getChildren().size());
     assertEquals(1,currentPowerUps.size());

@@ -177,9 +177,9 @@ public class Game extends Application {
   }
 
   private void updateBlocks() {
+    currentLevel.updateAllBlocks();
     currentLevel.spawnPowerUps(currentGroup,currentPowerUps);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup);
-    currentLevel.cycleAllShieldBlocks();
   }
 
 

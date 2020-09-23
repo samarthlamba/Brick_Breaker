@@ -8,6 +8,7 @@ public class BasicBlock extends AbstractBlock {
 
   private Rectangle displayObject;
   private final int blockHeight;
+  private int hitsRemaining;
 
   public BasicBlock(int row, int column, int numRows, int numColumns) {
     super(row, column, numRows, numColumns);
@@ -16,11 +17,19 @@ public class BasicBlock extends AbstractBlock {
     this.displayObject = new Rectangle(column * blockWidth, row * blockHeight,
         blockWidth, blockHeight);
     this.setColors(Color.YELLOW,Color.BLACK);
+    this.setHitsRemaining(1);
   }
 
   @Override
   public void hit() {
-    this.breakBlock();
+    hitsRemaining--;
+  }
+
+  @Override
+  public void update() {
+    if(hitsRemaining<1) {
+      breakBlock();
+    }
   }
 
   public void setColors(Color fill, Color stroke) {
@@ -32,4 +41,7 @@ public class BasicBlock extends AbstractBlock {
     return this.displayObject;
   }
 
+  protected void setHitsRemaining(int hitsRemaining) {
+    this.hitsRemaining = hitsRemaining;
+  }
 }
