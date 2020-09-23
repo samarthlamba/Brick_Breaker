@@ -4,6 +4,7 @@ import breakout.blocks.AbstractBlock;
 import breakout.blocks.BasicBlock;
 import breakout.blocks.BossBlock;
 import breakout.blocks.ShieldBlock;
+import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -14,7 +15,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.shape.Circle;
 
 public class Level {
 
@@ -40,6 +43,28 @@ public class Level {
     return objectsToDraw;
   }
 
+  public void removeBrokenBlocksFromGroup(Group group){
+    List<AbstractBlock> blocksToRemove = getBrokenBlocks();
+    List<Node> nodesToRemove = blocksToRemove.stream()
+        .map(block -> block.getDisplayObject())
+        .collect(Collectors.toList());
+    group.getChildren().removeAll(nodesToRemove);
+    removeBrokenBlocks();
+  }
+
+  public void spawnPowerUps(Group group,List<PowerUp> currentPowerUps) {
+    List<AbstractBlock> brokenBlocks = getBrokenBlocks();
+    List<PowerUp> powerUps = new ArrayList<>();
+    for (AbstractBlock each: brokenBlocks) {
+      if(each.containsPowerUp()) {
+        powerUps.add(each.spawnPowerUp());
+      }
+    }
+    List<Circle> powerUpNodes = powerUps.stream().map(powerUp -> powerUp.getDisplayCircle()).collect(Collectors.toList());
+    currentPowerUps.addAll(powerUps);
+    group.getChildren().addAll(powerUpNodes);
+  }
+
   public void cycleAllShieldBlocks() {
     List<ShieldBlock> shieldBlocks = this.getBlockList().stream()
         .filter(block -> block instanceof ShieldBlock)
@@ -47,12 +72,16 @@ public class Level {
         .collect(Collectors.toList());
     shieldBlocks.stream().forEach(shieldBlock -> shieldBlock.cycleShields());
   }
-  public List<AbstractBlock> removeBrokenBlocks(){
+
+  private List<AbstractBlock> getBrokenBlocks() {
     List<AbstractBlock> brokenBlocks = this.getBlockList().stream()
         .filter(block -> block.isBroken()).collect(
-        Collectors.toList());
-    this.blockList.removeAll(brokenBlocks);
+            Collectors.toList());
     return brokenBlocks;
+  }
+  private void removeBrokenBlocks(){
+    List<AbstractBlock> blocksToRemove = getBrokenBlocks();
+    this.getBlockList().removeAll(blocksToRemove);
   }
 
   private void convertLinesToBlocks(List<String> allLines) {

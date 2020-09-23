@@ -6,10 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.ShieldBlock;
+import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -50,16 +52,23 @@ public class LevelTest {
   }
 
   @Test
-  public void testGetBrokenBlocks() {
+  public void testRemoveBrokenBlocksFromGroup() {
     final List<AbstractBlock> blockList = testLevel.getBlockList();
     final int initialSize = blockList.size();
     AbstractBlock basicBlock = testLevel.getBlockList().get(0);
+
+    Group group = new Group();
+    group.getChildren().add(basicBlock.getDisplayObject());
     basicBlock.hit();
     assertTrue(basicBlock.isBroken());
-    final List<AbstractBlock> brokenBlocks = testLevel.removeBrokenBlocks();
-    assertEquals(1,brokenBlocks.size());
+    assertEquals(1,group.getChildren().size());
+
+    testLevel.removeBrokenBlocksFromGroup(group);
+
+    assertEquals(0,group.getChildren().size());
     assertEquals(initialSize-1,blockList.size());
     assertFalse(blockList.contains(basicBlock));
+    assertFalse(group.getChildren().contains(basicBlock.getDisplayObject()));
   }
 
   @Test
@@ -72,6 +81,17 @@ public class LevelTest {
     }
     shieldBlock.hit();
     assertTrue(shieldBlock.isBroken());
+  }
+
+  @Test
+  public void testSpawnPowerUps() {
+    Group group = new Group();
+    List<PowerUp> currentPowerUps = new ArrayList<>();
+    List<AbstractBlock> blockList = testLevel.getBlockList();
+    blockList.forEach(block -> block.hit());
+    testLevel.spawnPowerUps(group,currentPowerUps);
+    assertEquals(1,group.getChildren().size());
+    assertEquals(1,currentPowerUps.size());
   }
 
 }
