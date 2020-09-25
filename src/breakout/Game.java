@@ -177,22 +177,25 @@ public class Game extends Application {
   }
 
   private void updateBlocks() {
+    currentLevel.updateAllBlocks();
     currentLevel.spawnPowerUps(currentGroup,currentPowerUps);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup);
-    currentLevel.cycleAllShieldBlocks();
   }
 
 
   private void updatePowerUps() {
-    for (PowerUp powerUp : currentPowerUps) {
+    List<PowerUp> copyOfCurrentPowerUps = List.copyOf(currentPowerUps);
+    for (PowerUp powerUp : copyOfCurrentPowerUps) {
       Node powerupCircle = powerUp.getDisplayCircle();
       powerUp.move();
       if (physicsEngine.collides(powerupCircle, gamePaddle.getObject())) {
         powerUp.doPowerUp(gamePaddle,gameBall);
+        currentPowerUps.remove(powerUp);
         currentGroup.getChildren().remove(powerupCircle);
       }
       if (physicsEngine.atBottom(powerupCircle)) {
-        currentGroup.getChildren().remove(powerUp);
+        currentPowerUps.remove(powerUp);
+        currentGroup.getChildren().remove(powerupCircle);
       }
     }
   }

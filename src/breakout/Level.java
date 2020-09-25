@@ -33,6 +33,10 @@ public class Level {
     return this.blockList;
   }
 
+  public void updateAllBlocks() {
+    blockList.stream().forEach(block -> block.update());
+  }
+
   public List<Node> getObjectsToDraw() {
     List<Node> objectsToDraw =  this.blockList.stream()
         .map(block -> block.getDisplayObject())
@@ -63,14 +67,6 @@ public class Level {
     List<Circle> powerUpNodes = powerUps.stream().map(powerUp -> powerUp.getDisplayCircle()).collect(Collectors.toList());
     currentPowerUps.addAll(powerUps);
     group.getChildren().addAll(powerUpNodes);
-  }
-
-  public void cycleAllShieldBlocks() {
-    List<ShieldBlock> shieldBlocks = this.getBlockList().stream()
-        .filter(block -> block instanceof ShieldBlock)
-        .map(block -> (ShieldBlock) block)
-        .collect(Collectors.toList());
-    shieldBlocks.stream().forEach(shieldBlock -> shieldBlock.cycleShields());
   }
 
   private List<AbstractBlock> getBrokenBlocks() {

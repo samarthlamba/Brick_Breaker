@@ -40,7 +40,8 @@ public class PhysicsEngine {
   }
 
   private void checkPaddleCollision(Ball ball){
-    if(collides(ball.getObject(),paddle.getObject())) {
+    if(collides(ball.getObject(),paddle.getObject()) &&
+        ball.getObject().getCenterY() < paddle.getBounds().getMinY()) {
 
       ball.changeYDirection();
       edgeOfObject(ball, paddle.getObject());

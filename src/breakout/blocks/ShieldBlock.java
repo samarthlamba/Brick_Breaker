@@ -19,21 +19,21 @@ public class ShieldBlock extends BasicBlock{
     this.isShielded = true;
   }
 
-
-
   @Override
-  public void hit(){
-    if(!isShielded){
-      this.breakBlock();
+  public void hit() {
+    if(!isShielded) {
+      super.hit();
     }
   }
 
-  public void cycleShields(){
+  @Override
+  public void update(){
     cycleCount++;
     if (cycleCount > NUM_CYCLES){
       isShielded = !isShielded;
       cycleCount = 0;
       this.setColors(Color.BLUE,strokeColorMap.get(isShielded));
     }
+    super.update();
   }
 }

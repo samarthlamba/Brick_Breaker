@@ -26,6 +26,8 @@ public abstract class AbstractBlock {
 
   public abstract void hit();
 
+  public abstract void update();
+
   public abstract Node getDisplayObject();
 
   public boolean containsPowerUp() {
