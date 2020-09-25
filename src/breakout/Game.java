@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -24,8 +26,8 @@ import javafx.util.Duration;
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
-  public static final int WIDTH = 1200;
-  public static final int HEIGHT = 800;
+  public static int WIDTH = 1200;
+  public static int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
@@ -53,7 +55,11 @@ public class Game extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    this.WIDTH = (int)(screenBounds.getWidth()*0.8);
+    this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
     myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
+    System.out.println(screenBounds);
 
     primaryStage.setScene(myScene);
     primaryStage.setTitle(TITLE);
