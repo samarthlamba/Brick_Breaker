@@ -108,11 +108,14 @@ public class GameTest extends DukeApplicationTest {
 
   @Test
   public void ballTouchesEdgeOfPaddle(){
+
     gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);
-    gameBall.setCenterY(gamePaddle.getBoundsInLocal().getCenterY()+gamePaddle.getHeight());
-    double speedXBeforeImpact = gameBall.getCenterX();
-    javafxRun(() -> myGame.step(1.00));
-    assertEquals(true, speedXBeforeImpact < (gameBall.getCenterX()));
+    gameBall.setCenterY(gamePaddle.getBoundsInLocal().getCenterY()-gamePaddle.getHeight());
+    double speedXBeforeImpact = myGame.getBall().getSpeedX();
+    System.out.println(gameBall.getCenterX());
+    javafxRun(() -> myGame.step(1.00/120));
+    System.out.println(gameBall.getCenterX());
+    assertEquals(true, speedXBeforeImpact < (myGame.getBall().getSpeedX()));
   }
 
   @Test
