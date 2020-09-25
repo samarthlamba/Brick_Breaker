@@ -107,6 +107,52 @@ public class GameTest extends DukeApplicationTest {
   }
 
   @Test
+  public void testRKeyResetPos() {
+    final double initialBallX = gameBall.getCenterX();
+    final double initialBallY = gameBall.getCenterY();
+    final double initialPaddleX = gamePaddle.getX();
+    gameBall.setCenterX(Math.random());
+    gameBall.setCenterY(Math.random());
+    gamePaddle.setX(Math.random());
+
+    press(myScene,KeyCode.R);
+
+    assertEquals(initialBallX,gameBall.getCenterX());
+    assertEquals(initialBallY,gameBall.getCenterY());
+    assertEquals(initialPaddleX,gamePaddle.getX());
+  }
+
+  @Test
+  public void testRKeyResetPaddleDimensions() {
+    final double initialWidth = gamePaddle.getWidth();
+    final double initialHeight= gamePaddle.getHeight();
+    final double initialArcWidth = gamePaddle.getArcWidth();
+    final double initialArcheight = gamePaddle.getArcHeight();
+    gamePaddle.setArcWidth(Math.random());
+    gamePaddle.setArcHeight(Math.random());
+    gamePaddle.setWidth(Math.random());
+    gamePaddle.setHeight(Math.random());
+
+    press(myScene,KeyCode.R);
+
+    assertEquals(initialWidth,gamePaddle.getWidth());
+    assertEquals(initialArcWidth,gamePaddle.getArcWidth());
+    assertEquals(initialHeight,gamePaddle.getHeight());
+    assertEquals(initialArcheight,gamePaddle.getArcHeight());
+  }
+
+  @Test
+  public void testLKeyIncreaseLives() {
+    final Paddle paddle = myGame.getPaddle();
+    final int initialLives = paddle.getLives();
+    paddle.decreaseLives();
+
+    press(myScene,KeyCode.L);
+
+    assertEquals(initialLives,paddle.getLives());
+  }
+
+  @Test
   public void ballTouchesEdgeOfPaddle(){
 
     gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);

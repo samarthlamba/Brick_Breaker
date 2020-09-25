@@ -10,8 +10,7 @@ public class Paddle {
   public int PADDLE_WIDTH;
   public int PADDLE_HEIGHT;
   private double speed = 20;
-  private int width;
-  private int height;
+  private int gameWidth;
   private Rectangle paddleNode;
   private Paint paddleColor = Color.HOTPINK;
   private int INCREASE_PADDLE_LENGTH = 2;
@@ -21,13 +20,14 @@ public class Paddle {
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
    *
-   * @param width
-   * @param height
+   * @param gameWidth
+   * @param gameHeight
    */
-  public Paddle(int width, int height) {
-    PADDLE_WIDTH = width / 5;
-    PADDLE_HEIGHT = height / 25;
-    paddleNode = new Rectangle(width / 2 - PADDLE_WIDTH / 2, height - PADDLE_HEIGHT - height / 35,
+  public Paddle(int gameWidth, int gameHeight) {
+    this.gameWidth = gameWidth;
+    PADDLE_WIDTH = gameWidth / 5;
+    PADDLE_HEIGHT = gameHeight / 25;
+    paddleNode = new Rectangle(gameWidth / 2 - PADDLE_WIDTH / 2, gameHeight - PADDLE_HEIGHT - gameHeight / 35,
         PADDLE_WIDTH, PADDLE_HEIGHT);
     paddleNode.setId("paddle");
     paddleNode.setFill(paddleColor);
@@ -45,6 +45,15 @@ public class Paddle {
   public Rectangle getObject() {
     return this.paddleNode;
 
+  }
+
+  public void reset() {
+    this.speed = 20;
+    this.paddleNode.setX(gameWidth/2 - PADDLE_WIDTH/2);
+    paddleNode.setArcWidth(PADDLE_EDGE);
+    paddleNode.setArcHeight(PADDLE_EDGE);
+    paddleNode.setWidth(PADDLE_WIDTH);
+    paddleNode.setHeight(PADDLE_HEIGHT);
   }
 
   /**

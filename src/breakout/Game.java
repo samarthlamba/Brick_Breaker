@@ -1,11 +1,15 @@
 package breakout;
 
+import breakout.cheats.Cheat;
+import breakout.cheats.IncreaseLivesCheat;
+import breakout.cheats.ResetCheat;
+import breakout.cheats.SpeedUpPaddleCheat;
 import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -33,6 +37,7 @@ public class Game extends Application {
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
+  private Map<KeyCode,Cheat> cheatMap;
   private Scene myScene;
   private Group currentGroup;
   private Level currentLevel;
@@ -59,7 +64,6 @@ public class Game extends Application {
     this.WIDTH = (int)(screenBounds.getWidth()*0.8);
     this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
     myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
-    System.out.println(screenBounds);
 
     primaryStage.setScene(myScene);
     primaryStage.setTitle(TITLE);
@@ -137,20 +141,17 @@ public class Game extends Application {
 
 
   private void handleKeyInput(KeyCode code) {
+    if(cheatMap == null) {
+      initializeCheatMap();
+    }
+    if(cheatMap.containsKey(code)) {
+      cheatMap.get(code).doCheat();
+    }
     if (code.equals(KeyCode.LEFT)) {
       gamePaddle.moveLeft();
     }
     if (code.equals(KeyCode.RIGHT)) {
       gamePaddle.moveRight();
-    }
-    if (code.equals(KeyCode.S)) {
-      gamePaddle.speedUp();
-    }
-    if (code.equals(KeyCode.L)) {
-      gamePaddle.increaseLives();
-    }
-    if (code.equals(KeyCode.R)) {
-      gameBall.reset();
     }
   }
 
@@ -220,8 +221,20 @@ public class Game extends Application {
     return List.of(lives,score,winLoss);
   }
 
+  private void initializeCheatMap() {
+    Map<KeyCode, Cheat> cheatMap = new HashMap<>();
+    cheatMap.put(KeyCode.R,new ResetCheat(gameBall,gamePaddle,currentLevel));
+    cheatMap.put(KeyCode.L,new IncreaseLivesCheat(gameBall,gamePaddle,currentLevel));
+    cheatMap.put(KeyCode.S,new SpeedUpPaddleCheat(gameBall,gamePaddle,currentLevel));
+    this.cheatMap = cheatMap;
+  }
+
   public Ball getBall() {
     return gameBall;
+  }
+
+  public Paddle getPaddle() {
+    return gamePaddle;
   }
 
   public Level getCurrentLevel() {
