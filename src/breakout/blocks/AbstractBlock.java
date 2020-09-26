@@ -55,7 +55,7 @@ public abstract class AbstractBlock {
     return this.isBroken;
   }
 
-  void breakBlock(){
+  public void breakBlock(){
     this.isBroken = true;
   }
 

@@ -11,7 +11,7 @@ public class Ball {
   public static final int PADDLE_EDGE = 15;
   public int BALL_RADIUS;
   private double speed = 480000;
-  private Circle ball;
+  private Circle ballNode;
   private Paint ballColor = Color.RED;
   private int currentXDirection = 1;
   private int currentYDirection = 1;
@@ -35,15 +35,15 @@ public class Ball {
     BALL_RADIUS = width / 60;
     initialWidth = width;
     initialHeight = height;
-    ball = new Circle(width / 2, height / 2, BALL_RADIUS);
-    ball.setId("ball");
-    ball.setFill(ballColor);
+    ballNode = new Circle(width / 2, height / 2, BALL_RADIUS);
+    ballNode.setId("ball");
+    ballNode.setFill(ballColor);
 
   }
 
   public void move(double time) {
-    this.ball.setCenterY(this.ball.getCenterY() - speedY * time * currentYDirection+ speedY*speedDecrease*currentYDirection);
-    this.ball.setCenterX(this.ball.getCenterX() - speedX * time * currentXDirection +speedDecrease*speedX*currentXDirection);
+    this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection+ currentYDirection*speedDecrease);
+    this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection +speedDecrease*currentXDirection);
   }
 
   public void decreaseSpeed(){
@@ -58,8 +58,8 @@ public class Ball {
 
 
   public void reset() {
-    ball.setCenterX(initialWidth / 2);
-    ball.setCenterY(initialHeight / 2);
+    ballNode.setCenterX(initialWidth / 2);
+    ballNode.setCenterY(initialHeight / 2);
     this.speedX = 0;
     this.speedY = 0;
   }
@@ -95,17 +95,17 @@ public class Ball {
   }
 
   public double getX() {
-    return this.ball.getCenterX();
+    return this.ballNode.getCenterX();
 
   }
 
   public double getY() {
-    return this.ball.getCenterY();
+    return this.ballNode.getCenterY();
 
   }
 
   public javafx.geometry.Bounds getBounds() {
-    return this.ball.getBoundsInParent();
+    return this.ballNode.getBoundsInParent();
   }
 
   /**
@@ -114,7 +114,7 @@ public class Ball {
    * @return
    */
   public Circle getObject() {
-    return this.ball;
+    return this.ballNode;
 
   }
 }
