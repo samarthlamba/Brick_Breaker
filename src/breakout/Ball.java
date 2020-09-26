@@ -47,7 +47,8 @@ public class Ball {
   }
 
   public void decreaseSpeed(){
-    this.speedDecrease = 0.02; //need to fix, temporary. was goin backwards when changing speed
+    this.speedX = this.speedX*0.95; //need to fix, temporary. was goin backwards when changing speed
+    this.speedY = this.speedY*0.95;
   }
 
   public void start(){

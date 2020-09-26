@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
 public class Level {
@@ -47,7 +48,7 @@ public class Level {
     return objectsToDraw;
   }
 
-  public void removeBrokenBlocksFromGroup(Group group){
+  public void removeBrokenBlocksFromGroup(BorderPane group){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(block -> block.getDisplayObject())
@@ -56,7 +57,7 @@ public class Level {
     removeBrokenBlocks();
   }
 
-  public void spawnPowerUps(Group group,List<PowerUp> currentPowerUps) {
+  public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     List<PowerUp> powerUps = new ArrayList<>();
     for (AbstractBlock each: brokenBlocks) {

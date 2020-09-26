@@ -1,22 +1,45 @@
 package breakout;
 
 import breakout.powerups.PowerUp;
+import com.sun.tools.javac.Main;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.util.*;
-import java.util.function.Consumer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,14 +57,14 @@ public class Game extends Application {
   private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
   private Map<KeyCode, Consumer<Game>> keyMap;
   private Scene myScene;
-  private Group currentGroup;
+  private BorderPane currentGroup;
   private Level currentLevel;
   private Paddle gamePaddle;
   private Ball gameBall;
   private int level = 1;
-  private Text lives;
-  private Text score;
-  private Text winLoss;
+  private Label lives;
+  private Label score;
+  private Label winLoss;
   private PhysicsEngine physicsEngine;
   private boolean isPaused = false;
   private int currentScore = 0;
@@ -73,16 +96,17 @@ public class Game extends Application {
 
   Scene setupScene(int width, int height, Paint background) {
     // create one top level collection to organize the things in the scene
-    Group root = new Group();
+    BorderPane root = new BorderPane();
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
-
+    initializeText();
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
-    root.getChildren().addAll(initializeText());
-
+    root.setCenter(winLossInitializeText());
+    root.setBottom(score);
     this.currentGroup = root;
     setLevel(levelList.get(0));
+    root.setTop(lives);
     this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, gamePaddle, currentLevel.getBlockList());
     // make some shapes and set their properties
 
@@ -100,9 +124,7 @@ public class Game extends Application {
     try {
       level = new Level(fileSource);
       blocksForLevel = level.getObjectsToDraw();
-    } catch (IOException e) {
-      blocksForLevel = Collections.emptyList();
-    } catch (URISyntaxException e) {
+    } catch (Exception e) {
       blocksForLevel = Collections.emptyList();
     }
     if (currentLevel != null) {
@@ -156,8 +178,26 @@ public class Game extends Application {
     if (gamePaddle.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
+      updateHighScore();
     }
   }
+
+  public void updateHighScore() {
+    try {
+      Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
+      List<String> allLines = Files.readAllLines(pathToFile);
+      String line = allLines.get(0);
+      if (Integer.valueOf(currentScore) > Integer.valueOf(line)){
+        PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
+        prw.println(currentScore);
+        prw.close();
+      }
+    }
+    catch (Exception e) {
+      System.out.println("High Score file not present");
+      e.printStackTrace();
+    }
+    }
 
 
   private void nextLevel() {
@@ -198,36 +238,29 @@ public class Game extends Application {
     }
   }
 
-  private List<Text> initializeText() {
+  private VBox initializeText() {
+    GridPane gridPane = new GridPane();
+    VBox vbox = new VBox(2);
+    vbox.setAlignment(Pos.BOTTOM_LEFT);
     String livesString = String.format("Lives left: %d", gamePaddle.getLives());
-    lives = new Text(10, HEIGHT - HEIGHT / 30, livesString);
-    score = new Text(10, HEIGHT - HEIGHT / 30 - HEIGHT / 30,
+    lives = new Label(livesString);
+    score = new Label(
         String.format("Score: %d", this.currentScore));
     lives.setFont(new Font(HEIGHT / 30));
     score.setFont(new Font(HEIGHT / 30));
-    winLoss = new Text(WIDTH / 2, HEIGHT / 2, "You won");
-    //winLoss.setTextAlignment(TextAlignment.CENTER);
+    vbox.getChildren().addAll(lives, score);
+    return vbox;
+  }
+
+  private Label winLossInitializeText() {
+    winLoss = new Label("You won");
     winLoss.setFont(new Font(HEIGHT / 10));
     winLoss.setVisible(false);
-    return List.of(lives,score,winLoss);
+
+    return winLoss;
+
   }
 
-  private void pause() {
-    isPaused = !isPaused;
-  }
-
-  private void initializeKeyMap() {
-    if(keyMap == null) {
-      keyMap = new HashMap<>();
-      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
-      keyMap.put(KeyCode.R,game -> {gamePaddle.reset();gameBall.reset();});
-      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
-      keyMap.put(KeyCode.SPACE,game -> game.pause());
-      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
-      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
-      keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
-    }
-  }
 
   public Ball getBall() {
     return gameBall;
