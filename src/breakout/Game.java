@@ -1,15 +1,10 @@
 package breakout;
 
-import breakout.cheats.Cheat;
-import breakout.cheats.IncreaseLivesCheat;
-import breakout.cheats.ResetCheat;
-import breakout.cheats.SpeedUpPaddleCheat;
 import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Stream;
-
+import java.util.function.Consumer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -37,7 +32,7 @@ public class Game extends Application {
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
-  private Map<KeyCode,Cheat> cheatMap;
+  private Map<KeyCode, Consumer<Game>> keyMap;
   private Scene myScene;
   private Group currentGroup;
   private Level currentLevel;
@@ -48,6 +43,7 @@ public class Game extends Application {
   private Text score;
   private Text winLoss;
   private PhysicsEngine physicsEngine;
+  private boolean isPaused = false;
   private int currentScore = 0;
 
   /**
@@ -129,10 +125,12 @@ public class Game extends Application {
    * @param elapsedTime
    */
   void step(double elapsedTime) {
-    updateBallAndPaddle(elapsedTime);
-    updateBlocks();
-    updatePowerUps();
-    updateStatusTest();
+    if(!isPaused) {
+      updateBallAndPaddle(elapsedTime);
+      updateBlocks();
+      updatePowerUps();
+      updateStatusTest();
+    }
   }
 
   private void handleMouseInput(double x, double y) {
@@ -141,17 +139,9 @@ public class Game extends Application {
 
 
   private void handleKeyInput(KeyCode code) {
-    if(cheatMap == null) {
-      initializeCheatMap();
-    }
-    if(cheatMap.containsKey(code)) {
-      cheatMap.get(code).doCheat();
-    }
-    if (code.equals(KeyCode.LEFT)) {
-      gamePaddle.moveLeft();
-    }
-    if (code.equals(KeyCode.RIGHT)) {
-      gamePaddle.moveRight();
+    initializeKeyMap();
+    if(keyMap.containsKey(code)) {
+      keyMap.get(code).accept(this);
     }
   }
 
@@ -168,6 +158,7 @@ public class Game extends Application {
       winLoss.setVisible(true);
     }
   }
+
 
   private void nextLevel() {
     level++;
@@ -221,12 +212,20 @@ public class Game extends Application {
     return List.of(lives,score,winLoss);
   }
 
-  private void initializeCheatMap() {
-    Map<KeyCode, Cheat> cheatMap = new HashMap<>();
-    cheatMap.put(KeyCode.R,new ResetCheat(gameBall,gamePaddle,currentLevel));
-    cheatMap.put(KeyCode.L,new IncreaseLivesCheat(gameBall,gamePaddle,currentLevel));
-    cheatMap.put(KeyCode.S,new SpeedUpPaddleCheat(gameBall,gamePaddle,currentLevel));
-    this.cheatMap = cheatMap;
+  private void pause() {
+    isPaused = !isPaused;
+  }
+
+  private void initializeKeyMap() {
+    if(keyMap == null) {
+      keyMap = new HashMap<>();
+      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
+      keyMap.put(KeyCode.R,game -> {gamePaddle.reset();gameBall.reset();});
+      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
+      keyMap.put(KeyCode.SPACE,game -> game.pause());
+      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
+      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
+    }
   }
 
   public Ball getBall() {

@@ -153,6 +153,21 @@ public class GameTest extends DukeApplicationTest {
   }
 
   @Test
+  public void testSpaceKeyPause() {
+    final double initialBallXPos = gameBall.getCenterX();
+    final double initialBallYPos = gameBall.getCenterY();
+    final double initialPaddleXPos = gamePaddle.getX();
+
+    press(myScene,KeyCode.SPACE);
+    press(myScene,KeyCode.RIGHT);
+    javafxRun(() -> myGame.step(1.00));
+
+    assertEquals(initialBallXPos,gameBall.getCenterX());
+    assertEquals(initialBallYPos,gameBall.getCenterY());
+    assertNotEquals(initialPaddleXPos,gamePaddle.getX());
+  }
+
+  @Test
   public void ballTouchesEdgeOfPaddle(){
 
     gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);
