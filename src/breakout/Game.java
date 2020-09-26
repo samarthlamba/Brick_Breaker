@@ -76,7 +76,6 @@ public class Game extends Application {
     launch(args);
   }
 
-
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -132,6 +131,9 @@ public class Game extends Application {
     }
     if (!blocksForLevel.isEmpty()) {
       currentGroup.getChildren().addAll(blocksForLevel);
+    }
+    if(physicsEngine != null) {
+      physicsEngine.setBlockList(level);
     }
     this.currentLevel = level;
   }
@@ -204,7 +206,6 @@ public class Game extends Application {
     level++;
     if(level-1< levelList.size()){
       setLevel(levelList.get(level-1));
-      physicsEngine.setBlockList(currentLevel);
       gameBall.reset();
     }
   }
