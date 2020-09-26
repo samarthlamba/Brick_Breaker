@@ -277,6 +277,8 @@ public class Game extends Application {
       keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
       keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
       keyMap.put(KeyCode.DIGIT3, game -> game.setLevel(levelList.get(2)));
+      keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
+      keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
     }
   }
 

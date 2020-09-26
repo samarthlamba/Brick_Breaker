@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.util.Random;
+
 public class Ball {
 
   public static final int PADDLE_EDGE = 15;
@@ -62,6 +64,11 @@ public class Ball {
     ballNode.setCenterY(initialHeight / 2);
     this.speedX = 0;
     this.speedY = 0;
+  }
+
+  public void randomColor() {
+    Random rand = new Random();
+    ballNode.setFill(Color.color(rand.nextDouble(),rand.nextDouble(),rand.nextDouble()));
   }
 
   public double getSpeedX(){
