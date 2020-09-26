@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ public class LevelTest {
     final int initialSize = blockList.size();
     AbstractBlock basicBlock = testLevel.getBlockList().get(0);
 
-    Group group = new Group();
+    BorderPane group = new BorderPane();
     group.getChildren().add(basicBlock.getDisplayObject());
     basicBlock.hit();
     basicBlock.update();
@@ -87,7 +88,7 @@ public class LevelTest {
 
   @Test
   public void testSpawnPowerUps() {
-    Group group = new Group();
+    BorderPane group = new BorderPane();
     List<PowerUp> currentPowerUps = new ArrayList<>();
     List<AbstractBlock> blockList = testLevel.getBlockList();
     blockList.forEach(block -> {

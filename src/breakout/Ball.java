@@ -42,12 +42,13 @@ public class Ball {
   }
 
   public void move(double time) {
-    this.ball.setCenterY(this.ball.getCenterY() - speedY * time * currentYDirection+ currentYDirection*speedDecrease);
-    this.ball.setCenterX(this.ball.getCenterX() - speedX * time * currentXDirection +speedDecrease*currentXDirection);
+    this.ball.setCenterY(this.ball.getCenterY() - speedY * time * currentYDirection+ speedY*speedDecrease*currentYDirection);
+    this.ball.setCenterX(this.ball.getCenterX() - speedX * time * currentXDirection +speedDecrease*speedX*currentXDirection);
   }
 
   public void decreaseSpeed(){
-    this.speedDecrease = 0.02; //need to fix, temporary. was goin backwards when changing speed
+    this.speedX = this.speedX*0.95; //need to fix, temporary. was goin backwards when changing speed
+    this.speedY = this.speedY*0.95;
   }
 
   public void start(){
