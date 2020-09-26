@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import breakout.blocks.AbstractBlock;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
@@ -165,6 +168,20 @@ public class GameTest extends DukeApplicationTest {
     assertEquals(initialBallXPos,gameBall.getCenterX());
     assertEquals(initialBallYPos,gameBall.getCenterY());
     assertNotEquals(initialPaddleXPos,gamePaddle.getX());
+  }
+
+  @Test
+  public void testDKeyDeletesBlock() {
+    javafxRun(() -> myGame.setLevel("level1.txt"));
+    final Level currentLevel = myGame.getCurrentLevel();
+    List<AbstractBlock> brokenBlocks = currentLevel.getBlockList().stream()
+            .filter(block -> block.isBroken()).collect(Collectors.toList());
+
+    press(myScene,KeyCode.D);
+
+    List<AbstractBlock> newlyBrokenBlocks = currentLevel.getBlockList().stream()
+            .filter(block -> block.isBroken()).collect(Collectors.toList());
+    assertNotEquals(brokenBlocks,newlyBrokenBlocks);
   }
 
   @Test

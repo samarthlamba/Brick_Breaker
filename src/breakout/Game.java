@@ -225,6 +225,7 @@ public class Game extends Application {
       keyMap.put(KeyCode.SPACE,game -> game.pause());
       keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
       keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
+      keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
     }
   }
 
