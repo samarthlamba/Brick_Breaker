@@ -17,13 +17,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
 public class Level {
 
   private final List<AbstractBlock> blockList = new ArrayList<>();
+  private final String levelId;
 
   public Level(String fileSource) throws IOException, URISyntaxException {
+    this.levelId = fileSource;
     Path pathToFile = Paths.get(ClassLoader.getSystemResource(fileSource).toURI());
     List<String> allLines = Files.readAllLines(pathToFile);
     convertLinesToBlocks(allLines);
@@ -47,7 +50,7 @@ public class Level {
     return objectsToDraw;
   }
 
-  public void removeBrokenBlocksFromGroup(Group group){
+  public void removeBrokenBlocksFromGroup(BorderPane group){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(block -> block.getDisplayObject())
@@ -56,7 +59,7 @@ public class Level {
     removeBrokenBlocks();
   }
 
-  public void spawnPowerUps(Group group,List<PowerUp> currentPowerUps) {
+  public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     List<PowerUp> powerUps = new ArrayList<>();
     for (AbstractBlock each: brokenBlocks) {
@@ -110,5 +113,9 @@ public class Level {
       return new BossBlock(row, column, numberRows, numberColumns);
     }
     return null;
+  }
+
+  public String getLevelId() {
+    return levelId;
   }
 }

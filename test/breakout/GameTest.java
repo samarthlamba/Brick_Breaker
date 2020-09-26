@@ -3,7 +3,12 @@ package breakout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import breakout.blocks.AbstractBlock;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
@@ -104,6 +109,98 @@ public class GameTest extends DukeApplicationTest {
 
     assertEquals(initialXPos + 30, gamePaddle.getX());
     assertEquals(initialYPos, gamePaddle.getY());
+  }
+
+  @Test
+  public void testRKeyResetPos() {
+    final double initialBallX = gameBall.getCenterX();
+    final double initialBallY = gameBall.getCenterY();
+    final double initialPaddleX = gamePaddle.getX();
+    gameBall.setCenterX(Math.random());
+    gameBall.setCenterY(Math.random());
+    gamePaddle.setX(Math.random());
+
+    press(myScene,KeyCode.R);
+
+    assertEquals(initialBallX,gameBall.getCenterX());
+    assertEquals(initialBallY,gameBall.getCenterY());
+    assertEquals(initialPaddleX,gamePaddle.getX());
+  }
+
+  @Test
+  public void testRKeyResetPaddleDimensions() {
+    final double initialWidth = gamePaddle.getWidth();
+    final double initialHeight= gamePaddle.getHeight();
+    final double initialArcWidth = gamePaddle.getArcWidth();
+    final double initialArcheight = gamePaddle.getArcHeight();
+    gamePaddle.setArcWidth(Math.random());
+    gamePaddle.setArcHeight(Math.random());
+    gamePaddle.setWidth(Math.random());
+    gamePaddle.setHeight(Math.random());
+
+    press(myScene,KeyCode.R);
+
+    assertEquals(initialWidth,gamePaddle.getWidth());
+    assertEquals(initialArcWidth,gamePaddle.getArcWidth());
+    assertEquals(initialHeight,gamePaddle.getHeight());
+    assertEquals(initialArcheight,gamePaddle.getArcHeight());
+  }
+
+  @Test
+  public void testLKeyIncreaseLives() {
+    final Paddle paddle = myGame.getPaddle();
+    final int initialLives = paddle.getLives();
+    paddle.decreaseLives();
+
+    press(myScene,KeyCode.L);
+
+    assertEquals(initialLives,paddle.getLives());
+  }
+
+  @Test
+  public void testSpaceKeyPause() {
+    final double initialBallXPos = gameBall.getCenterX();
+    final double initialBallYPos = gameBall.getCenterY();
+    final double initialPaddleXPos = gamePaddle.getX();
+
+    press(myScene,KeyCode.SPACE);
+    press(myScene,KeyCode.RIGHT);
+    javafxRun(() -> myGame.step(1.00));
+
+    assertEquals(initialBallXPos,gameBall.getCenterX());
+    assertEquals(initialBallYPos,gameBall.getCenterY());
+    assertNotEquals(initialPaddleXPos,gamePaddle.getX());
+  }
+
+  @Test
+  public void testDKeyDeletesBlock() {
+    javafxRun(() -> myGame.setLevel("level1.txt"));
+    final Level currentLevel = myGame.getCurrentLevel();
+    List<AbstractBlock> brokenBlocks = currentLevel.getBlockList().stream()
+            .filter(block -> block.isBroken()).collect(Collectors.toList());
+
+    press(myScene,KeyCode.D);
+
+    List<AbstractBlock> newlyBrokenBlocks = currentLevel.getBlockList().stream()
+            .filter(block -> block.isBroken()).collect(Collectors.toList());
+    assertNotEquals(brokenBlocks,newlyBrokenBlocks);
+  }
+
+  @Test
+  public void test123ChangeLevel() throws IOException, URISyntaxException {
+    javafxRun(() -> myGame.setLevelList(List.of("level1.txt","level2.txt","level3.txt")));
+    final Level level1 = new Level("level1.txt");
+    final Level level2 = new Level("level2.txt");
+    final Level level3 = new Level("level3.txt");
+
+    press(myScene,KeyCode.DIGIT2);
+    assertEquals(level2.getLevelId(),myGame.getCurrentLevel().getLevelId());
+
+    press(myScene,KeyCode.DIGIT3);
+    assertEquals(level3.getLevelId(),myGame.getCurrentLevel().getLevelId());
+
+    press(myScene,KeyCode.DIGIT1);
+    assertEquals(level1.getLevelId(),myGame.getCurrentLevel().getLevelId());
   }
 
   @Test

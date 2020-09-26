@@ -69,7 +69,6 @@ public class PhysicsEngine {
     if (blockHit != null) {
       blockHit.hit();
       ball.changeYDirection();
-      ball.changeXDirection();
       edgeOfObject(ball, blockHit.getDisplayObject());
     }
   }

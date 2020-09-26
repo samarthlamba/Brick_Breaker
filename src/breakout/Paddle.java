@@ -10,9 +10,8 @@ public class Paddle {
   public int PADDLE_WIDTH;
   public int PADDLE_HEIGHT;
   private double speed = 20;
-  private int width;
-  private int height;
-  private Rectangle paddle;
+  private int gameWidth;
+  private Rectangle paddleNode;
   private Paint paddleColor = Color.HOTPINK;
   private int INCREASE_PADDLE_LENGTH = 2;
   private int lives = 3;
@@ -21,20 +20,21 @@ public class Paddle {
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
    *
-   * @param width
-   * @param height
+   * @param gameWidth
+   * @param gameHeight
    */
-  public Paddle(int width, int height) {
-    PADDLE_WIDTH = width / 5;
-    PADDLE_HEIGHT = height / 25;
-    paddle = new Rectangle(width / 2 - PADDLE_WIDTH / 2, height - PADDLE_HEIGHT - height / 35,
+  public Paddle(int gameWidth, int gameHeight) {
+    this.gameWidth = gameWidth;
+    PADDLE_WIDTH = gameWidth / 5;
+    PADDLE_HEIGHT = gameHeight / 25;
+    paddleNode = new Rectangle(gameWidth / 2 - PADDLE_WIDTH / 2, gameHeight - PADDLE_HEIGHT - gameHeight / 35,
         PADDLE_WIDTH, PADDLE_HEIGHT);
-    paddle.setId("paddle");
-    paddle.setFill(paddleColor);
-    paddle.setArcWidth(PADDLE_EDGE);
-    paddle.setArcHeight(PADDLE_EDGE);
-    paddle.setWidth(PADDLE_WIDTH);
-    paddle.setHeight(PADDLE_HEIGHT);
+    paddleNode.setId("paddle");
+    paddleNode.setFill(paddleColor);
+    paddleNode.setArcWidth(PADDLE_EDGE);
+    paddleNode.setArcHeight(PADDLE_EDGE);
+    paddleNode.setWidth(PADDLE_WIDTH);
+    paddleNode.setHeight(PADDLE_HEIGHT);
   }
 
   /**
@@ -43,8 +43,17 @@ public class Paddle {
    * @return
    */
   public Rectangle getObject() {
-    return this.paddle;
+    return this.paddleNode;
 
+  }
+
+  public void reset() {
+    this.speed = 20;
+    this.paddleNode.setX(gameWidth/2 - PADDLE_WIDTH/2);
+    paddleNode.setArcWidth(PADDLE_EDGE);
+    paddleNode.setArcHeight(PADDLE_EDGE);
+    paddleNode.setWidth(PADDLE_WIDTH);
+    paddleNode.setHeight(PADDLE_HEIGHT);
   }
 
   /**
@@ -57,11 +66,11 @@ public class Paddle {
   }
 
   public void moveRight() {
-    this.paddle.setX(this.paddle.getX() + speed);
+    this.paddleNode.setX(this.paddleNode.getX() + speed);
   }
 
   public void moveLeft() {
-    this.paddle.setX(this.paddle.getX() - speed);
+    this.paddleNode.setX(this.paddleNode.getX() - speed);
   }
 
   public void speedUp() {
@@ -84,20 +93,20 @@ public class Paddle {
   }
 
   public void increaseLength(){
-    this.paddle.setWidth(this.paddle.getWidth()+INCREASE_PADDLE_LENGTH);
+    this.paddleNode.setWidth(this.paddleNode.getWidth()+INCREASE_PADDLE_LENGTH);
   }
 
 
   public double getX() {
-    return this.paddle.getX();
+    return this.paddleNode.getX();
   }
 
   public void setX(double X) {
-    this.paddle.setX(X);
+    this.paddleNode.setX(X);
   }
 
   public javafx.geometry.Bounds getBounds() {
-    return this.paddle.getBoundsInLocal();
+    return this.paddleNode.getBoundsInLocal();
   }
 
 }
