@@ -3,6 +3,8 @@ package breakout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -182,6 +184,23 @@ public class GameTest extends DukeApplicationTest {
     List<AbstractBlock> newlyBrokenBlocks = currentLevel.getBlockList().stream()
             .filter(block -> block.isBroken()).collect(Collectors.toList());
     assertNotEquals(brokenBlocks,newlyBrokenBlocks);
+  }
+
+  @Test
+  public void test123ChangeLevel() throws IOException, URISyntaxException {
+    javafxRun(() -> myGame.setLevelList(List.of("level1.txt","level2.txt","level3.txt")));
+    final Level level1 = new Level("level1.txt");
+    final Level level2 = new Level("level2.txt");
+    final Level level3 = new Level("level3.txt");
+
+    press(myScene,KeyCode.DIGIT2);
+    assertEquals(level2.getLevelId(),myGame.getCurrentLevel().getLevelId());
+
+    press(myScene,KeyCode.DIGIT3);
+    assertEquals(level3.getLevelId(),myGame.getCurrentLevel().getLevelId());
+
+    press(myScene,KeyCode.DIGIT1);
+    assertEquals(level1.getLevelId(),myGame.getCurrentLevel().getLevelId());
   }
 
   @Test

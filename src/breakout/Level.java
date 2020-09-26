@@ -23,8 +23,10 @@ import javafx.scene.shape.Circle;
 public class Level {
 
   private final List<AbstractBlock> blockList = new ArrayList<>();
+  private final String levelId;
 
   public Level(String fileSource) throws IOException, URISyntaxException {
+    this.levelId = fileSource;
     Path pathToFile = Paths.get(ClassLoader.getSystemResource(fileSource).toURI());
     List<String> allLines = Files.readAllLines(pathToFile);
     convertLinesToBlocks(allLines);
@@ -111,5 +113,9 @@ public class Level {
       return new BossBlock(row, column, numberRows, numberColumns);
     }
     return null;
+  }
+
+  public String getLevelId() {
+    return levelId;
   }
 }

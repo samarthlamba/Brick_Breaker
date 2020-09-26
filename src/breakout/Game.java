@@ -14,9 +14,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -258,7 +258,26 @@ public class Game extends Application {
     winLoss.setVisible(false);
 
     return winLoss;
+  }
 
+  private void pause() {
+    isPaused = !isPaused;
+  }
+
+  private void initializeKeyMap() {
+    if(keyMap == null) {
+      keyMap = new HashMap<>();
+      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
+      keyMap.put(KeyCode.R,game -> {gamePaddle.reset();gameBall.reset();});
+      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
+      keyMap.put(KeyCode.SPACE,game -> game.pause());
+      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
+      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
+      keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
+      keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
+      keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
+      keyMap.put(KeyCode.DIGIT3, game -> game.setLevel(levelList.get(2)));
+    }
   }
 
 
