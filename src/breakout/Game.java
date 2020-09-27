@@ -178,7 +178,7 @@ public class Game extends Application {
     currentGroup.setCenter(store.showStoreContent());
   }
 
-  private void nextLevel() {
+  public void nextLevel() {
     level++;
     store.removeAllStoreItems(currentGroup);
     if(level-1< levelList.size()){

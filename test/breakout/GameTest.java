@@ -3,6 +3,7 @@ package breakout;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -221,9 +222,11 @@ public class GameTest extends DukeApplicationTest {
     Level firstlevel = myGame.getCurrentLevel();
 
     javafxRun(() -> myGame.step(1.00));
-
+    press(myScene, KeyCode.N);
     Level secondLevel = myGame.getCurrentLevel();
     assertNotEquals(secondLevel,firstlevel);
   }
+
+
 
 }

@@ -27,6 +27,7 @@ public class Store {
   private Paddle paddleNode;
   private Ball ballNode;
   private String notEnoughMoneyText = "You don't have enough points, please press N to continue";
+  private String moveToNextLevel = "Press N to move to next level";
   private Label notEnoughMoney;
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
     this.SCENEHEIGHT = height;
@@ -69,7 +70,6 @@ public class Store {
   }
 
   public void monitorPurchases(BorderPane root) {
-      System.out.println(currentScore);
       for (Button k : keyMap.keySet()) {
           System.out.println(currentScore);
           k.setOnAction(event -> { if(currentScore>= COST){
@@ -78,12 +78,15 @@ public class Store {
           }});
       }
 
-
+    notEnoughMoney = new Label(moveToNextLevel);
+    notEnoughMoney.setFont(new Font(30));
+    root.setTop(notEnoughMoney);
+    root.setAlignment(notEnoughMoney, Pos.CENTER);
     if (currentScore < COST) {
-      notEnoughMoney = new Label(notEnoughMoneyText);
-      notEnoughMoney.setFont(new Font(30));
-      root.setTop(notEnoughMoney);
-      root.setAlignment(notEnoughMoney, Pos.CENTER);
+      notEnoughMoney.setText(notEnoughMoneyText);
+
+
+
     }
   }
 
@@ -92,6 +95,7 @@ public class Store {
     root.getChildren().remove(notEnoughMoney);
     root.getChildren().remove(keyMap.keySet());
   }
+
   public void updateHighScore() { //test this? Might be weird testing it
     try {
       Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
