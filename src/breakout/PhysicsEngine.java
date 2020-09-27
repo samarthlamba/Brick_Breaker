@@ -10,8 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 
 public class PhysicsEngine {
-  private Bounds dimensions;
-  private Paddle paddle;
+  private final Bounds dimensions;
+  private final Paddle paddle;
   private List<AbstractBlock> blockList;
 
   public PhysicsEngine(int width, int height, Paddle paddle, List<AbstractBlock> blockList) {

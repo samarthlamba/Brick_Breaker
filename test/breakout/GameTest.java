@@ -2,6 +2,7 @@ package breakout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,7 +33,7 @@ public class GameTest extends DukeApplicationTest {
   @Override
   public void start(Stage stage) {
     // create game's scene with all shapes in their initial positions and show it
-    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT, Game.BACKGROUND);
+    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
     myGame.setLevelList(List.of("empty.txt"));
     stage.setScene(myScene);
     stage.show();
@@ -177,12 +178,12 @@ public class GameTest extends DukeApplicationTest {
     javafxRun(() -> myGame.setLevel("level1.txt"));
     final Level currentLevel = myGame.getCurrentLevel();
     List<AbstractBlock> brokenBlocks = currentLevel.getBlockList().stream()
-            .filter(block -> block.isBroken()).collect(Collectors.toList());
+            .filter(AbstractBlock::isBroken).collect(Collectors.toList());
 
     press(myScene,KeyCode.D);
 
     List<AbstractBlock> newlyBrokenBlocks = currentLevel.getBlockList().stream()
-            .filter(block -> block.isBroken()).collect(Collectors.toList());
+            .filter(AbstractBlock::isBroken).collect(Collectors.toList());
     assertNotEquals(brokenBlocks,newlyBrokenBlocks);
   }
 
@@ -212,18 +213,53 @@ public class GameTest extends DukeApplicationTest {
     System.out.println(gameBall.getCenterX());
     javafxRun(() -> myGame.step(1.00/120));
     System.out.println(gameBall.getCenterX());
-    assertEquals(true, speedXBeforeImpact < (myGame.getBall().getSpeedX()));
+    assertTrue(speedXBeforeImpact < (myGame.getBall().getSpeedX()));
   }
 
   @Test
   public void testLevelMovesToNextInList() {
-    javafxRun(() -> myGame.setLevelList(List.of("empty.txt","testBlocksRemoved.txt")));
+    javafxRun(() -> myGame.setLevelList(List.of("empty.txt", "testBlocksRemoved.txt")));
     Level firstlevel = myGame.getCurrentLevel();
 
     javafxRun(() -> myGame.step(1.00));
-
+    press(myScene, KeyCode.N);
     Level secondLevel = myGame.getCurrentLevel();
-    assertNotEquals(secondLevel,firstlevel);
+    assertNotEquals(secondLevel, firstlevel);
   }
+
+  @Test
+  public void testIncreasePaddleLength(){
+    double initialWidth = gamePaddle.getWidth();
+    myGame.getPaddle().increaseLength();
+    assertEquals(initialWidth+2, myGame.getPaddle().getBounds().getWidth());
+  }
+
+  @Test
+  public void testIncreasePaddleLives(){
+    Paddle testPaddle = myGame.getPaddle();
+    int initialLives = testPaddle.getLives();
+    testPaddle.increaseLives();
+    assertEquals(initialLives+1, testPaddle.getLives());
+  }
+
+  @Test
+  public void testDecreaseBallSpeed(){
+    Ball testBall = myGame.getBall();
+    double initialBallSpeedX = testBall.getSpeedX();
+    double initialBallSpeedY = testBall.getSpeedY();
+    testBall.decreaseSpeed();
+    assertEquals(initialBallSpeedX*0.95, testBall.getSpeedX());
+    assertEquals(initialBallSpeedY*0.95, testBall.getSpeedX());
+  }
+  @Test
+  public void testBallStart(){
+    Ball testBall = myGame.getBall();
+    double initialSpeedX = testBall.getSpeedX();
+    testBall.changeSpeedX(5);
+
+    assertEquals(initialSpeedX + 5, testBall.getSpeedX());
+
+  }
+
 
 }
