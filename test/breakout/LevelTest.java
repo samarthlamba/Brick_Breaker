@@ -7,24 +7,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.ShieldBlock;
 import breakout.powerups.PowerUp;
+import com.sun.tools.javac.Main;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class LevelTest {
   private Level testLevel;
+  private Circle gameBall;
+  private Rectangle gamePaddle;
+  private Store store;
+  private final Game myGame = new Game();
+  private Scene myScene;
 
   @BeforeEach
   public void setup() throws IOException, URISyntaxException {
+    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
     testLevel = new Level("test.txt");
+    Paddle gamePaddle = new Paddle(600, 600);
+    Ball gameBall = new Ball(600, 600);
+    store = new Store(600, 600, gamePaddle, gameBall);
   }
 
   @Test
@@ -65,7 +80,7 @@ public class LevelTest {
     assertTrue(basicBlock.isBroken());
     assertEquals(1,group.getChildren().size());
 
-    testLevel.removeBrokenBlocksFromGroup(group);
+    testLevel.removeBrokenBlocksFromGroup(group, store);
 
     assertEquals(0,group.getChildren().size());
     assertEquals(initialSize-1,blockList.size());
@@ -98,6 +113,50 @@ public class LevelTest {
     testLevel.spawnPowerUps(group,currentPowerUps);
     assertEquals(1,group.getChildren().size());
     assertEquals(1,currentPowerUps.size());
+  }
+  @Test
+  public void testPowerUpMove(){
+    BorderPane group = new BorderPane();
+    List<PowerUp> currentPowerUps = new ArrayList<>();
+    List<AbstractBlock> blockList = testLevel.getBlockList();
+    blockList.forEach(block -> {
+      block.hit();
+      block.update();
+    });
+    testLevel.spawnPowerUps(group,currentPowerUps);
+    PowerUp testPowerUp = currentPowerUps.get(0);
+    double initialPostion = testPowerUp.getDisplayCircle().getCenterY();
+    testPowerUp.move();
+    assertEquals(initialPostion+1, testPowerUp.getDisplayCircle().getCenterY());
+  }
+
+  @Test
+  public void testPointsIncrease(){
+    int currentScore = store.getCurrentScore();
+    store.addToCurrentScore(1);
+    assertEquals(currentScore, store.getCurrentScore()-1);
+  }
+
+  @Test
+  public void storeUpdateScores() throws IOException, URISyntaxException {
+
+    int oldHighScore = Integer.valueOf(readFile());
+    store.addToCurrentScore(oldHighScore);
+
+    int newHighScore = store.getCurrentScore();
+    store.updateHighScore();
+    int scoreInFile = Integer.valueOf(readFile());
+    assertEquals(newHighScore, scoreInFile);
+    Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
+    PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
+    prw.println(oldHighScore);
+    prw.close();
+  }
+  public String readFile() throws IOException, URISyntaxException {
+    Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
+    List<String> allLines = Files.readAllLines(pathToFile);
+    String line = allLines.get(0);
+    return line;
   }
 
 }

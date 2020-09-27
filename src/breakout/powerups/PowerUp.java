@@ -10,7 +10,7 @@ import javafx.scene.shape.Circle;
 
 public abstract class PowerUp {
 
-  private Circle displayCircle;
+  private final Circle displayCircle;
   private final int dropSpeed = 1;
   public PowerUp(Node blockSpawnedFrom){
     Bounds blockBounds = blockSpawnedFrom.getBoundsInLocal();
