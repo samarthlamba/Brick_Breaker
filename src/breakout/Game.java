@@ -1,6 +1,11 @@
 package breakout;
 
 import breakout.powerups.PowerUp;
+import com.sun.tools.javac.Main;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -57,22 +62,21 @@ public class Game extends Application {
     launch(args);
   }
 
-
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    WIDTH = (int)(screenBounds.getWidth()*0.8);
-    HEIGHT = (int)(screenBounds.getHeight()*0.8);
-    Scene myScene = setupScene(WIDTH, HEIGHT);
-
-    primaryStage.setScene(myScene);
+    this.WIDTH = (int)(screenBounds.getWidth()*0.8);
+    this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
+    myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
+    SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
+    primaryStage.setScene(splashScreen.getSplashScene());
     primaryStage.setTitle(TITLE);
     primaryStage.show();
     KeyFrame frame = new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY));
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
-    animation.play();
+    splashScreen.setButtonToStartGame(animation,primaryStage,myScene);
   }
 
   Scene setupScene(int width, int height) {
@@ -114,6 +118,9 @@ public class Game extends Application {
     }
     if (!blocksForLevel.isEmpty()) {
       currentGroup.getChildren().addAll(blocksForLevel);
+    }
+    if(physicsEngine != null) {
+      physicsEngine.setBlockList(level);
     }
     this.currentLevel = level;
   }
@@ -276,6 +283,8 @@ public class Game extends Application {
       keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
       keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
       keyMap.put(KeyCode.DIGIT3, game -> game.setLevel(levelList.get(2)));
+      keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
+      keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
     }
   }
 
