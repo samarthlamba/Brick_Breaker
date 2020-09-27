@@ -56,14 +56,6 @@ public class Paddle {
     paddleNode.setHeight(PADDLE_HEIGHT);
   }
 
-  /**
-   * changes color. Maybe level up?
-   *
-   * @param color
-   */
-  public void changeColor(Paint color) {
-    paddleColor = color;
-  }
 
   public void moveRight() {
     this.paddleNode.setX(this.paddleNode.getX() + speed);
@@ -96,14 +88,6 @@ public class Paddle {
     this.paddleNode.setWidth(this.paddleNode.getWidth()+INCREASE_PADDLE_LENGTH);
   }
 
-
-  public double getX() {
-    return this.paddleNode.getX();
-  }
-
-  public void setX(double X) {
-    this.paddleNode.setX(X);
-  }
 
   public javafx.geometry.Bounds getBounds() {
     return this.paddleNode.getBoundsInLocal();

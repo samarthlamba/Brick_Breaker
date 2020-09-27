@@ -75,13 +75,11 @@ public class Ball {
     speedX = sqrt(speed/2);
     speedY = sqrt(speed/2);
   }
-  public void changeSpeedY(double change){
-    this.speedY = this.speedY + change;
-    this.speedX = sqrt(this.speed-this.speedY*this.speedY);
-  }
-  public void changeSpeedX(double change){
-    this.speedX = this.speedX + change;
-    this.speedY = sqrt(this.speed-this.speedX*this.speedX);
+  public void changeSpeedX(double change) {
+    if (this.speedY > this.speedX / 3) {
+      this.speedX = this.speedX + change;
+      this.speedY = sqrt(this.speed - this.speedX * this.speedX);
+    }
   }
 
   public void changeXDirection() {
@@ -99,10 +97,6 @@ public class Ball {
 
   }
 
-  public double getY() {
-    return this.ballNode.getCenterY();
-
-  }
 
   public javafx.geometry.Bounds getBounds() {
     return this.ballNode.getBoundsInParent();
