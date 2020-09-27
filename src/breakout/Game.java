@@ -66,13 +66,8 @@ public class Game extends Application {
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-<<<<<<< src/breakout/Game.java
     WIDTH = (int)(screenBounds.getWidth()*percentOfScreen);
     HEIGHT = (int)(screenBounds.getHeight()*percentOfScreen);
-=======
-    WIDTH = (int) (screenBounds.getWidth() * 0.8);
-    HEIGHT = (int) (screenBounds.getHeight() * 0.8);
->>>>>>> src/breakout/Game.java
     Scene myScene = setupScene(WIDTH, HEIGHT);
     SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
