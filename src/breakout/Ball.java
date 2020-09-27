@@ -35,6 +35,10 @@ public class Ball {
 
   }
 
+  /**
+   * Called every step to move the ball by its speed
+   * @param time How long a step to take
+   */
   public void move(double time) {
     double speedDecrease = 0;
     this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection+ currentYDirection* speedDecrease);
@@ -42,17 +46,17 @@ public class Ball {
         speedDecrease *currentXDirection);
   }
 
+  /**
+   * Used to decrease the ball's speed. Used by powerups and cheat keys.
+   */
   public void decreaseSpeed(){
     this.speedX = this.speedX*0.95; //need to fix, temporary. was goin backwards when changing speed
     this.speedY = this.speedY*0.95;
   }
 
-  public void start(){
-    this.speedX = sqrt(speed/2);
-    this.speedY = sqrt(speed/2);
-  }
-
-
+  /**
+   * Used to reset the ball back to its initial position and stay there.
+   */
   public void reset() {
     ballNode.setCenterX(initialWidth / 2);
     ballNode.setCenterY(initialHeight / 2);
@@ -60,17 +64,34 @@ public class Ball {
     this.speedY = 0;
   }
 
+  /**
+   * gets the ball's speed in the x direction
+   * @return the double of the ball's speed x component
+   */
   public double getSpeedX(){
     return this.speedX;
   }
+  /**
+   * gets the ball's speed in the y direction
+   * @return the double of the ball's speed y component
+   */
   public double getSpeedY(){
     return this.speedY;
   }
 
+  /**
+   * Used to set the ball's speed back to its initial value
+   */
   public void reinitializeSpeed(){
     speedX = sqrt(speed/2);
     speedY = sqrt(speed/2);
   }
+
+  /**
+   * Used to change the ball's x speed by an amount and its y speed so that its x and y speeds
+   * still make up its total speed
+   * @param change the double value corresponding to the ball's change in x speed
+   */
   public void changeSpeedX(double change) {
     if (this.speedY > this.speedX / 3) {
       this.speedX = this.speedX + change;
@@ -78,33 +99,43 @@ public class Ball {
     }
   }
 
+  /**
+   * Used to reverse the ball's x direction
+   */
   public void changeXDirection() {
     this.currentXDirection = this.currentXDirection * -1;
 
   }
 
+  /**
+   * Used to reverse the ball's y direction
+   */
   public void changeYDirection() {
     this.currentYDirection = this.currentYDirection * -1;
 
   }
 
+  /**
+   * used to get the node representing the ball's center x coordinate
+   * @return the center x coordinate of the circle representing the ball.
+   */
   public double getX() {
     return this.ballNode.getCenterX();
-
   }
 
-
+  /**
+   * used to get the bounds of the circle object representing the ball in javaFX
+   * @return the bounds in parent of the circle representing the ball.
+   */
   public javafx.geometry.Bounds getBounds() {
     return this.ballNode.getBoundsInParent();
   }
 
   /**
-   * returns the rectangular object. Can be changed to image in the future
-   *
-   * @return
+   * used to get the circle object used to display the ball
+   * @return the circle object representing the ball in javaFX
    */
   public Circle getObject() {
     return this.ballNode;
-
   }
 }

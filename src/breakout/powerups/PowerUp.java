@@ -18,14 +18,27 @@ public abstract class PowerUp {
     this.displayCircle.setFill(getFill());
   }
 
+  /**
+   * Used to drop the powerup from its spawn location to the bottom of the screen
+   */
   public void move(){
     this.displayCircle.setCenterY(this.displayCircle.getCenterY()+dropSpeed);
   }
 
+  /**
+   * Performs the powerup on the requried object. If a powerup is added that acts on an object other
+   * than the paddle or ball, it should be added to the arguments.
+   * @param paddle a Paddle object from the game to be powered up
+   * @param ball a ball object from the game to be powered up
+   */
   public abstract void doPowerUp(Paddle paddle, Ball ball);
 
   abstract Paint getFill() ;
 
+  /**
+   * Used to get the circle representing the powerup in JavaFX.
+   * @return a Circle node representing the powerup.
+   */
   public Circle getDisplayCircle() {
     return this.displayCircle;
   }

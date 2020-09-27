@@ -32,11 +32,20 @@ public class BasicBlock extends AbstractBlock {
     }
   }
 
+  /**
+   * Used to set the color palette of the block
+   * @param fill the inside of the block
+   * @param stroke the border of the block
+   */
   public void setColors(Color fill, Color stroke) {
     this.displayObject.setFill(fill);
     this.displayObject.setStroke(stroke);
   }
 
+  /**
+   * Basic blocks display to javaFx with a Rectangle object
+   * @return the rectangle used to display this block on JavaFX
+   */
   public Rectangle getDisplayObject() {
     return this.displayObject;
   }

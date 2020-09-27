@@ -31,14 +31,26 @@ public class Level {
     convertLinesToBlocks(allLines);
   }
 
+  /**
+   * Used to get the list of blocks currently in the level.
+   * @return a list of AbstractBlock objects currently in the level.
+   */
   public List<AbstractBlock> getBlockList() {
     return this.blockList;
   }
 
+  /**
+   * Calls the .update() method on every AbstractBlock in the level. This will mark them as
+   * broken if they are out of hits, cycle shields, or perform any other necessary functions
+   */
   public void updateAllBlocks() {
     blockList.stream().forEach(AbstractBlock::update);
   }
 
+  /**
+   * Returns a list of the nodes corresponding to AbstractBlock objects curently in the level.
+   * @return a list of nodes representing blocks in the level
+   */
   public List<Node> getObjectsToDraw() {
     List<Node> objectsToDraw =  this.blockList.stream()
         .map(AbstractBlock::getDisplayObject)
@@ -49,6 +61,11 @@ public class Level {
     return objectsToDraw;
   }
 
+  /**
+   *
+   * @param group
+   * @param store
+   */
   public void removeBrokenBlocksFromGroup(BorderPane group, Store store){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
