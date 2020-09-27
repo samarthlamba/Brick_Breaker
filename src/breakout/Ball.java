@@ -100,7 +100,6 @@ public class Ball {
 
   }
 
-
   public javafx.geometry.Bounds getBounds() {
     return this.ballNode.getBoundsInParent();
   }
