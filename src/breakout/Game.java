@@ -34,7 +34,7 @@ public class Game extends Application {
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
-  private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
+  private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
   private Map<KeyCode, Consumer<Game>> keyMap;
   private BorderPane currentGroup;
   private Level currentLevel;
@@ -57,11 +57,16 @@ public class Game extends Application {
     launch(args);
   }
 
+
+  /**
+   * Used to start the game. Called once when the game is launched
+   * @param primaryStage the stage the game will be run in
+   */
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    this.WIDTH = (int)(screenBounds.getWidth()*0.8);
-    this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
+    WIDTH = (int) (screenBounds.getWidth() * 0.8);
+    HEIGHT = (int) (screenBounds.getHeight() * 0.8);
     Scene myScene = setupScene(WIDTH, HEIGHT);
     SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
@@ -99,6 +104,11 @@ public class Game extends Application {
     return scene;
   }
 
+  /**
+   * Used to set the current level to the specified level. If the level cannot be created,
+   * will set the blocks for the level to an empty list, so no blocks will be drawn
+   * @param fileSource the source of the level format
+   */
   public void setLevel(String fileSource) {
     Level level = null;
     List<Node> blocksForLevel;
@@ -120,6 +130,11 @@ public class Game extends Application {
     this.currentLevel = level;
   }
 
+  /**
+   * Called to change the list of levels the game progresses through. Also sets the current level
+   * to the first in the list.
+   * @param listOfLevels a List of strings corresponding to text files of levels in /data folder.
+   */
   public void setLevelList(List<String> listOfLevels) {
     this.levelList = listOfLevels;
     setLevel(listOfLevels.get(0));
@@ -131,14 +146,14 @@ public class Game extends Application {
    * @param elapsedTime
    */
   void step(double elapsedTime) {
-    if(!isPaused) {
+    if (!isPaused) {
       updateBallAndPaddle(elapsedTime);
       updateBlocks();
       updatePowerUps();
       updateStatusText();
 
     }
-    if(showStore){
+    if (showStore) {
       store.monitorPurchases(currentGroup);
     }
   }
@@ -150,20 +165,17 @@ public class Game extends Application {
 
   private void handleKeyInput(KeyCode code) {
     initializeKeyMap();
-    if(keyMap.containsKey(code)) {
+    if (keyMap.containsKey(code)) {
       keyMap.get(code).accept(this);
     }
-    if (showStore && code.equals(KeyCode.N))
-    {
+    if (showStore && code.equals(KeyCode.N)) {
       changeStoreStatus();
       nextLevel();
       winLoss.setText("Level Cleared!");
       winLoss.setVisible(true);
       System.out.println("changed");
-      }
-
-      }
-
+    }
+  }
 
   private void updateStatusText() {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
@@ -175,17 +187,15 @@ public class Game extends Application {
     }
   }
 
-
-  private void showStoreItems(){
-
+  private void showStoreItems() {
     Image image = new Image("image.jpg", WIDTH, HEIGHT, true, false);
     shop = new ImageView(image);
-    shop.setX(WIDTH/6);
+    shop.setX(WIDTH / 6);
     currentGroup.getChildren().add(shop);
     currentGroup.setCenter(store.showStoreContent());
   }
 
-  private void removeStoreComponents(){
+  private void removeStoreComponents() {
     currentGroup.getChildren().remove(lives);
     store.removeAllStoreItems(currentGroup);
     currentGroup.getChildren().remove(shop);
@@ -194,8 +204,8 @@ public class Game extends Application {
   public void nextLevel() {
     level++;
     removeStoreComponents();
-    if(level-1< levelList.size()){
-      setLevel(levelList.get(level-1));
+    if (level - 1 < levelList.size()) {
+      setLevel(levelList.get(level - 1));
       physicsEngine.setBlockList(currentLevel);
       gameBall.reset();
     }
@@ -209,49 +219,49 @@ public class Game extends Application {
 
   private void updateBlocks() {
     currentLevel.updateAllBlocks();
-    currentLevel.spawnPowerUps(currentGroup,currentPowerUps);
+    currentLevel.spawnPowerUps(currentGroup, currentPowerUps);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup, store);
     if (currentLevel.getBlockList().isEmpty() && !showStore) {
       changeStoreStatus();
       showStoreItems();
     }
-    }
-
-
+  }
 
   private void updatePowerUps() {
     List<PowerUp> copyOfCurrentPowerUps = List.copyOf(currentPowerUps);
     for (PowerUp powerUp : copyOfCurrentPowerUps) {
       Node powerupCircle = powerUp.getDisplayCircle();
       powerUp.move();
-      if (physicsEngine.collides(powerupCircle, gamePaddle.getObject())) {
-        powerUp.doPowerUp(gamePaddle, gameBall);
-        currentPowerUps.remove(powerUp);
-        currentGroup.getChildren().remove(powerupCircle);
+      if (physicsEngine.collides(powerupCircle, paddleNode.getObject())) {
+        powerUp.doPowerUp(paddleNode, ballNode);
+        removePowerUp(powerUp);
       }
       if (physicsEngine.atBottom(powerupCircle)) {
-        currentPowerUps.remove(powerUp);
-        currentGroup.getChildren().remove(powerupCircle);
+        removePowerUp(powerUp);
       }
     }
   }
 
-  private void initializeText() {
+  private void removePowerUp(PowerUp powerUptoRemove){
+    Node powerupCircle = powerUptoRemove.getDisplayCircle();
+    currentPowerUps.remove(powerUptoRemove);
+    currentGroup.getChildren().remove(powerupCircle);
+  }
+
+  private void initializeStatusText() {
     VBox vbox = new VBox(2);
     vbox.setAlignment(Pos.BOTTOM_LEFT);
     String livesString = String.format("Lives left: %d", gamePaddle.getLives());
     lives = new Label(livesString);
-    score = new Label(
-        String.format("Score: %d", store.getCurrentScore()));
+    score = new Label(String.format("Score: %d", store.getCurrentScore()));
     lives.setFont(new Font(HEIGHT / 30));
     score.setFont(new Font(HEIGHT / 30));
   }
 
-  private Label winLossInitializeText() {
+  private Label initializeWinLossText() {
     winLoss = new Label("You won");
     winLoss.setFont(new Font(HEIGHT / 10));
     winLoss.setVisible(false);
-
     return winLoss;
   }
 
@@ -264,7 +274,7 @@ public class Game extends Application {
   }
 
   private void initializeKeyMap() {
-    if(keyMap == null) {
+    if (keyMap == null) {
       keyMap = new HashMap<>();
       keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
       keyMap.put(KeyCode.R,game -> {
@@ -283,15 +293,29 @@ public class Game extends Application {
     }
   }
 
-
+  /**
+   * Gets the game ball. Used for testing
+   *
+   * @return the active Ball object
+   */
   public Ball getBall() {
     return gameBall;
   }
 
+  /**
+   * Gets the game paddle. Used for testing
+   *
+   * @return the active Paddle object controlled by the player
+   */
   public Paddle getPaddle() {
     return gamePaddle;
   }
 
+  /**
+   * Gets the current level. Used for testing
+   *
+   * @return the current Level object.
+   */
   public Level getCurrentLevel() {
     return currentLevel;
   }

@@ -20,6 +20,10 @@ public class PhysicsEngine {
     this.blockList = blockList;
   }
 
+  /**
+   * Called in updateBallAndPaddle() to determine if the ball should bounce
+   * @param ball the ball moving in the game
+   */
   public void ballBounce(Ball ball) {
     checkEdgeCollision(ball);
     checkBlockCollision(ball);
@@ -35,18 +39,23 @@ public class PhysicsEngine {
     return null;
   }
 
+  /**
+   * Sets the list of blocks the physics engine is detecting collision for
+   * @param level
+   */
   public void setBlockList(Level level) {
     this.blockList = level.getBlockList();
   }
 
   private void checkPaddleCollision(Ball ball){
-    if(collides(ball.getObject(),paddle.getObject()) &&
+    if (collides(ball.getObject(),paddle.getObject()) &&
         ball.getObject().getCenterY() < paddle.getBounds().getMinY()) {
 
       ball.changeYDirection();
       edgeOfObject(ball, paddle.getObject());
     }
   }
+
   private void edgeOfObject(Ball ball, Node object){
 
     Bounds nodeObject = object.getBoundsInLocal();
@@ -62,7 +71,6 @@ public class PhysicsEngine {
        ball.reinitializeSpeed();
     }
   }
-
 
   private void checkBlockCollision(Ball ball) {
     AbstractBlock blockHit = this.getBlockAtBallPosition(ball);
@@ -87,6 +95,12 @@ public class PhysicsEngine {
     }
   }
 
+  /**
+   * Used to determine if two nodes collide
+   * @param a a Node object
+   * @param b a different node object.
+   * @return True if the nodes are different and their bounds in parent intersect, false else.
+   */
   public boolean collides(Node a, Node b) {
     if (!a.equals(b)) {
       return a.getBoundsInParent().intersects(b.getBoundsInParent());
@@ -94,21 +108,28 @@ public class PhysicsEngine {
     return false;
   }
 
+  /**
+   * Used to determine if a node is at the bottom of the screen
+   * @param a a node object
+   * @return true if the node is at or below the bottom of the screen.
+   */
   public boolean atBottom(Node a) {
     Bounds bounds = a.getBoundsInParent();
     return bounds.getMaxY()>=dimensions.getMaxY();
   }
-  public boolean atTop(Node a) {
+
+  private boolean atTop(Node a) {
     Bounds bounds = a.getBoundsInParent();
     return bounds.getMinY()<=dimensions.getMinY();
   }
-  public boolean atRight(Node a) {
+
+  private boolean atRight(Node a) {
     Bounds bounds = a.getBoundsInParent();
     return bounds.getMaxX()>=dimensions.getMaxX();
   }
-  public boolean atLeft(Node a) {
+
+  private boolean atLeft(Node a) {
     Bounds bounds = a.getBoundsInParent();
     return bounds.getMinX()<=dimensions.getMinX();
   }
-
 }
