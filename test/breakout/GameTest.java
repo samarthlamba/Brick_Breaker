@@ -226,40 +226,4 @@ public class GameTest extends DukeApplicationTest {
     Level secondLevel = myGame.getCurrentLevel();
     assertNotEquals(secondLevel, firstlevel);
   }
-
-  @Test
-  public void testIncreasePaddleLength(){
-    double initialWidth = gamePaddle.getWidth();
-    myGame.getPaddle().increaseLength();
-    assertEquals(initialWidth+2, myGame.getPaddle().getBounds().getWidth());
-  }
-
-  @Test
-  public void testIncreasePaddleLives(){
-    Paddle testPaddle = myGame.getPaddle();
-    int initialLives = testPaddle.getLives();
-    testPaddle.increaseLives();
-    assertEquals(initialLives+1, testPaddle.getLives());
-  }
-
-  @Test
-  public void testDecreaseBallSpeed(){
-    Ball testBall = myGame.getBall();
-    double initialBallSpeedX = testBall.getSpeedX();
-    double initialBallSpeedY = testBall.getSpeedY();
-    testBall.decreaseSpeed();
-    assertEquals(initialBallSpeedX*0.95, testBall.getSpeedX());
-    assertEquals(initialBallSpeedY*0.95, testBall.getSpeedX());
-  }
-  @Test
-  public void testBallStart(){
-    Ball testBall = myGame.getBall();
-    double initialSpeedX = testBall.getSpeedX();
-    testBall.changeSpeedX(5);
-
-    assertEquals(initialSpeedX + 5, testBall.getSpeedX());
-
-  }
-
-
 }
