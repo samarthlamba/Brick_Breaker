@@ -45,8 +45,7 @@ public abstract class AbstractBlock {
    * @return true if the block should drop a powerup.
    */
   public boolean containsPowerUp() {
-    final boolean result = (Math.random() * 100) < POWERUP_CHANCE;
-    return result;
+    return (Math.random() * 100) < POWERUP_CHANCE;
   }
 
   /**
