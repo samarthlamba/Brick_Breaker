@@ -41,11 +41,18 @@ public class Ball {
 
   }
 
+  /**
+   * Called every step to move the ball by its speed
+   * @param time How long a step to take
+   */
   public void move(double time) {
     this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection);
     this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection);
   }
 
+  /**
+   * Used to decrease the ball's speed. Used by powerups and cheat keys.
+   */
   public void decreaseSpeed(){
     this.speedX = this.speedX*BALL_SPEED_DECREASE_MULTIPLIER;
     this.speedY = this.speedY*BALL_SPEED_DECREASE_MULTIPLIER;
@@ -72,6 +79,10 @@ public class Ball {
   public double getSpeedX(){
     return this.speedX;
   }
+  /**
+   * gets the ball's speed in the y direction
+   * @return the double of the ball's speed y component
+   */
   public double getSpeedY(){
     return this.speedY;
   }
@@ -84,32 +95,43 @@ public class Ball {
     }
   }
 
+  /**
+   * Used to reverse the ball's x direction
+   */
   public void changeXDirection() {
     this.currentXDirection = this.currentXDirection * NEGATIVE_DIRECTION;
 
   }
 
+  /**
+   * Used to reverse the ball's y direction
+   */
   public void changeYDirection() {
     this.currentYDirection = this.currentYDirection * NEGATIVE_DIRECTION;
 
   }
 
+  /**
+   * used to get the node representing the ball's center x coordinate
+   * @return the center x coordinate of the circle representing the ball.
+   */
   public double getX() {
     return this.ballNode.getCenterX();
-
   }
 
+  /**
+   * used to get the bounds of the circle object representing the ball in javaFX
+   * @return the bounds in parent of the circle representing the ball.
+   */
   public javafx.geometry.Bounds getBounds() {
     return this.ballNode.getBoundsInParent();
   }
 
   /**
-   * returns the rectangular object. Can be changed to image in the future
-   *
-   * @return
+   * used to get the circle object used to display the ball
+   * @return the circle object representing the ball in javaFX
    */
   public Circle getObject() {
     return this.ballNode;
-
   }
 }
