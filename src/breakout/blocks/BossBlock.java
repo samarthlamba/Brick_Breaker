@@ -10,5 +10,8 @@ public class BossBlock extends BasicBlock {
     this.setHitsRemaining(3);
   }
 
-
+  @Override
+  public void update() {
+    super.update();
+  }
 }

@@ -19,8 +19,8 @@ import javafx.scene.text.Font;
 
 public class Store {
 
-  private final double SCENEWIDTH;
-  private final double SCENEHEIGHT;
+  private final double sceneWidth;
+  private final double sceneHeight;
   private final int COST = 5;
   private Map<Button, Consumer<Store>> keyMap;
   private int currentScore = 0;
@@ -28,8 +28,8 @@ public class Store {
   private final Ball ballNode;
   private Label notEnoughMoney;
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
-    this.SCENEHEIGHT = height;
-    this.SCENEWIDTH = width;
+    this.sceneHeight = height;
+    this.sceneWidth = width;
     this.ballNode = ballNode;
     this.paddleNode = paddleNode;
     initializePowers();
@@ -60,7 +60,7 @@ public class Store {
     root.setAlignment(Pos.CENTER);
     int position = 0;
     for (Button k : keyMap.keySet()){
-      k.setMinSize(SCENEWIDTH/8, SCENEHEIGHT/8);
+      k.setMinSize(sceneWidth /8, sceneHeight /8);
       root.add(k, position,position,6,6);
       position = position +6;
     }
@@ -79,7 +79,7 @@ public class Store {
     String moveToNextLevel = "Press N to move to next level";
     notEnoughMoney = new Label(moveToNextLevel);
       notEnoughMoney.setAlignment(Pos.CENTER);
-    notEnoughMoney.setFont(new Font(SCENEHEIGHT/20));
+    notEnoughMoney.setFont(new Font(sceneHeight /20));
     notEnoughMoney.setTextFill(Color.WHITE);
     root.setTop(notEnoughMoney);
     BorderPane.setAlignment(notEnoughMoney, Pos.CENTER);
