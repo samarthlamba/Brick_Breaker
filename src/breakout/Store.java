@@ -12,24 +12,20 @@ import java.util.function.Consumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class Store {
 
-  private double SCENEWIDTH;
-  private double SCENEHEIGHT;
+  private final double SCENEWIDTH;
+  private final double SCENEHEIGHT;
   private final int COST = 5;
   private Map<Button, Consumer<Store>> keyMap;
   private int currentScore = 0;
-  private Paddle paddleNode;
-  private Ball ballNode;
-  private String notEnoughMoneyText = "You don't have enough points, please press N to continue";
-  private String moveToNextLevel = "Press N to move to next level";
+  private final Paddle paddleNode;
+  private final Ball ballNode;
   private Label notEnoughMoney;
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
     this.SCENEHEIGHT = height;
@@ -65,7 +61,7 @@ public class Store {
     int position = 0;
     for (Button k : keyMap.keySet()){
       k.setMinSize(SCENEWIDTH/8, SCENEHEIGHT/8);
-      root.add(k, 0+position,position,6,6);
+      root.add(k, position,position,6,6);
       position = position +6;
     }
     return root;
@@ -80,13 +76,15 @@ public class Store {
           }});
       }
 
+    String moveToNextLevel = "Press N to move to next level";
     notEnoughMoney = new Label(moveToNextLevel);
       notEnoughMoney.setAlignment(Pos.CENTER);
     notEnoughMoney.setFont(new Font(SCENEHEIGHT/20));
     notEnoughMoney.setTextFill(Color.WHITE);
     root.setTop(notEnoughMoney);
-    root.setAlignment(notEnoughMoney, Pos.CENTER);
+    BorderPane.setAlignment(notEnoughMoney, Pos.CENTER);
     if (currentScore < COST) {
+      String notEnoughMoneyText = "You don't have enough points, please press N to continue";
       notEnoughMoney.setText(notEnoughMoneyText);
 
 
@@ -106,7 +104,7 @@ public class Store {
       Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
       List<String> allLines = Files.readAllLines(pathToFile);
       String line = allLines.get(0);
-      if (Integer.valueOf(currentScore) > Integer.valueOf(line)){
+      if (currentScore > Integer.parseInt(line)){
         PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
         prw.println(currentScore);
         prw.close();

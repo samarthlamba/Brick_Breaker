@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.ShieldBlock;
-import breakout.powerups.IncreasePaddleSizePowerUp;
 import breakout.powerups.PowerUp;
 import com.sun.tools.javac.Main;
 import java.io.IOException;
@@ -17,10 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -38,7 +35,7 @@ public class LevelTest {
 
   @BeforeEach
   public void setup() throws IOException, URISyntaxException {
-    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT, Game.BACKGROUND);
+    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
     testLevel = new Level("test.txt");
     Paddle gamePaddle = new Paddle(600, 600);
     Ball gameBall = new Ball(600, 600);

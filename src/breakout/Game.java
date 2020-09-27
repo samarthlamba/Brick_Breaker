@@ -36,7 +36,6 @@ public class Game extends Application {
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
   private Map<KeyCode, Consumer<Game>> keyMap;
-  private Scene myScene;
   private BorderPane currentGroup;
   private Level currentLevel;
   private Paddle paddleNode;
@@ -62,9 +61,9 @@ public class Game extends Application {
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    this.WIDTH = (int)(screenBounds.getWidth()*0.8);
-    this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
-    myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
+    WIDTH = (int)(screenBounds.getWidth()*0.8);
+    HEIGHT = (int)(screenBounds.getHeight()*0.8);
+    Scene myScene = setupScene(WIDTH, HEIGHT);
 
     primaryStage.setScene(myScene);
     primaryStage.setTitle(TITLE);
@@ -76,7 +75,7 @@ public class Game extends Application {
     animation.play();
   }
 
-  Scene setupScene(int width, int height, Paint background) {
+  Scene setupScene(int width, int height) {
     // create one top level collection to organize the things in the scene
     BorderPane root = new BorderPane();
     paddleNode = new Paddle(width, height);
@@ -94,10 +93,10 @@ public class Game extends Application {
     // make some shapes and set their properties
 
     // create a place to see the shapes
-    Scene scene = new Scene(root, width, height, background);
+    Scene scene = new Scene(root, width, height, Game.BACKGROUND);
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-    scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+    scene.setOnMouseClicked(e -> handleMouseInput());
     return scene;
   }
 
@@ -142,7 +141,7 @@ public class Game extends Application {
     }
   }
 
-  private void handleMouseInput(double x, double y) {
+  private void handleMouseInput() {
     ballNode.start();
   }
 
@@ -152,7 +151,7 @@ public class Game extends Application {
     if(keyMap.containsKey(code)) {
       keyMap.get(code).accept(this);
     }
-    if (showStore == true && code.equals(KeyCode.N))
+    if (showStore && code.equals(KeyCode.N))
     {
       changeStoreStatus();
       nextLevel();
@@ -210,7 +209,7 @@ public class Game extends Application {
     currentLevel.updateAllBlocks();
     currentLevel.spawnPowerUps(currentGroup,currentPowerUps);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup, store);
-    if (currentLevel.getBlockList().isEmpty() && showStore==false) {
+    if (currentLevel.getBlockList().isEmpty() && !showStore) {
       changeStoreStatus();
       showStoreItems();
     }
@@ -270,7 +269,7 @@ public class Game extends Application {
         paddleNode.reset();
         ballNode.reset();});
       keyMap.put(KeyCode.S,game -> paddleNode.speedUp());
-      keyMap.put(KeyCode.SPACE,game -> game.pause());
+      keyMap.put(KeyCode.SPACE, Game::pause);
       keyMap.put(KeyCode.RIGHT,game -> paddleNode.moveRight());
       keyMap.put(KeyCode.LEFT,game -> paddleNode.moveLeft());
       keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());

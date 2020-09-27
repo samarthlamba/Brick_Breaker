@@ -2,8 +2,8 @@ package breakout;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import breakout.powerups.PowerUp;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,7 +33,7 @@ public class GameTest extends DukeApplicationTest {
   @Override
   public void start(Stage stage) {
     // create game's scene with all shapes in their initial positions and show it
-    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT, Game.BACKGROUND);
+    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
     myGame.setLevelList(List.of("empty.txt"));
     stage.setScene(myScene);
     stage.show();
@@ -178,12 +178,12 @@ public class GameTest extends DukeApplicationTest {
     javafxRun(() -> myGame.setLevel("level1.txt"));
     final Level currentLevel = myGame.getCurrentLevel();
     List<AbstractBlock> brokenBlocks = currentLevel.getBlockList().stream()
-            .filter(block -> block.isBroken()).collect(Collectors.toList());
+            .filter(AbstractBlock::isBroken).collect(Collectors.toList());
 
     press(myScene,KeyCode.D);
 
     List<AbstractBlock> newlyBrokenBlocks = currentLevel.getBlockList().stream()
-            .filter(block -> block.isBroken()).collect(Collectors.toList());
+            .filter(AbstractBlock::isBroken).collect(Collectors.toList());
     assertNotEquals(brokenBlocks,newlyBrokenBlocks);
   }
 
@@ -213,7 +213,7 @@ public class GameTest extends DukeApplicationTest {
     System.out.println(gameBall.getCenterX());
     javafxRun(() -> myGame.step(1.00/120));
     System.out.println(gameBall.getCenterX());
-    assertEquals(true, speedXBeforeImpact < (myGame.getBall().getSpeedX()));
+    assertTrue(speedXBeforeImpact < (myGame.getBall().getSpeedX()));
   }
 
   @Test

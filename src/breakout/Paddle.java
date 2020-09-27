@@ -10,10 +10,8 @@ public class Paddle {
   public int PADDLE_WIDTH;
   public int PADDLE_HEIGHT;
   private double speed = 20;
-  private int gameWidth;
-  private Rectangle paddleNode;
-  private Paint paddleColor = Color.HOTPINK;
-  private int INCREASE_PADDLE_LENGTH = 2;
+  private final int gameWidth;
+  private final Rectangle paddleNode;
   private int lives = 3;
 
 
@@ -30,6 +28,7 @@ public class Paddle {
     paddleNode = new Rectangle(gameWidth / 2 - PADDLE_WIDTH / 2, gameHeight - PADDLE_HEIGHT - gameHeight / 35,
         PADDLE_WIDTH, PADDLE_HEIGHT);
     paddleNode.setId("paddle");
+    Paint paddleColor = Color.HOTPINK;
     paddleNode.setFill(paddleColor);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
@@ -85,7 +84,8 @@ public class Paddle {
   }
 
   public void increaseLength(){
-    this.paddleNode.setWidth(this.paddleNode.getWidth()+INCREASE_PADDLE_LENGTH);
+    int INCREASE_PADDLE_LENGTH = 2;
+    this.paddleNode.setWidth(this.paddleNode.getWidth()+ INCREASE_PADDLE_LENGTH);
   }
 
 

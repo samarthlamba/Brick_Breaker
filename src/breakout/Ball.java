@@ -8,18 +8,13 @@ import javafx.scene.shape.Circle;
 
 public class Ball {
 
-  public static final int PADDLE_EDGE = 15;
   public int BALL_RADIUS;
-  private double speed = 480000;
-  private Circle ballNode;
-  private Paint ballColor = Color.RED;
+  private final double speed = 480000;
+  private final Circle ballNode;
   private int currentXDirection = 1;
   private int currentYDirection = 1;
-  private int initialWidth;
-  private int initialHeight;
-  private int sceneWidth;
-  private int sceneHeight;
-  private double speedDecrease = 0;
+  private final int initialWidth;
+  private final int initialHeight;
   private double speedX = sqrt(speed/2);
   private double speedY = sqrt(speed/2);
 
@@ -30,20 +25,21 @@ public class Ball {
    * @param height
    */
   public Ball(int width, int height) {
-    sceneWidth = width;
-    sceneHeight = height;
     BALL_RADIUS = width / 60;
     initialWidth = width;
     initialHeight = height;
     ballNode = new Circle(width / 2, height / 2, BALL_RADIUS);
     ballNode.setId("ball");
+    Paint ballColor = Color.RED;
     ballNode.setFill(ballColor);
 
   }
 
   public void move(double time) {
-    this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection+ currentYDirection*speedDecrease);
-    this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection +speedDecrease*currentXDirection);
+    double speedDecrease = 0;
+    this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection+ currentYDirection* speedDecrease);
+    this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection +
+        speedDecrease *currentXDirection);
   }
 
   public void decreaseSpeed(){

@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
@@ -37,12 +36,12 @@ public class Level {
   }
 
   public void updateAllBlocks() {
-    blockList.stream().forEach(block -> block.update());
+    blockList.stream().forEach(AbstractBlock::update);
   }
 
   public List<Node> getObjectsToDraw() {
     List<Node> objectsToDraw =  this.blockList.stream()
-        .map(block -> block.getDisplayObject())
+        .map(AbstractBlock::getDisplayObject)
         .collect(Collectors.toList());
     if(objectsToDraw==null){
       return Collections.EMPTY_LIST;
@@ -53,7 +52,7 @@ public class Level {
   public void removeBrokenBlocksFromGroup(BorderPane group, Store store){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
-        .map(block -> block.getDisplayObject())
+        .map(AbstractBlock::getDisplayObject)
         .collect(Collectors.toList());
     group.getChildren().removeAll(nodesToRemove);
     removeBrokenBlocks();
@@ -68,16 +67,15 @@ public class Level {
         powerUps.add(each.spawnPowerUp());
       }
     }
-    List<Circle> powerUpNodes = powerUps.stream().map(powerUp -> powerUp.getDisplayCircle()).collect(Collectors.toList());
+    List<Circle> powerUpNodes = powerUps.stream().map(PowerUp::getDisplayCircle).collect(Collectors.toList());
     currentPowerUps.addAll(powerUps);
     group.getChildren().addAll(powerUpNodes);
   }
 
   private List<AbstractBlock> getBrokenBlocks() {
-    List<AbstractBlock> brokenBlocks = this.getBlockList().stream()
-        .filter(block -> block.isBroken()).collect(
+    return this.getBlockList().stream()
+        .filter(AbstractBlock::isBroken).collect(
             Collectors.toList());
-    return brokenBlocks;
   }
   private void removeBrokenBlocks(){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
