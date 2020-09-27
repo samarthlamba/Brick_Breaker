@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -40,8 +39,8 @@ public class Game extends Application {
   private Scene myScene;
   private BorderPane currentGroup;
   private Level currentLevel;
-  private Paddle gamePaddle;
-  private Ball gameBall;
+  private Paddle paddleNode;
+  private Ball ballNode;
   private int level = 1;
   private Label lives;
   private ImageView shop;
@@ -80,18 +79,18 @@ public class Game extends Application {
   Scene setupScene(int width, int height, Paint background) {
     // create one top level collection to organize the things in the scene
     BorderPane root = new BorderPane();
-    gamePaddle = new Paddle(width, height);
-    gameBall = new Ball(width, height);
-    store = new Store(width, height, gamePaddle, gameBall);
+    paddleNode = new Paddle(width, height);
+    ballNode = new Ball(width, height);
+    store = new Store(width, height, paddleNode, ballNode);
     initializeText();
-    root.getChildren().add(gamePaddle.getObject());
-    root.getChildren().add(gameBall.getObject());
+    root.getChildren().add(paddleNode.getObject());
+    root.getChildren().add(ballNode.getObject());
     root.setCenter(winLossInitializeText());
     root.setBottom(score);
     this.currentGroup = root;
     setLevel(levelList.get(0));
     root.setTop(lives);
-    this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, gamePaddle, currentLevel.getBlockList());
+    this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, paddleNode, currentLevel.getBlockList());
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -144,7 +143,7 @@ public class Game extends Application {
   }
 
   private void handleMouseInput(double x, double y) {
-    gameBall.start();
+    ballNode.start();
   }
 
 
@@ -166,9 +165,9 @@ public class Game extends Application {
 
 
   private void updateStatusText() {
-    lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
+    lives.setText(String.format("Lives left: %d", paddleNode.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
-    if (gamePaddle.gameOver()) {
+    if (paddleNode.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
       store.updateHighScore();
@@ -197,14 +196,14 @@ public class Game extends Application {
     if(level-1< levelList.size()){
       setLevel(levelList.get(level-1));
       physicsEngine.setBlockList(currentLevel);
-      gameBall.reset();
+      ballNode.reset();
     }
     currentGroup.setTop(lives);
   }
 
   private void updateBallAndPaddle(double elapsedTime) {
-    physicsEngine.ballBounce(gameBall);
-    gameBall.move(elapsedTime);
+    physicsEngine.ballBounce(ballNode);
+    ballNode.move(elapsedTime);
   }
 
   private void updateBlocks() {
@@ -224,8 +223,8 @@ public class Game extends Application {
     for (PowerUp powerUp : copyOfCurrentPowerUps) {
       Node powerupCircle = powerUp.getDisplayCircle();
       powerUp.move();
-      if (physicsEngine.collides(powerupCircle, gamePaddle.getObject())) {
-        powerUp.doPowerUp(gamePaddle,gameBall);
+      if (physicsEngine.collides(powerupCircle, paddleNode.getObject())) {
+        powerUp.doPowerUp(paddleNode, ballNode);
         currentPowerUps.remove(powerUp);
         currentGroup.getChildren().remove(powerupCircle);
       }
@@ -239,7 +238,7 @@ public class Game extends Application {
   private void initializeText() {
     VBox vbox = new VBox(2);
     vbox.setAlignment(Pos.BOTTOM_LEFT);
-    String livesString = String.format("Lives left: %d", gamePaddle.getLives());
+    String livesString = String.format("Lives left: %d", paddleNode.getLives());
     lives = new Label(livesString);
     score = new Label(
         String.format("Score: %d", store.getCurrentScore()));
@@ -266,12 +265,14 @@ public class Game extends Application {
   private void initializeKeyMap() {
     if(keyMap == null) {
       keyMap = new HashMap<>();
-      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
-      keyMap.put(KeyCode.R,game -> {gamePaddle.reset();gameBall.reset();});
-      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
+      keyMap.put(KeyCode.L,game -> paddleNode.increaseLives());
+      keyMap.put(KeyCode.R,game -> {
+        paddleNode.reset();
+        ballNode.reset();});
+      keyMap.put(KeyCode.S,game -> paddleNode.speedUp());
       keyMap.put(KeyCode.SPACE,game -> game.pause());
-      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
-      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
+      keyMap.put(KeyCode.RIGHT,game -> paddleNode.moveRight());
+      keyMap.put(KeyCode.LEFT,game -> paddleNode.moveLeft());
       keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
       keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
       keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
@@ -281,11 +282,11 @@ public class Game extends Application {
 
 
   public Ball getBall() {
-    return gameBall;
+    return ballNode;
   }
 
   public Paddle getPaddle() {
-    return gamePaddle;
+    return paddleNode;
   }
 
   public Level getCurrentLevel() {
