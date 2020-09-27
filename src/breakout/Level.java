@@ -50,13 +50,14 @@ public class Level {
     return objectsToDraw;
   }
 
-  public void removeBrokenBlocksFromGroup(BorderPane group){
+  public void removeBrokenBlocksFromGroup(BorderPane group, Store store){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(block -> block.getDisplayObject())
         .collect(Collectors.toList());
     group.getChildren().removeAll(nodesToRemove);
     removeBrokenBlocks();
+    store.addToCurrentScore(blocksToRemove.size());
   }
 
   public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {

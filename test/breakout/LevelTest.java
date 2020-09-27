@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class LevelTest {
   private Level testLevel;
+  private Store store = new Store(400, 400, null, null);
 
   @BeforeEach
   public void setup() throws IOException, URISyntaxException {
@@ -65,7 +66,7 @@ public class LevelTest {
     assertTrue(basicBlock.isBroken());
     assertEquals(1,group.getChildren().size());
 
-    testLevel.removeBrokenBlocksFromGroup(group);
+    testLevel.removeBrokenBlocksFromGroup(group, store);
 
     assertEquals(0,group.getChildren().size());
     assertEquals(initialSize-1,blockList.size());
