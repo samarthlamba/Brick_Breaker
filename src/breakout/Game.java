@@ -85,10 +85,10 @@ public class Game extends Application {
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
     store = new Store(width, height, gamePaddle, gameBall);
-    initializeText();
+    initializeStatusText();
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
-    root.setCenter(winLossInitializeText());
+    root.setCenter(initializeWinLossText());
     root.setBottom(score);
     this.currentGroup = root;
     setLevel(levelList.get(0));
@@ -232,8 +232,8 @@ public class Game extends Application {
     for (PowerUp powerUp : copyOfCurrentPowerUps) {
       Node powerupCircle = powerUp.getDisplayCircle();
       powerUp.move();
-      if (physicsEngine.collides(powerupCircle, paddleNode.getObject())) {
-        powerUp.doPowerUp(paddleNode, ballNode);
+      if (physicsEngine.collides(powerupCircle, gamePaddle.getObject())) {
+        powerUp.doPowerUp(gamePaddle, gameBall);
         removePowerUp(powerUp);
       }
       if (physicsEngine.atBottom(powerupCircle)) {
