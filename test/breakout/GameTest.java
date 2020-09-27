@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import breakout.blocks.AbstractBlock;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -202,6 +203,24 @@ public class GameTest extends DukeApplicationTest {
 
     press(myScene,KeyCode.DIGIT1);
     assertEquals(level1.getLevelId(),myGame.getCurrentLevel().getLevelId());
+  }
+
+  @Test
+  public void testPIncreasesPaddleWidth() {
+    final double initialWidth = myGame.getPaddle().getObject().getWidth();
+
+    press(myScene,KeyCode.P);
+
+    assertTrue(myGame.getPaddle().getObject().getWidth() > initialWidth);
+  }
+
+  @Test
+  public void testZChangeBallColor() {
+    final Paint initialColor = gameBall.getFill();
+
+    press(myScene,KeyCode.Z);
+
+    assertNotEquals(initialColor,gameBall.getFill());
   }
 
   @Test

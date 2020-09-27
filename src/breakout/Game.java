@@ -38,8 +38,8 @@ public class Game extends Application {
   private Map<KeyCode, Consumer<Game>> keyMap;
   private BorderPane currentGroup;
   private Level currentLevel;
-  private Paddle paddleNode;
-  private Ball ballNode;
+  private Paddle gamePaddle;
+  private Ball gameBall;
   private int level = 1;
   private Label lives;
   private ImageView shop;
@@ -68,32 +68,32 @@ public class Game extends Application {
     WIDTH = (int) (screenBounds.getWidth() * 0.8);
     HEIGHT = (int) (screenBounds.getHeight() * 0.8);
     Scene myScene = setupScene(WIDTH, HEIGHT);
-
-    primaryStage.setScene(myScene);
+    SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
+    primaryStage.setScene(splashScreen.getSplashScene());
     primaryStage.setTitle(TITLE);
     primaryStage.show();
     KeyFrame frame = new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY));
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
-    animation.play();
+    splashScreen.setButtonToStartGame(animation,primaryStage,myScene);
   }
 
   Scene setupScene(int width, int height) {
     // create one top level collection to organize the things in the scene
     BorderPane root = new BorderPane();
-    paddleNode = new Paddle(width, height);
-    ballNode = new Ball(width, height);
-    store = new Store(width, height, paddleNode, ballNode);
-    initializeStatusText();
-    root.getChildren().add(paddleNode.getObject());
-    root.getChildren().add(ballNode.getObject());
-    root.setCenter(initializeWinLossText());
+    gamePaddle = new Paddle(width, height);
+    gameBall = new Ball(width, height);
+    store = new Store(width, height, gamePaddle, gameBall);
+    initializeText();
+    root.getChildren().add(gamePaddle.getObject());
+    root.getChildren().add(gameBall.getObject());
+    root.setCenter(winLossInitializeText());
     root.setBottom(score);
     this.currentGroup = root;
     setLevel(levelList.get(0));
     root.setTop(lives);
-    this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, paddleNode, currentLevel.getBlockList());
+    this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, gamePaddle, currentLevel.getBlockList());
     // make some shapes and set their properties
 
     // create a place to see the shapes
@@ -123,6 +123,9 @@ public class Game extends Application {
     }
     if (!blocksForLevel.isEmpty()) {
       currentGroup.getChildren().addAll(blocksForLevel);
+    }
+    if(physicsEngine != null) {
+      physicsEngine.setBlockList(level);
     }
     this.currentLevel = level;
   }
@@ -156,7 +159,7 @@ public class Game extends Application {
   }
 
   private void handleMouseInput() {
-    ballNode.reinitializeSpeed();
+    gameBall.start();
   }
 
 
@@ -175,9 +178,9 @@ public class Game extends Application {
   }
 
   private void updateStatusText() {
-    lives.setText(String.format("Lives left: %d", paddleNode.getLives()));
+    lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
-    if (paddleNode.gameOver()) {
+    if (gamePaddle.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
       store.updateHighScore();
@@ -204,14 +207,14 @@ public class Game extends Application {
     if (level - 1 < levelList.size()) {
       setLevel(levelList.get(level - 1));
       physicsEngine.setBlockList(currentLevel);
-      ballNode.reset();
+      gameBall.reset();
     }
     currentGroup.setTop(lives);
   }
 
   private void updateBallAndPaddle(double elapsedTime) {
-    physicsEngine.ballBounce(ballNode);
-    ballNode.move(elapsedTime);
+    physicsEngine.ballBounce(gameBall);
+    gameBall.move(elapsedTime);
   }
 
   private void updateBlocks() {
@@ -248,7 +251,7 @@ public class Game extends Application {
   private void initializeStatusText() {
     VBox vbox = new VBox(2);
     vbox.setAlignment(Pos.BOTTOM_LEFT);
-    String livesString = String.format("Lives left: %d", paddleNode.getLives());
+    String livesString = String.format("Lives left: %d", gamePaddle.getLives());
     lives = new Label(livesString);
     score = new Label(String.format("Score: %d", store.getCurrentScore()));
     lives.setFont(new Font(HEIGHT / 30));
@@ -273,19 +276,20 @@ public class Game extends Application {
   private void initializeKeyMap() {
     if (keyMap == null) {
       keyMap = new HashMap<>();
-      keyMap.put(KeyCode.L, game -> paddleNode.increaseLives());
-      keyMap.put(KeyCode.R, game -> {
-        paddleNode.reset();
-        ballNode.reset();
-      });
-      keyMap.put(KeyCode.S, game -> paddleNode.speedUp());
+      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
+      keyMap.put(KeyCode.R,game -> {
+        gamePaddle.reset();
+        gameBall.reset();});
+      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
       keyMap.put(KeyCode.SPACE, Game::pause);
-      keyMap.put(KeyCode.RIGHT, game -> paddleNode.moveRight());
-      keyMap.put(KeyCode.LEFT, game -> paddleNode.moveLeft());
-      keyMap.put(KeyCode.D, game -> currentLevel.getBlockList().get(0).breakBlock());
+      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
+      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
+      keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
       keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
       keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
       keyMap.put(KeyCode.DIGIT3, game -> game.setLevel(levelList.get(2)));
+      keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
+      keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
     }
   }
 
@@ -295,7 +299,7 @@ public class Game extends Application {
    * @return the active Ball object
    */
   public Ball getBall() {
-    return ballNode;
+    return gameBall;
   }
 
   /**
@@ -304,7 +308,7 @@ public class Game extends Application {
    * @return the active Paddle object controlled by the player
    */
   public Paddle getPaddle() {
-    return paddleNode;
+    return gamePaddle;
   }
 
   /**

@@ -9,6 +9,8 @@ public class BasicBlock extends AbstractBlock {
   private Rectangle displayObject;
   private final int blockHeight;
   private int hitsRemaining;
+  private Color fill;
+  private Color stroke;
 
   public BasicBlock(int row, int column, int numRows, int numColumns) {
     super(row, column, numRows, numColumns);
@@ -23,6 +25,10 @@ public class BasicBlock extends AbstractBlock {
   @Override
   public void hit() {
     hitsRemaining--;
+
+    //Color lighterColor = new Color.color(this.fill.getRed(), this.fill.getGreen(), this.fill.getBlue());
+    this.setColors(this.fill.darker(), this.stroke);
+
   }
 
   @Override
@@ -38,6 +44,8 @@ public class BasicBlock extends AbstractBlock {
    * @param stroke the border of the block
    */
   public void setColors(Color fill, Color stroke) {
+    this.fill = fill;
+    this.stroke = stroke;
     this.displayObject.setFill(fill);
     this.displayObject.setStroke(stroke);
   }

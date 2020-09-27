@@ -7,8 +7,8 @@ import javafx.scene.shape.Rectangle;
 public class Paddle {
 
   public static final int PADDLE_EDGE = 15;
-  public int PADDLE_WIDTH;
-  public int PADDLE_HEIGHT;
+  public final int paddleWidth;
+  public final int paddleHeight;
   private double speed = 20;
   private final int gameWidth;
   private final Rectangle paddleNode;
@@ -23,17 +23,18 @@ public class Paddle {
    */
   public Paddle(int gameWidth, int gameHeight) {
     this.gameWidth = gameWidth;
-    PADDLE_WIDTH = gameWidth / 5;
-    PADDLE_HEIGHT = gameHeight / 25;
-    paddleNode = new Rectangle(gameWidth / 2 - PADDLE_WIDTH / 2, gameHeight - PADDLE_HEIGHT - gameHeight / 35,
-        PADDLE_WIDTH, PADDLE_HEIGHT);
+    paddleWidth = gameWidth / 5;
+    paddleHeight = gameHeight / 25;
+    paddleNode = new Rectangle(gameWidth / 2 - paddleWidth / 2, gameHeight - paddleHeight
+        - gameHeight / 35,
+        paddleWidth, paddleHeight);
     paddleNode.setId("paddle");
     Paint paddleColor = Color.HOTPINK;
     paddleNode.setFill(paddleColor);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
-    paddleNode.setWidth(PADDLE_WIDTH);
-    paddleNode.setHeight(PADDLE_HEIGHT);
+    paddleNode.setWidth(paddleWidth);
+    paddleNode.setHeight(paddleHeight);
   }
 
   /**
@@ -50,11 +51,11 @@ public class Paddle {
    */
   public void reset() {
     this.speed = 20;
-    this.paddleNode.setX(gameWidth/2 - PADDLE_WIDTH/2);
+    this.paddleNode.setX(gameWidth/2 - paddleWidth /2);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
-    paddleNode.setWidth(PADDLE_WIDTH);
-    paddleNode.setHeight(PADDLE_HEIGHT);
+    paddleNode.setWidth(paddleWidth);
+    paddleNode.setHeight(paddleHeight);
   }
 
   /**
@@ -62,6 +63,10 @@ public class Paddle {
    */
   public void moveRight() {
     this.paddleNode.setX(this.paddleNode.getX() + speed);
+
+    if ((this.paddleNode.getX())> gameWidth){
+      this.paddleNode.setX(this.paddleNode.getX()-gameWidth-this.paddleNode.getWidth());
+    }
   }
 
   /**
@@ -69,6 +74,10 @@ public class Paddle {
    */
   public void moveLeft() {
     this.paddleNode.setX(this.paddleNode.getX() - speed);
+    System.out.println(this.paddleNode.getX() + "    " + gameWidth);
+    if ((this.paddleNode.getX()+this.paddleNode.getWidth())<0){
+      this.paddleNode.setX(this.paddleNode.getX()+gameWidth+ this.paddleNode.getWidth());
+    }
   }
 
   /**
