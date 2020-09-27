@@ -2,15 +2,7 @@ package breakout;
 
 import breakout.powerups.PowerUp;
 import com.sun.tools.javac.Main;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,26 +12,18 @@ import java.util.function.Consumer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -82,15 +66,15 @@ public class Game extends Application {
     this.WIDTH = (int)(screenBounds.getWidth()*0.8);
     this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
     myScene = setupScene(WIDTH, HEIGHT, BACKGROUND);
-
-    primaryStage.setScene(myScene);
+    SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
+    primaryStage.setScene(splashScreen.getSplashScene());
     primaryStage.setTitle(TITLE);
     primaryStage.show();
     KeyFrame frame = new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY));
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
-    animation.play();
+    splashScreen.setButtonToStartGame(animation,primaryStage,myScene);
   }
 
   Scene setupScene(int width, int height, Paint background) {
