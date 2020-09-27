@@ -7,13 +7,19 @@ import javafx.scene.shape.Rectangle;
 public class Paddle {
 
   public static final int PADDLE_EDGE = 15;
-  public final int paddleWidth;
-  public final int paddleHeight;
+  public final double paddleWidth;
+  public final double paddleHeight;
   private double speed = 20;
   private final int gameWidth;
   private final Rectangle paddleNode;
   private int lives = 3;
-
+  private static final double PADDLE_WIDTH_MULTIPLIER = 0.2;
+  private static final double PADDLE_HEIGHT_MULTIPLIER = 1/25;
+  private static final double PADDLE_LOCATION_Y_OFFSET = 1/35;
+  private static final int INITIAL_SPEED_PADDLE = 20;
+  private static final double SPEED_UP_MULTIPLIER = 1.5;
+  private static final int LIVES_CHANGE_AMOUNT = 1;
+  private static final int INCREASE_PADDLE_LENGTH = 2;
 
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
@@ -23,10 +29,10 @@ public class Paddle {
    */
   public Paddle(int gameWidth, int gameHeight) {
     this.gameWidth = gameWidth;
-    paddleWidth = gameWidth / 5;
-    paddleHeight = gameHeight / 25;
+    paddleWidth = gameWidth*PADDLE_WIDTH_MULTIPLIER;
+    paddleHeight = gameHeight* PADDLE_HEIGHT_MULTIPLIER;
     paddleNode = new Rectangle(gameWidth / 2 - paddleWidth / 2, gameHeight - paddleHeight
-        - gameHeight / 35,
+        - gameHeight / PADDLE_LOCATION_Y_OFFSET,
         paddleWidth, paddleHeight);
     paddleNode.setId("paddle");
     Paint paddleColor = Color.HOTPINK;
@@ -48,7 +54,7 @@ public class Paddle {
   }
 
   public void reset() {
-    this.speed = 20;
+    this.speed = INITIAL_SPEED_PADDLE;
     this.paddleNode.setX(gameWidth/2 - paddleWidth /2);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
@@ -74,14 +80,14 @@ public class Paddle {
   }
 
   public void speedUp() {
-    this.speed = this.speed*1.5;
+    this.speed = this.speed*SPEED_UP_MULTIPLIER;
   }
   public int getLives(){
     return this.lives;
   }
 
   public void increaseLives(){
-    this.lives = this.lives + 1;
+    this.lives = this.lives + LIVES_CHANGE_AMOUNT;
   }
 
   public boolean gameOver(){
@@ -89,11 +95,10 @@ public class Paddle {
   }
 
   public void decreaseLives(){
-    this.lives = this.lives -1;
+    this.lives = this.lives - LIVES_CHANGE_AMOUNT;
   }
 
   public void increaseLength(){
-    int INCREASE_PADDLE_LENGTH = 2;
     this.paddleNode.setWidth(this.paddleNode.getWidth()+ INCREASE_PADDLE_LENGTH);
   }
 

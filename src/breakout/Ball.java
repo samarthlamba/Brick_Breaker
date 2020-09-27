@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class Ball {
 
-  public final int ballRadius;
+  public final double ballRadius;
   private static final double SPEED = 480000;
   private final Circle ballNode;
   private int currentXDirection = 1;
@@ -19,6 +19,10 @@ public class Ball {
   private final int initialHeight;
   private double speedX = sqrt(SPEED /2);
   private double speedY = sqrt(SPEED /2);
+  private static final double BALL_RADIUS_MULTIPLIER = 1/60;
+  private static final double BALL_SPEED_DECREASE_MULTIPLIER = 0.9;
+  private static final int NEGATIVE_DIRECTION = -1;
+
 
   /**
    * Initialized based on width of screen and height. Creates the circular ball
@@ -27,7 +31,7 @@ public class Ball {
    * @param height
    */
   public Ball(int width, int height) {
-    ballRadius = width / 60;
+    ballRadius = width* BALL_RADIUS_MULTIPLIER;
     initialWidth = width;
     initialHeight = height;
     ballNode = new Circle(width / 2, height / 2, ballRadius);
@@ -38,18 +42,16 @@ public class Ball {
   }
 
   public void move(double time) {
-    double speedDecrease = 0;
-    this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection+ currentYDirection* speedDecrease);
-    this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection +
-        speedDecrease *currentXDirection);
+    this.ballNode.setCenterY(this.ballNode.getCenterY() - speedY * time * currentYDirection);
+    this.ballNode.setCenterX(this.ballNode.getCenterX() - speedX * time * currentXDirection);
   }
 
   public void decreaseSpeed(){
-    this.speedX = this.speedX*0.95; //need to fix, temporary. was goin backwards when changing speed
-    this.speedY = this.speedY*0.95;
+    this.speedX = this.speedX*BALL_SPEED_DECREASE_MULTIPLIER;
+    this.speedY = this.speedY*BALL_SPEED_DECREASE_MULTIPLIER;
   }
 
-  public void start(){
+  public void initializeSpeed(){
     this.speedX = sqrt(SPEED /2);
     this.speedY = sqrt(SPEED /2);
   }
@@ -74,10 +76,7 @@ public class Ball {
     return this.speedY;
   }
 
-  public void reinitializeSpeed(){
-    speedX = sqrt(SPEED /2);
-    speedY = sqrt(SPEED /2);
-  }
+
   public void changeSpeedX(double change) {
     if (this.speedY > this.speedX / 3) {
       this.speedX = this.speedX + change;
@@ -86,12 +85,12 @@ public class Ball {
   }
 
   public void changeXDirection() {
-    this.currentXDirection = this.currentXDirection * -1;
+    this.currentXDirection = this.currentXDirection * NEGATIVE_DIRECTION;
 
   }
 
   public void changeYDirection() {
-    this.currentYDirection = this.currentYDirection * -1;
+    this.currentYDirection = this.currentYDirection * NEGATIVE_DIRECTION;
 
   }
 

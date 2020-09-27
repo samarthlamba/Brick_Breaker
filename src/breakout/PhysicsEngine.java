@@ -59,7 +59,7 @@ public class PhysicsEngine {
       }
     }
     else{
-       ball.reinitializeSpeed();
+       ball.initializeSpeed();
     }
   }
 

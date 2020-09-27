@@ -32,6 +32,7 @@ public class Game extends Application {
   public static int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+  public static final double percentOfScreen = 0.8;
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt","level2.txt","level3.txt");
@@ -60,8 +61,8 @@ public class Game extends Application {
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    this.WIDTH = (int)(screenBounds.getWidth()*0.8);
-    this.HEIGHT = (int)(screenBounds.getHeight()*0.8);
+    this.WIDTH = (int)(screenBounds.getWidth()*percentOfScreen);
+    this.HEIGHT = (int)(screenBounds.getHeight()*percentOfScreen);
     Scene myScene = setupScene(WIDTH, HEIGHT);
     SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
@@ -144,7 +145,7 @@ public class Game extends Application {
   }
 
   private void handleMouseInput() {
-    gameBall.start();
+    gameBall.initializeSpeed();
   }
 
 
