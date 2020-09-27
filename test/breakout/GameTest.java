@@ -218,13 +218,13 @@ public class GameTest extends DukeApplicationTest {
 
   @Test
   public void testLevelMovesToNextInList() {
-    javafxRun(() -> myGame.setLevelList(List.of("empty.txt","testBlocksRemoved.txt")));
+    javafxRun(() -> myGame.setLevelList(List.of("empty.txt", "testBlocksRemoved.txt")));
     Level firstlevel = myGame.getCurrentLevel();
 
     javafxRun(() -> myGame.step(1.00));
     press(myScene, KeyCode.N);
     Level secondLevel = myGame.getCurrentLevel();
-    assertNotEquals(secondLevel,firstlevel);
+    assertNotEquals(secondLevel, firstlevel);
   }
 
 

@@ -161,5 +161,5 @@ public class LevelTest {
     String line = allLines.get(0);
     return line;
   }
-  
+
 }

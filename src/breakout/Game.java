@@ -12,6 +12,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -42,6 +44,7 @@ public class Game extends Application {
   private Ball gameBall;
   private int level = 1;
   private Label lives;
+  private ImageView shop;
   private Label score;
   private Label winLoss;
   private PhysicsEngine physicsEngine;
@@ -175,17 +178,28 @@ public class Game extends Application {
 
   private void showStoreItems(){
 
+    Image image = new Image("image.jpg", WIDTH, HEIGHT, true, false);
+    shop = new ImageView(image);
+    shop.setX(WIDTH/6);
+    currentGroup.getChildren().add(shop);
     currentGroup.setCenter(store.showStoreContent());
+  }
+
+  private void removeStoreComponents(){
+    currentGroup.getChildren().remove(lives);
+    store.removeAllStoreItems(currentGroup);
+    currentGroup.getChildren().remove(shop);
   }
 
   public void nextLevel() {
     level++;
-    store.removeAllStoreItems(currentGroup);
+    removeStoreComponents();
     if(level-1< levelList.size()){
       setLevel(levelList.get(level-1));
       physicsEngine.setBlockList(currentLevel);
       gameBall.reset();
     }
+    currentGroup.setTop(lives);
   }
 
   private void updateBallAndPaddle(double elapsedTime) {
@@ -222,7 +236,7 @@ public class Game extends Application {
     }
   }
 
-  private VBox initializeText() {
+  private void initializeText() {
     VBox vbox = new VBox(2);
     vbox.setAlignment(Pos.BOTTOM_LEFT);
     String livesString = String.format("Lives left: %d", gamePaddle.getLives());
@@ -231,8 +245,6 @@ public class Game extends Application {
         String.format("Score: %d", store.getCurrentScore()));
     lives.setFont(new Font(HEIGHT / 30));
     score.setFont(new Font(HEIGHT / 30));
-    vbox.getChildren().addAll(lives, score);
-    return vbox;
   }
 
   private Label winLossInitializeText() {

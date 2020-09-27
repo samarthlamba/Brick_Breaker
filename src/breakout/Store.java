@@ -12,9 +12,11 @@ import java.util.function.Consumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class Store {
@@ -79,7 +81,9 @@ public class Store {
       }
 
     notEnoughMoney = new Label(moveToNextLevel);
-    notEnoughMoney.setFont(new Font(30));
+      notEnoughMoney.setAlignment(Pos.CENTER);
+    notEnoughMoney.setFont(new Font(SCENEHEIGHT/20));
+    notEnoughMoney.setTextFill(Color.WHITE);
     root.setTop(notEnoughMoney);
     root.setAlignment(notEnoughMoney, Pos.CENTER);
     if (currentScore < COST) {
@@ -93,7 +97,8 @@ public class Store {
   public void removeAllStoreItems(BorderPane root)
   {
     root.getChildren().remove(notEnoughMoney);
-    root.getChildren().remove(keyMap.keySet());
+    root.getChildren().remove(showStoreContent());
+
   }
 
   public void updateHighScore() { //test this? Might be weird testing it
