@@ -237,6 +237,7 @@ public class Game extends Application {
     currentLevel.spawnPowerUps(currentGroup, currentPowerUps);
     currentLevel.addScoreToStore(store);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup);
+    physicsEngine.checkForBlocksAtBottom();
     if (currentLevel.getBlockList().isEmpty() && !showStore) {
       changeStoreStatus();
       showStoreItems();

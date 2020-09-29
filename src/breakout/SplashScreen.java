@@ -31,11 +31,11 @@ public class SplashScreen {
     button = formatButton();
     button.setId("startButton");
     ImageView background = formatBackground();
+    group.getChildren().add(button);
     if(background!=null) {
       background.setId("splashBackground");
       group.getChildren().add(background);
     }
-    group.getChildren().add(button);
     splashScene = new Scene(group, width, height);
     splashScene.setFill(Color.BLACK);
   }
@@ -90,7 +90,7 @@ public class SplashScreen {
     }
     button.setStyle("-fx-color: black");
     button.setLayoutX(gameWidth/3);
-    button.setLayoutY(gameHeight+BUTTON_HEIGHT_PADDING);
+    button.setLayoutY(gameHeight-BUTTON_HEIGHT_PADDING);
     return button;
   }
 }

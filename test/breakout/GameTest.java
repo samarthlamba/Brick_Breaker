@@ -250,6 +250,7 @@ public class GameTest extends DukeApplicationTest {
     assertNotEquals(secondLevel, firstlevel);
   }
 
+
   @Test
   public void testNextLevelChangesLevelType(){
     javafxRun(() -> myGame.setLevelList(List.of("test.txt","test.txt","test.txt")));
@@ -264,5 +265,20 @@ public class GameTest extends DukeApplicationTest {
     assertTrue(firstlevel instanceof BasicLevel);
     assertTrue(secondLevel instanceof ScrambleBlockLevel);
     assertTrue(thirdLevel instanceof DescendLevel);
+  }
+
+
+  @Test
+  public void testBlocksAtBottomCauseLoss() {
+    javafxRun(() -> myGame.setLevelList(List.of("test.txt","test.txt","test.txt")));
+    javafxRun(() -> myGame.nextLevel());
+    javafxRun(() -> myGame.nextLevel());
+    assertTrue(myGame.getCurrentLevel() instanceof DescendLevel);
+    for(int k = 0; k<10000;k++) {
+      myGame.getCurrentLevel().updateLevel();
+    }
+    javafxRun(() -> myGame.step(1.00));
+
+    assertTrue(myGame.getPaddle().getLives() <3);
   }
 }

@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import breakout.blocks.AbstractBlock;
 import breakout.level.Level;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -32,6 +33,14 @@ public class PhysicsEngine {
     checkEdgeCollision(ball);
     checkBlockCollision(ball);
     checkPaddleCollision(ball);
+  }
+
+  public void checkForBlocksAtBottom() {
+    blockList.stream().forEach(block -> {
+      if (atBottom(block.getDisplayObject())) {
+        paddle.decreaseLives();
+      }
+    });
   }
 
   private AbstractBlock getBlockAtBallPosition(Ball ball){
