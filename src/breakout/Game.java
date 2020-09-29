@@ -34,8 +34,8 @@ import javafx.util.Duration;
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
-  public static int WIDTH = 1200;
-  public static int HEIGHT = 800;
+  public static final int WIDTH = 1200;
+  public static final int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30.0);
@@ -72,9 +72,9 @@ public class Game extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
-    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    WIDTH = (int) (screenBounds.getWidth() * 0.8);
-    HEIGHT = (int) (screenBounds.getHeight() * 0.8);
+    //Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    //WIDTH = (int) (screenBounds.getWidth() * 0.8);
+    //HEIGHT = (int) (screenBounds.getHeight() * 0.8);
     Scene myScene = setupScene(WIDTH, HEIGHT);
     SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
