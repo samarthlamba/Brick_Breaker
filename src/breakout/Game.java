@@ -199,10 +199,7 @@ public class Game extends Application {
   }
 
   private void showStoreItems() {
-    Image image = new Image("image.jpg", WIDTH, HEIGHT, true, false);
-    shop = new ImageView(image);
-    shop.setX(WIDTH / 6);
-    currentGroup.getChildren().add(shop);
+
     currentGroup.setCenter(store.showStoreContent());
   }
 
