@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 
 /**
  * This class is created at the start of the game to display the rules. It has a single button that
- * starts the game when preseed.
+ * starts the game when pressed.
  */
 public class SplashScreen {
 
@@ -22,7 +22,7 @@ public class SplashScreen {
   private final int gameHeight;
   private final Scene splashScene;
   private static final int BUTTON_HEIGHT_PADDING = 50;
-  private Button button;
+  private final Button button;
 
   public SplashScreen(int width, int height) {
     gameWidth = width;
@@ -52,7 +52,7 @@ public class SplashScreen {
    * Gives an action to the button
    * @param e an event handler for the button to use on action.
    */
-  public void setButtonAction(EventHandler e) {
+  public void setButtonAction(EventHandler e) { //due to the nature of the action, we felt comfortable leaving this as raw use
     button.setOnAction(e);
   }
 
@@ -70,10 +70,10 @@ public class SplashScreen {
   private ImageView formatBackground() {
     ImageView background = loadImage("splashScreenDisplay.png");
     if(background!=null) {
-      background.setFitWidth(gameWidth / 2);
-      background.setX(gameWidth / 4);
-      background.setFitHeight(gameHeight / 2);
-      background.setY(gameHeight / 4);
+      background.setFitWidth(gameWidth / 2.0);
+      background.setX(gameWidth / 4.0);
+      background.setFitHeight(gameHeight / 2.0);
+      background.setY(gameHeight / 4.0);
     }
     return background;
   }
@@ -89,7 +89,7 @@ public class SplashScreen {
       button.setTextFill(Color.WHITE);
     }
     button.setStyle("-fx-color: black");
-    button.setLayoutX(gameWidth/3);
+    button.setLayoutX(gameWidth/3.0);
     button.setLayoutY(gameHeight-BUTTON_HEIGHT_PADDING);
     return button;
   }

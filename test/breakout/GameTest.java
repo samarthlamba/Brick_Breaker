@@ -50,12 +50,12 @@ public class GameTest extends DukeApplicationTest {
 
   @Test
   public void testInitialPositions() {
-    assertEquals(Game.WIDTH / 2, gameBall.getCenterX());
-    assertEquals(3*Game.HEIGHT / 4, gameBall.getCenterY());
-    assertEquals(Game.WIDTH / 60, gameBall.getRadius());
+    assertEquals(Game.WIDTH / 2.0, gameBall.getCenterX());
+    assertEquals(3*Game.HEIGHT / 4.0, gameBall.getCenterY());
+    assertEquals(Game.WIDTH / 60.0, gameBall.getRadius());
 
-    assertEquals(Game.WIDTH / 2 - Game.WIDTH / 10, gamePaddle.getX());
-    assertEquals(Game.HEIGHT - Game.HEIGHT / 25 - Game.HEIGHT / 35, gamePaddle.getY());
+    assertEquals(Game.WIDTH / 2.0 - Game.WIDTH / 10.0, gamePaddle.getX());
+    assertEquals(Game.HEIGHT - Game.HEIGHT / 25.0 - Game.HEIGHT / 35.0, gamePaddle.getY());
   }
 
   @Test
@@ -77,8 +77,8 @@ public class GameTest extends DukeApplicationTest {
   public void testPaddleMoveOnKeyPress() {
     final double initialXPos = gamePaddle.getX();
     final double initialYPos = gamePaddle.getY();
-    assertEquals(Game.WIDTH / 2 - Game.WIDTH / 10, initialXPos);
-    assertEquals(Game.HEIGHT - Game.HEIGHT / 25 - Game.HEIGHT / 35, initialYPos);
+    assertEquals(Game.WIDTH / 2.0 - Game.WIDTH / 10.0, initialXPos);
+    assertEquals(Game.HEIGHT - Game.HEIGHT / 25.0 - Game.HEIGHT / 35.0, initialYPos);
 
     press(myScene, KeyCode.RIGHT);
 

@@ -5,7 +5,6 @@ import static java.lang.Math.abs;
 import breakout.blocks.AbstractBlock;
 import breakout.level.Level;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -36,7 +35,7 @@ public class PhysicsEngine {
   }
 
   public void checkForBlocksAtBottom() {
-    blockList.stream().forEach(block -> {
+    blockList.stream().forEach(block -> {  //we were more familiar with stream and forEach vs stream made little difference so left this error
       if (atBottom(block.getDisplayObject())) {
         paddle.decreaseLives();
       }
@@ -54,7 +53,7 @@ public class PhysicsEngine {
 
   /**
    * Sets the list of blocks the physics engine is detecting collision for
-   * @param level
+   * @param level the level of the game
    */
   public void setBlockList(Level level) {
     this.blockList = level.getBlockList();

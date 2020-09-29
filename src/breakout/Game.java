@@ -190,7 +190,7 @@ public class Game extends Application {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
     levelLabel.setText(String.format("Your level: %d", onLevelInt+1));
-    if (gamePaddle.gameOver() || gamePaddle.getLives() <= 0) {
+    if (gamePaddle.gameOver()) {
       Label finalLabel = new Label("So close, yet so far, friend");
       finalLabel.setFont(new Font(HEIGHT/10.0));
       currentGroup.setCenter(finalLabel);

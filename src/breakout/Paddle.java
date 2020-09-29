@@ -12,7 +12,7 @@ public class Paddle {
   public static final int PADDLE_EDGE = 15;
   private static final int PADDLE_WIDTH_RATIO = 5;
   private static final int PADDLE_HEIGHT_RATIO = 25;
-  private static final int PADDLE_OFFSET = 35;
+  private static final double PADDLE_OFFSET = 35;
   private static final int INITIAL_SPEED = 20;
   private static final int SPEED_INCREMENT = 2;
   public final int paddleWidth;
@@ -26,14 +26,14 @@ public class Paddle {
   /**
    * Initialized based on width of screen and height. Creates the rectangular paddle
    *
-   * @param gameWidth
-   * @param gameHeight
+   * @param gameWidth size of the scene
+   * @param gameHeight height of the scene
    */
   public Paddle(int gameWidth, int gameHeight) {
     this.gameWidth = gameWidth;
     paddleWidth = gameWidth / PADDLE_WIDTH_RATIO;
     paddleHeight = gameHeight / PADDLE_HEIGHT_RATIO;
-    paddleNode = new Rectangle(gameWidth / 2 - paddleWidth / 2, gameHeight - paddleHeight
+    paddleNode = new Rectangle(gameWidth / 2.0 - paddleWidth / 2.0, gameHeight - paddleHeight
         - gameHeight / PADDLE_OFFSET,
         paddleWidth, paddleHeight);
     paddleNode.setId("paddle");
@@ -48,7 +48,7 @@ public class Paddle {
   /**
    * returns the rectangular object. Can be changed to image in the future
    *
-   * @return
+   * @return return the paddle node object
    */
   public Rectangle getObject() {
     return this.paddleNode;
@@ -59,7 +59,7 @@ public class Paddle {
    */
   public void reset() {
     this.speed = INITIAL_SPEED;
-    this.paddleNode.setX(gameWidth/2 - paddleWidth /2);
+    this.paddleNode.setX(gameWidth/2.0 - paddleWidth /2.0);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
     paddleNode.setWidth(paddleWidth);
@@ -111,7 +111,7 @@ public class Paddle {
 
   /**
    * Used to determine if the game is over, i.e. if the paddle has run out of lives.
-   * @return
+   * @return returns if game is over and you lost
    */
   public boolean gameOver(){
     return (this.lives <= 0);

@@ -13,7 +13,6 @@ import java.util.Random;
  */
 public class Ball {
 
-  private final int ballRadius;
   private static final double SPEED = 480000;
   private static final double SPEED_DECREMENT = .95;
   private final Circle ballNode;
@@ -28,14 +27,14 @@ public class Ball {
   /**
    * Initialized based on width of screen and height. Creates the circular ball
    *
-   * @param width
-   * @param height
+   * @param width width of the scene
+   * @param height height of the game scene
    */
   public Ball(int width, int height) {
-    ballRadius = width / RADIUS_RATIO;
+    int ballRadius = width / RADIUS_RATIO;
     gameWidth = width;
     gameHeight = height;
-    ballNode = new Circle(width / 2, 3*height / 4, ballRadius);
+    ballNode = new Circle(width / 2.0, 3*height / 4.0, ballRadius);
     ballNode.setId("ball");
     Paint ballColor = Color.RED;
     ballNode.setFill(ballColor);
@@ -57,13 +56,13 @@ public class Ball {
    * Used to decrease the ball's speed. Used by powerups and cheat keys.
    */
   public void decreaseSpeed(){
-    this.speedX = this.speedX*SPEED_DECREMENT; //need to fix, temporary. was goin backwards when changing speed
+    this.speedX = this.speedX*SPEED_DECREMENT;
     this.speedY = this.speedY*SPEED_DECREMENT;
   }
 
   public void reset() {
-    ballNode.setCenterX(gameWidth / 2);
-    ballNode.setCenterY(3*gameHeight / 4);
+    ballNode.setCenterX(gameWidth / 2.0);
+    ballNode.setCenterY(3*gameHeight / 4.0);
     this.speedX = 0;
     this.speedY = 0;
   }
@@ -100,7 +99,7 @@ public class Ball {
   public void changeSpeedX(double change) {
     if (this.speedY > this.speedX / 3) {
       this.speedX = this.speedX + change;
-      this.speedY = sqrt(this.SPEED - this.speedX * this.speedX);
+      this.speedY = sqrt(SPEED - this.speedX * this.speedX);
     }
   }
 

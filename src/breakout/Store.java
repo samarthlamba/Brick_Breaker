@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -72,7 +73,7 @@ public class Store {
       storeDisplayPane.getChildren().add(shop);
     }
     catch (Exception e){
-
+      //we left this as empty because if there is no picture we can still play the game and ignore the addition of picture.
     }
     VBox buttonsBox = new VBox();
     for (Button k : keyMap.keySet()) {
@@ -86,16 +87,14 @@ public class Store {
   public void monitorPurchases(BorderPane root) {
     initializeMoneyText(root);
     if (currentScore < COST) {
-      String notEnoughMoneyText = NOT_ENOUGH_MONEY_LEFT_STRING;
-      notEnoughMoney.setText(notEnoughMoneyText);
+      notEnoughMoney.setText(NOT_ENOUGH_MONEY_LEFT_STRING);
 
 
     }
   }
 
   private void initializeMoneyText(BorderPane root) {
-    String moveToNextLevel = MOVE_TO_NEXT_LEVEL_STRING;
-    notEnoughMoney = new Label(moveToNextLevel);
+    notEnoughMoney = new Label(MOVE_TO_NEXT_LEVEL_STRING);
     notEnoughMoney.setAlignment(Pos.CENTER);
     this.storeDisplayPane.getChildren().add(notEnoughMoney);
     notEnoughMoney.setFont(new Font(sceneHeight / 20));
@@ -126,7 +125,8 @@ public class Store {
       int highScore = getHighScore();
       if (currentScore > highScore) {
         Path pathToFile = Paths
-            .get(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE).toURI());
+            .get(
+                Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE)).toURI());
         PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
         prw.println(currentScore);
         prw.close();
@@ -140,7 +140,7 @@ public class Store {
   public int getHighScore() {
     try {
       Path pathToFile = Paths
-          .get(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE).toURI());
+          .get(Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE)).toURI());
       List<String> allLines = Files.readAllLines(pathToFile);
       String line = allLines.get(0).trim();
       return Integer.parseInt(line);
