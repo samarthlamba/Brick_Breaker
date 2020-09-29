@@ -38,6 +38,7 @@ public class Game extends Application {
   public static int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+  private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30);
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
@@ -58,6 +59,8 @@ public class Game extends Application {
   private boolean isPaused = false;
   private boolean showStore = false;
   private Store store;
+  private Label levelLabel;
+  private Timeline animation;
 
   /**
    * Start the program.
@@ -82,7 +85,7 @@ public class Game extends Application {
     primaryStage.setTitle(TITLE);
     primaryStage.show();
     KeyFrame frame = new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY));
-    Timeline animation = new Timeline();
+    animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
     splashScreen.setButtonAction(e -> {
@@ -100,7 +103,7 @@ public class Game extends Application {
 
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
-    root.setCenter(initializeWinLossText());
+
     this.currentGroup = root;
     setLevel(levelList.get(0));
     root.setBottom(initializeStatusText());
@@ -112,6 +115,7 @@ public class Game extends Application {
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     scene.setOnMouseClicked(e -> handleMouseInput());
+    root.setCenter(initializeWinLossText());
     return scene;
   }
 
@@ -191,6 +195,7 @@ public class Game extends Application {
   private void updateStatusText() {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
+    levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
     if (gamePaddle.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
@@ -212,6 +217,7 @@ public class Game extends Application {
    * Used to move the game to the next level.
    */
   public void nextLevel() {
+    System.out.println(onLevelInt + "   " + levelList.size());
     onLevelInt++;
     removeStoreComponents();
     if (onLevelInt < levelList.size()) {
@@ -234,7 +240,17 @@ public class Game extends Application {
     currentLevel.addScoreToStore(store);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup);
     physicsEngine.checkForBlocksAtBottom();
-    if (currentLevel.getBlockList().isEmpty() && !showStore) {
+    inciteCutScene();
+  }
+  private void inciteCutScene(){
+    if (onLevelInt>= levelList.size()){
+      System.out.println("the end");
+      winLoss.isVisible();
+      winLoss.setText("You won");
+      winLoss.setVisible(true);
+      animation.stop();
+    }
+    else if (currentLevel.getBlockList().isEmpty() && !showStore) {
       changeStoreStatus();
       showStoreItems();
     }
@@ -268,10 +284,12 @@ public class Game extends Application {
     lives = new Label(livesString);
     highestScore = new Label(highestScoreString);
     score = new Label(String.format("Your Score: %d", store.getCurrentScore()));
-    lives.setFont(new Font(HEIGHT / 30));
-    score.setFont(new Font(HEIGHT / 30));
-    highestScore.setFont(new Font(HEIGHT / 30));
-    gameStats.getChildren().addAll(lives, score, highestScore);
+    levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
+    levelLabel.setFont(SUMMARY_FONT_SIZE);
+    lives.setFont(SUMMARY_FONT_SIZE);
+    score.setFont(SUMMARY_FONT_SIZE);
+    highestScore.setFont(SUMMARY_FONT_SIZE);
+    gameStats.getChildren().addAll(lives, score, highestScore, levelLabel);
     return gameStats;
   }
 
