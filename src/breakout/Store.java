@@ -33,7 +33,7 @@ public class Store {
   private Map<Button, Consumer<Store>> keyMap;
   private int currentScore = 0;
   private Label notEnoughMoney;
-  private BorderPane group;
+  private BorderPane storeDisplayPane;
 
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
     this.sceneHeight = height;
@@ -41,7 +41,7 @@ public class Store {
     this.ballNode = ballNode;
     this.paddleNode = paddleNode;
     initializePowers();
-
+    initializeButtons();
   }
 
   private void initializePowers() {
@@ -64,28 +64,47 @@ public class Store {
 
 
   public BorderPane showStoreContent() {
-    BorderPane root = new BorderPane();
+    storeDisplayPane = new BorderPane();
     try {
       Image image = new Image(STORE_IMAGE_FILE, sceneWidth, sceneHeight, true, false);
       ImageView shop = new ImageView(image);
       shop.setX(sceneWidth / 6);
-      root.getChildren().add(shop);
+      storeDisplayPane.getChildren().add(shop);
     }
     catch (Exception e){
 
     }
-    int position = 0;
     VBox buttonsBox = new VBox();
     for (Button k : keyMap.keySet()) {
       k.setMinSize(sceneWidth / 6, sceneHeight / 6);
       buttonsBox.getChildren().add(k);
     }
-    root.setRight(buttonsBox);
-    this.group = root;
-    return root;
+    storeDisplayPane.setRight(buttonsBox);
+    return storeDisplayPane;
   }
 
   public void monitorPurchases(BorderPane root) {
+    initializeMoneyText(root);
+    if (currentScore < COST) {
+      String notEnoughMoneyText = NOT_ENOUGH_MONEY_LEFT_STRING;
+      notEnoughMoney.setText(notEnoughMoneyText);
+
+
+    }
+  }
+
+  private void initializeMoneyText(BorderPane root) {
+    String moveToNextLevel = MOVE_TO_NEXT_LEVEL_STRING;
+    notEnoughMoney = new Label(moveToNextLevel);
+    notEnoughMoney.setAlignment(Pos.CENTER);
+    this.storeDisplayPane.getChildren().add(notEnoughMoney);
+    notEnoughMoney.setFont(new Font(sceneHeight / 20));
+    notEnoughMoney.setTextFill(Color.BLACK);
+    root.setTop(notEnoughMoney);
+    BorderPane.setAlignment(notEnoughMoney, Pos.CENTER);
+  }
+
+  private void initializeButtons() {
     for (Button k : keyMap.keySet()) {
       System.out.println(currentScore);
       k.setOnAction(event -> {
@@ -95,24 +114,10 @@ public class Store {
         }
       });
     }
-    String moveToNextLevel = MOVE_TO_NEXT_LEVEL_STRING;
-    notEnoughMoney = new Label(moveToNextLevel);
-    notEnoughMoney.setAlignment(Pos.CENTER);
-    group.getChildren().add(notEnoughMoney);
-    notEnoughMoney.setFont(new Font(sceneHeight / 20));
-    notEnoughMoney.setTextFill(Color.BLACK);
-    root.setTop(notEnoughMoney);
-    BorderPane.setAlignment(notEnoughMoney, Pos.CENTER);
-    if (currentScore < COST) {
-      String notEnoughMoneyText = NOT_ENOUGH_MONEY_LEFT_STRING;
-      notEnoughMoney.setText(notEnoughMoneyText);
-
-
-    }
   }
 
   public void removeAllStoreItems(BorderPane root) {
-    root.getChildren().remove(group);
+    root.getChildren().remove(this.storeDisplayPane);
 
   }
 

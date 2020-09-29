@@ -199,7 +199,6 @@ public class Game extends Application {
   }
 
   private void showStoreItems() {
-
     currentGroup.setCenter(store.showStoreContent());
   }
 
