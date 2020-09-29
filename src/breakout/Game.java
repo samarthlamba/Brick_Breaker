@@ -50,6 +50,7 @@ public class Game extends Application {
   private Ball gameBall;
   private int onLevelInt = 0;
   private Label lives;
+  private Label highestScore;
   private ImageView shop;
   private Label score;
   private Label winLoss;
@@ -96,14 +97,13 @@ public class Game extends Application {
     gamePaddle = new Paddle(width, height);
     gameBall = new Ball(width, height);
     store = new Store(width, height, gamePaddle, gameBall);
-    initializeStatusText();
+
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
     root.setCenter(initializeWinLossText());
-    root.setBottom(score);
     this.currentGroup = root;
     setLevel(levelList.get(0));
-    root.setTop(lives);
+    root.setBottom(initializeStatusText());
     this.physicsEngine = new PhysicsEngine(WIDTH, HEIGHT, gamePaddle, currentLevel.getBlockList());
     // make some shapes and set their properties
 
@@ -221,7 +221,7 @@ public class Game extends Application {
     if (onLevelInt < levelList.size()) {
       setLevel(levelList.get(onLevelInt));
       physicsEngine.setBlockList(currentLevel);
-      gameBall.reset();
+
     }
     currentGroup.setTop(lives);
   }
@@ -265,14 +265,18 @@ public class Game extends Application {
     currentGroup.getChildren().remove(powerupCircle);
   }
 
-  private void initializeStatusText() {
-    VBox vbox = new VBox(2);
-    vbox.setAlignment(Pos.BOTTOM_LEFT);
+  private VBox initializeStatusText() {
+    VBox gameStats = new VBox();
     String livesString = String.format("Lives left: %d", gamePaddle.getLives());
+    String highestScoreString = String.format("Highest Score: %d", store.getHighScore());
     lives = new Label(livesString);
-    score = new Label(String.format("Score: %d", store.getCurrentScore()));
+    highestScore = new Label(highestScoreString);
+    score = new Label(String.format("Your Score: %d", store.getCurrentScore()));
     lives.setFont(new Font(HEIGHT / 30));
     score.setFont(new Font(HEIGHT / 30));
+    highestScore.setFont(new Font(HEIGHT / 30));
+    gameStats.getChildren().addAll(lives, score, highestScore);
+    return gameStats;
   }
 
   private Label initializeWinLossText() {
