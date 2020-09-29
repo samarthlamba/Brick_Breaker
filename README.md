@@ -46,6 +46,7 @@ Z: Makes the ball a random color
 SPACE: Pauses the game.
 
 Known Bugs:
+Someitmes the ball can bounce into a block or paddle if it hits it at the right angle.
 
 
 Extra credit:
@@ -76,6 +77,12 @@ passing in the list.
 
 To add a new key input (including cheat keys), add a new entry to the keyMap() by
 calling .put(KeyCode, (game) -> FUNCTION) in initializeKeyMap().
+
+On errors:
+Errors caused by missing data files should cause no issues. There are tests checking for empty text files; in that case,
+the level is simply considered beaten and the game proceeds to the next. In the case of msising image files, which is hardly possible since we don't
+accept any image files as inputs, the game simply will not display anything in their place (splash screen, store) but will still function.
+
 
 
 ### Impressions
