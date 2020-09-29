@@ -229,7 +229,7 @@ public class GameTest extends DukeApplicationTest {
 
   @Test
   public void ballTouchesEdgeOfPaddle(){
-
+    System.out.println(myGame.getCurrentLevel().getLevelId());
     gameBall.setCenterX(gamePaddle.getBoundsInLocal().getCenterX() - gamePaddle.getWidth()/2.5);
     gameBall.setCenterY(gamePaddle.getBoundsInLocal().getCenterY()-gamePaddle.getHeight());
     double speedXBeforeImpact = myGame.getBall().getSpeedX();

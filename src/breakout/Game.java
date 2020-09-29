@@ -111,11 +111,12 @@ public class Game extends Application {
     // make some shapes and set their properties
 
     // create a place to see the shapes
+    root.setCenter(initializeWinLossText());
     Scene scene = new Scene(root, width, height, Game.BACKGROUND);
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     scene.setOnMouseClicked(e -> handleMouseInput());
-    root.setCenter(initializeWinLossText());
+
     return scene;
   }
 
@@ -186,9 +187,6 @@ public class Game extends Application {
     if (showStore && code.equals(KeyCode.N)) {
       changeStoreStatus();
       nextLevel();
-      winLoss.setText("Level Cleared!");
-      winLoss.setVisible(true);
-      System.out.println("changed");
     }
   }
 
@@ -196,12 +194,15 @@ public class Game extends Application {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
     levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
-    if (gamePaddle.gameOver()) {
-      winLoss.setText("You lose");
-      winLoss.setVisible(true);
+    if (gamePaddle.gameOver() || gamePaddle.getLives() <= 0) {
+      Label finalLabel = new Label("So close, yet so far, friend");
+      finalLabel.setFont(new Font(HEIGHT/10));
+      currentGroup.setCenter(finalLabel);
       store.updateHighScore();
     }
   }
+
+
 
   private void showStoreItems() {
     currentGroup.setCenter(store.showStoreContent());
@@ -217,7 +218,6 @@ public class Game extends Application {
    * Used to move the game to the next level.
    */
   public void nextLevel() {
-    System.out.println(onLevelInt + "   " + levelList.size());
     onLevelInt++;
     removeStoreComponents();
     if (onLevelInt < levelList.size()) {
@@ -243,14 +243,16 @@ public class Game extends Application {
     inciteCutScene();
   }
   private void inciteCutScene(){
-    if (onLevelInt>= levelList.size()){
-      System.out.println("the end");
-      winLoss.isVisible();
-      winLoss.setText("You won");
-      winLoss.setVisible(true);
+    if (onLevelInt > 0 && onLevelInt+1>= levelList.size() && currentLevel.getBlockList().isEmpty()){
+
+      Label finalLabel = new Label("Oh my god! You won friend");
+      finalLabel.setFont(new Font(HEIGHT/10));
+      currentGroup.setCenter(finalLabel);
+
+      store.updateHighScore();
       animation.stop();
     }
-    else if (currentLevel.getBlockList().isEmpty() && !showStore) {
+    else if (currentLevel.getBlockList().isEmpty() && !showStore && currentPowerUps.isEmpty()) {
       changeStoreStatus();
       showStoreItems();
     }
