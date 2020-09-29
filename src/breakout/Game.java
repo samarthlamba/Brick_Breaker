@@ -58,6 +58,7 @@ public class Game extends Application {
   private boolean isPaused = false;
   private boolean showStore = false;
   private Store store;
+  private Timeline animation;
 
   /**
    * Start the program.
@@ -82,7 +83,7 @@ public class Game extends Application {
     primaryStage.setTitle(TITLE);
     primaryStage.show();
     KeyFrame frame = new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY));
-    Timeline animation = new Timeline();
+    animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
     splashScreen.setButtonAction(e -> {
@@ -100,7 +101,7 @@ public class Game extends Application {
 
     root.getChildren().add(gamePaddle.getObject());
     root.getChildren().add(gameBall.getObject());
-    root.setCenter(initializeWinLossText());
+
     this.currentGroup = root;
     setLevel(levelList.get(0));
     root.setBottom(initializeStatusText());
@@ -112,6 +113,7 @@ public class Game extends Application {
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     scene.setOnMouseClicked(e -> handleMouseInput());
+    root.setCenter(initializeWinLossText());
     return scene;
   }
 
@@ -195,6 +197,7 @@ public class Game extends Application {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
       store.updateHighScore();
+      animation.pause();
     }
   }
 

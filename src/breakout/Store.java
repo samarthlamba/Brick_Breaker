@@ -27,7 +27,7 @@ public class Store {
   private final static String STORE_IMAGE_FILE = "image.jpg";
   private final double sceneWidth;
   private final double sceneHeight;
-  private final int COST = 5;
+  private static final int COST = 5;
   private final Paddle paddleNode;
   private final Ball ballNode;
   private Map<Button, Consumer<Store>> keyMap;
@@ -72,9 +72,7 @@ public class Store {
       root.getChildren().add(shop);
     }
     catch (Exception e){
-
     }
-    int position = 0;
     VBox buttonsBox = new VBox();
     for (Button k : keyMap.keySet()) {
       k.setMinSize(sceneWidth / 6, sceneHeight / 6);
@@ -85,6 +83,10 @@ public class Store {
     return root;
   }
 
+  /**
+   * Keeps check of the purchases and enacts them if money is present
+   * @param root
+   */
   public void monitorPurchases(BorderPane root) {
     for (Button k : keyMap.keySet()) {
       System.out.println(currentScore);
@@ -97,7 +99,6 @@ public class Store {
     }
     String moveToNextLevel = MOVE_TO_NEXT_LEVEL_STRING;
     notEnoughMoney = new Label(moveToNextLevel);
-    notEnoughMoney.setAlignment(Pos.CENTER);
     group.getChildren().add(notEnoughMoney);
     notEnoughMoney.setFont(new Font(sceneHeight / 20));
     notEnoughMoney.setTextFill(Color.BLACK);
@@ -106,17 +107,22 @@ public class Store {
     if (currentScore < COST) {
       String notEnoughMoneyText = NOT_ENOUGH_MONEY_LEFT_STRING;
       notEnoughMoney.setText(notEnoughMoneyText);
-
-
     }
   }
 
+  /**
+   * Removes all items from group created by store
+   * @param root
+   */
   public void removeAllStoreItems(BorderPane root) {
     root.getChildren().remove(group);
 
   }
 
-  public void updateHighScore() { //test this? Might be weird testing it
+  /**
+   * Updates high score in the txt file if the old highscore is less than currentScore
+   */
+  public void updateHighScore() {
     try {
       int highScore = getHighScore();
       System.out.println(highScore + "   " + currentScore);
@@ -133,6 +139,10 @@ public class Store {
     }
   }
 
+  /**
+   * Returns the highScore stored in txt file.
+   * @return
+   */
   public int getHighScore() {
     try {
       Path pathToFile = Paths
