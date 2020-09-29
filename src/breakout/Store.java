@@ -27,6 +27,7 @@ public class Store {
   private final Paddle paddleNode;
   private final Ball ballNode;
   private Label notEnoughMoney;
+  private final static String highestScoreFile = "highestScore.txt";
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
     this.sceneHeight = height;
     this.sceneWidth = width;
@@ -101,10 +102,11 @@ public class Store {
 
   public void updateHighScore() { //test this? Might be weird testing it
     try {
-      Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
-      List<String> allLines = Files.readAllLines(pathToFile);
-      String line = allLines.get(0);
-      if (currentScore > Integer.parseInt(line)){
+      int highScore = getHighScore();
+      System.out.println(highScore + "   " + currentScore);
+      if (currentScore > highScore){
+        Path pathToFile = Paths
+            .get(Main.class.getClassLoader().getResource(highestScoreFile).toURI());
         PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
         prw.println(currentScore);
         prw.close();
@@ -114,6 +116,20 @@ public class Store {
       System.out.println("High Score file not present");
       e.printStackTrace();
     }
+  }
+
+  public int getHighScore(){
+    try {
+      Path pathToFile = Paths
+          .get(Main.class.getClassLoader().getResource(highestScoreFile).toURI());
+      List<String> allLines = Files.readAllLines(pathToFile);
+      String line = allLines.get(0);
+      return Integer.parseInt(line);
+    }
+    catch (Exception e){
+      return 0;
+    }
+
   }
 }
 
