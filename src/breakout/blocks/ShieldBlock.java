@@ -5,14 +5,15 @@ import java.util.Map;
 import javafx.scene.paint.Color;
 
 /**
- * Variation of basic block that can only be hit if its shields are down, after .update() has
- * been called NUM_CYCLES times. Then it can be hit for the next NUM_CYCLES updates
+ * Variation of basic block that can only be hit if its shields are down, after .update() has been
+ * called NUM_CYCLES times. Then it can be hit for the next NUM_CYCLES updates
  */
-public class ShieldBlock extends BasicBlock{
+public class ShieldBlock extends BasicBlock {
+
   private static final int NUM_CYCLES = 1000;
+  private static final Map<Boolean, Color> strokeColorMap = new HashMap<>();
   private boolean isShielded;
   private int cycleCount = 0;
-  private static final Map<Boolean,Color> strokeColorMap = new HashMap<>();
 
   public ShieldBlock(int row, int column, int numRows, int numColumns) {
     super(row, column, numRows, numColumns);
@@ -25,18 +26,18 @@ public class ShieldBlock extends BasicBlock{
 
   @Override
   public void hit() {
-    if(!isShielded) {
+    if (!isShielded) {
       super.hit();
     }
   }
 
   @Override
-  public void update(){
+  public void update() {
     cycleCount++;
-    if (cycleCount > NUM_CYCLES){
+    if (cycleCount > NUM_CYCLES) {
       isShielded = !isShielded;
       cycleCount = 0;
-      this.setColors(Color.BLUE,strokeColorMap.get(isShielded));
+      this.setColors(Color.BLUE, strokeColorMap.get(isShielded));
     }
     super.update();
   }

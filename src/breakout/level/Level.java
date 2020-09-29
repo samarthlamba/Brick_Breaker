@@ -21,15 +21,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
 /**
- * This class represents a configuration of blocks that has some special mechanic. Block config
- * is read from the file on the constructor.
+ * This class represents a configuration of blocks that has some special mechanic. Block config is
+ * read from the file on the constructor.
  */
 public abstract class Level {
 
+  private final static int MAX_CYCLES = 1000;
   private final List<AbstractBlock> blockList = new ArrayList<>();
   private final String levelId;
   protected int cycleCount = 0;
-  private final static int MAX_CYCLES = 1000;
 
   public Level(String fileSource) throws IOException, URISyntaxException {
     this.levelId = fileSource;
@@ -43,7 +43,7 @@ public abstract class Level {
    */
   public void updateLevel() {
     cycleCount++;
-    if(isTimeToUpdate()) {
+    if (isTimeToUpdate()) {
       doLevelMechanic();
       cycleCount = 0;
     }
@@ -53,6 +53,7 @@ public abstract class Level {
 
   /**
    * Used to get the list of blocks currently in the level.
+   *
    * @return a list of AbstractBlock objects currently in the level.
    */
   public List<AbstractBlock> getBlockList() {
@@ -60,8 +61,8 @@ public abstract class Level {
   }
 
   /**
-   * Calls the .update() method on every AbstractBlock in the level. This will mark them as
-   * broken if they are out of hits, cycle shields, or perform any other necessary functions
+   * Calls the .update() method on every AbstractBlock in the level. This will mark them as broken
+   * if they are out of hits, cycle shields, or perform any other necessary functions
    */
   public void updateAllBlocks() {
     blockList.stream().forEach(AbstractBlock::update);
@@ -69,29 +70,31 @@ public abstract class Level {
 
   /**
    * Returns a list of the nodes corresponding to AbstractBlock objects curently in the level.
+   *
    * @return a list of nodes representing blocks in the level
    */
   public List<Node> getObjectsToDraw() {
-    List<Node> objectsToDraw =  this.blockList.stream()
+    List<Node> objectsToDraw = this.blockList.stream()
         .map(AbstractBlock::getDisplayObject)
         .collect(Collectors.toList());
-    if(objectsToDraw==null){
+    if (objectsToDraw == null) {
       return Collections.EMPTY_LIST;
     }
     return objectsToDraw;
   }
 
   private boolean isTimeToUpdate() {
-    return cycleCount>MAX_CYCLES;
+    return cycleCount > MAX_CYCLES;
   }
 
 
   /**
    * Final method called on Level each step. Removes the display objects for each broken block from
    * the given group, then remvoes the blocks from the list.
+   *
    * @param group The collection of nodes to remove display objects from
    */
-  public void removeBrokenBlocksFromGroup(BorderPane group){
+  public void removeBrokenBlocksFromGroup(BorderPane group) {
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(AbstractBlock::getDisplayObject)
@@ -102,6 +105,7 @@ public abstract class Level {
 
   /**
    * Called to add the number of broken blocks to the store's score.
+   *
    * @param store the store to give points to.
    */
   public void addScoreToStore(Store store) {
@@ -110,21 +114,22 @@ public abstract class Level {
   }
 
   /**
-   * Called from game step function to spawn powerups (add them to list of
-   * current powerups) at each broken block and
-   * add their display objects to the given group
-   * @param group a collection of nodes to add display objects to
+   * Called from game step function to spawn powerups (add them to list of current powerups) at each
+   * broken block and add their display objects to the given group
+   *
+   * @param group           a collection of nodes to add display objects to
    * @param currentPowerUps a list of current powerups to add newly spawned ones to
    */
-  public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
+  public void spawnPowerUps(BorderPane group, List<PowerUp> currentPowerUps) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     List<PowerUp> powerUps = new ArrayList<>();
-    for (AbstractBlock each: brokenBlocks) {
-      if(each.containsPowerUp()) {
+    for (AbstractBlock each : brokenBlocks) {
+      if (each.containsPowerUp()) {
         powerUps.add(each.spawnPowerUp());
       }
     }
-    List<Circle> powerUpNodes = powerUps.stream().map(PowerUp::getDisplayCircle).collect(Collectors.toList());
+    List<Circle> powerUpNodes = powerUps.stream().map(PowerUp::getDisplayCircle)
+        .collect(Collectors.toList());
     currentPowerUps.addAll(powerUps);
     group.getChildren().addAll(powerUpNodes);
   }
@@ -134,7 +139,8 @@ public abstract class Level {
         .filter(AbstractBlock::isBroken).collect(
             Collectors.toList());
   }
-  private void removeBrokenBlocks(){
+
+  private void removeBrokenBlocks() {
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     this.getBlockList().removeAll(blocksToRemove);
   }
@@ -151,21 +157,23 @@ public abstract class Level {
   private void convertSingleLineToRow(List<String> blockPositionsInRow, int row, int numberRows) {
     for (int column = 0; column < blockPositionsInRow.size(); column++) {
       String blockType = blockPositionsInRow.get(column);
-      AbstractBlock thisBlock = createBlockOfCorrectType(blockType,row,column,numberRows,blockPositionsInRow.size());
-      if(thisBlock != null) {
+      AbstractBlock thisBlock = createBlockOfCorrectType(blockType, row, column, numberRows,
+          blockPositionsInRow.size());
+      if (thisBlock != null) {
         blockList.add(thisBlock);
       }
     }
   }
 
-  private AbstractBlock createBlockOfCorrectType(String blockType, int row, int column, int numberRows, int numberColumns) {
-    if(blockType.equals("1")){
+  private AbstractBlock createBlockOfCorrectType(String blockType, int row, int column,
+      int numberRows, int numberColumns) {
+    if (blockType.equals("1")) {
       return new BasicBlock(row, column, numberRows, numberColumns);
     }
-    if(blockType.equals("S")){
-      return new ShieldBlock(row,column,numberRows,numberColumns);
+    if (blockType.equals("S")) {
+      return new ShieldBlock(row, column, numberRows, numberColumns);
     }
-    if(blockType.equals("B")){
+    if (blockType.equals("B")) {
       return new BossBlock(row, column, numberRows, numberColumns);
     }
     return null;
@@ -173,6 +181,7 @@ public abstract class Level {
 
   /**
    * Used for testing to compare two levels by their ID
+   *
    * @return the string used to create the levle, their "ID"
    */
   public String getLevelId() {

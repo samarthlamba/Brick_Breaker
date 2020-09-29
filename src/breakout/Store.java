@@ -26,9 +26,12 @@ public class Store {
   private final static String MOVE_TO_NEXT_LEVEL_STRING = "Press N to move to next level";
   private final static String NOT_ENOUGH_MONEY_LEFT_STRING = "You don't have enough points, please press N to continue";
   private final static String STORE_IMAGE_FILE = "image.jpg";
+  private static final int COST = 5;
+  private final static int BUTTON_SIZE_MULTIPLIER = 6;
+  private final static int STORE_DISPLAY_SIZE_MULTIPLIER = 20;
+  private final static int ZERO = 0;
   private final double sceneWidth;
   private final double sceneHeight;
-  private final int COST = 5;
   private final Paddle paddleNode;
   private final Ball ballNode;
   private Map<Button, Consumer<Store>> keyMap;
@@ -69,15 +72,14 @@ public class Store {
     try {
       Image image = new Image(STORE_IMAGE_FILE, sceneWidth, sceneHeight, true, false);
       ImageView shop = new ImageView(image);
-      shop.setX(sceneWidth / 6);
+      shop.setX(sceneWidth / BUTTON_SIZE_MULTIPLIER);
       storeDisplayPane.getChildren().add(shop);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       //we left this as empty because if there is no picture we can still play the game and ignore the addition of picture.
     }
     VBox buttonsBox = new VBox();
     for (Button k : keyMap.keySet()) {
-      k.setMinSize(sceneWidth / 6, sceneHeight / 6);
+      k.setMinSize(sceneWidth / BUTTON_SIZE_MULTIPLIER, sceneHeight / BUTTON_SIZE_MULTIPLIER);
       buttonsBox.getChildren().add(k);
     }
     storeDisplayPane.setRight(buttonsBox);
@@ -97,7 +99,7 @@ public class Store {
     notEnoughMoney = new Label(MOVE_TO_NEXT_LEVEL_STRING);
     notEnoughMoney.setAlignment(Pos.CENTER);
     this.storeDisplayPane.getChildren().add(notEnoughMoney);
-    notEnoughMoney.setFont(new Font(sceneHeight / 20));
+    notEnoughMoney.setFont(new Font(sceneHeight / STORE_DISPLAY_SIZE_MULTIPLIER));
     notEnoughMoney.setTextFill(Color.BLACK);
     root.setTop(notEnoughMoney);
     BorderPane.setAlignment(notEnoughMoney, Pos.CENTER);
@@ -126,7 +128,8 @@ public class Store {
       if (currentScore > highScore) {
         Path pathToFile = Paths
             .get(
-                Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE)).toURI());
+                Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE))
+                    .toURI());
         PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
         prw.println(currentScore);
         prw.close();
@@ -139,12 +142,13 @@ public class Store {
   public int getHighScore() {
     try {
       Path pathToFile = Paths
-          .get(Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE)).toURI());
+          .get(Objects.requireNonNull(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE))
+              .toURI());
       List<String> allLines = Files.readAllLines(pathToFile);
-      String line = allLines.get(0).trim();
+      String line = allLines.get(ZERO).trim();
       return Integer.parseInt(line);
     } catch (Exception e) {
-      return 0;
+      return ZERO;
     }
 
   }

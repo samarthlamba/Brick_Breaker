@@ -9,8 +9,8 @@ import javafx.scene.shape.Rectangle;
  */
 public class BasicBlock extends AbstractBlock {
 
-  private Rectangle displayObject;
   private final int blockHeight;
+  private Rectangle displayObject;
   private int hitsRemaining;
   private Color fill;
   private Color stroke;
@@ -21,7 +21,7 @@ public class BasicBlock extends AbstractBlock {
     blockHeight = Game.HEIGHT / (2 * numRows);
     this.displayObject = new Rectangle(column * blockWidth, row * blockHeight,
         blockWidth, blockHeight);
-    this.setColors(Color.YELLOW,Color.BLACK);
+    this.setColors(Color.YELLOW, Color.BLACK);
     this.setHitsRemaining(1);
   }
 
@@ -56,14 +56,15 @@ public class BasicBlock extends AbstractBlock {
 
   @Override
   public void update() {
-    if(hitsRemaining<1) {
+    if (hitsRemaining < 1) {
       breakBlock();
     }
   }
 
   /**
    * Used to set the color palette of the block
-   * @param fill the inside of the block
+   *
+   * @param fill   the inside of the block
    * @param stroke the border of the block
    */
   public void setColors(Color fill, Color stroke) {
@@ -75,6 +76,7 @@ public class BasicBlock extends AbstractBlock {
 
   /**
    * Basic blocks display to javaFx with a Rectangle object
+   *
    * @return the rectangle used to display this block on JavaFX
    */
   public Rectangle getDisplayObject() {

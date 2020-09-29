@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -24,7 +23,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,8 +36,8 @@ public class Game extends Application {
   public static final int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-  private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30.0);
   public static final Paint BACKGROUND = Color.AZURE;
+  private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30.0);
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
   //we are ignoring this error as this allows for maximum flexibility
@@ -68,6 +66,7 @@ public class Game extends Application {
 
   /**
    * Used to start the game. Called once when the game is launched
+   *
    * @param primaryStage the stage the game will be run in
    */
   @Override
@@ -76,7 +75,7 @@ public class Game extends Application {
     //WIDTH = (int) (screenBounds.getWidth() * 0.8);
     //HEIGHT = (int) (screenBounds.getHeight() * 0.8);
     Scene myScene = setupScene(WIDTH, HEIGHT);
-    SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
+    SplashScreen splashScreen = new SplashScreen(WIDTH, HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
     primaryStage.setTitle(TITLE);
     primaryStage.show();
@@ -116,8 +115,9 @@ public class Game extends Application {
   }
 
   /**
-   * Used to set the current level to the specified level. If the level cannot be created,
-   * will set the blocks for the level to an empty list, so no blocks will be drawn
+   * Used to set the current level to the specified level. If the level cannot be created, will set
+   * the blocks for the level to an empty list, so no blocks will be drawn
+   *
    * @param fileSource the source of the level format
    */
   public void setLevel(String fileSource) {
@@ -135,7 +135,7 @@ public class Game extends Application {
     if (!blocksForLevel.isEmpty()) {
       currentGroup.getChildren().addAll(blocksForLevel);
     }
-    if(physicsEngine != null) {
+    if (physicsEngine != null) {
       assert level != null;
       physicsEngine.setBlockList(level);
     }
@@ -143,8 +143,9 @@ public class Game extends Application {
   }
 
   /**
-   * Called to change the list of levels the game progresses through. Also sets the current level
-   * to the first in the list.
+   * Called to change the list of levels the game progresses through. Also sets the current level to
+   * the first in the list.
+   *
    * @param listOfLevels a List of strings corresponding to text files of levels in /data folder.
    */
   public void setLevelList(List<String> listOfLevels) {
@@ -189,15 +190,14 @@ public class Game extends Application {
   private void updateStatusText() {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
-    levelLabel.setText(String.format("Your level: %d", onLevelInt+1));
+    levelLabel.setText(String.format("Your level: %d", onLevelInt + 1));
     if (gamePaddle.gameOver()) {
       Label finalLabel = new Label("So close, yet so far, friend");
-      finalLabel.setFont(new Font(HEIGHT/10.0));
+      finalLabel.setFont(new Font(HEIGHT / 10.0));
       currentGroup.setCenter(finalLabel);
       store.updateHighScore();
     }
   }
-
 
 
   private void showStoreItems() {
@@ -238,17 +238,18 @@ public class Game extends Application {
     physicsEngine.checkForBlocksAtBottom();
     inciteCutScene();
   }
-  private void inciteCutScene(){
-    if (onLevelInt > 0 && onLevelInt+1>= levelList.size() && currentLevel.getBlockList().isEmpty()){
+
+  private void inciteCutScene() {
+    if (onLevelInt > 0 && onLevelInt + 1 >= levelList.size() && currentLevel.getBlockList()
+        .isEmpty()) {
 
       Label finalLabel = new Label("Oh my god! You won friend");
-      finalLabel.setFont(new Font(HEIGHT/10.0));
+      finalLabel.setFont(new Font(HEIGHT / 10.0));
       currentGroup.setCenter(finalLabel);
 
       store.updateHighScore();
       animation.stop();
-    }
-    else if (currentLevel.getBlockList().isEmpty() && !showStore && currentPowerUps.isEmpty()) {
+    } else if (currentLevel.getBlockList().isEmpty() && !showStore && currentPowerUps.isEmpty()) {
       changeStoreStatus();
       showStoreItems();
     }
@@ -269,7 +270,7 @@ public class Game extends Application {
     }
   }
 
-  private void removePowerUp(PowerUp powerUptoRemove){
+  private void removePowerUp(PowerUp powerUptoRemove) {
     Node powerupCircle = powerUptoRemove.getDisplayCircle();
     currentPowerUps.remove(powerUptoRemove);
     currentGroup.getChildren().remove(powerupCircle);
@@ -282,7 +283,7 @@ public class Game extends Application {
     lives = new Label(livesString);
     Label highestScore = new Label(highestScoreString);
     score = new Label(String.format("Your Score: %d", store.getCurrentScore()));
-    levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
+    levelLabel = new Label(String.format("Your level: %d", onLevelInt + 1));
     levelLabel.setFont(SUMMARY_FONT_SIZE);
     lives.setFont(SUMMARY_FONT_SIZE);
     score.setFont(SUMMARY_FONT_SIZE);
@@ -303,29 +304,30 @@ public class Game extends Application {
   private void initializeKeyMap() {
     if (keyMap == null) {
       keyMap = new HashMap<>();
-      keyMap.put(KeyCode.L,game -> gamePaddle.increaseLives());
-      keyMap.put(KeyCode.R,game -> {
+      keyMap.put(KeyCode.L, game -> gamePaddle.increaseLives());
+      keyMap.put(KeyCode.R, game -> {
         gamePaddle.reset();
-        gameBall.reset();});
-      keyMap.put(KeyCode.S,game -> gamePaddle.speedUp());
+        gameBall.reset();
+      });
+      keyMap.put(KeyCode.S, game -> gamePaddle.speedUp());
       keyMap.put(KeyCode.SPACE, Game::pause);
-      keyMap.put(KeyCode.RIGHT,game -> gamePaddle.moveRight());
-      keyMap.put(KeyCode.LEFT,game -> gamePaddle.moveLeft());
-      keyMap.put(KeyCode.D,game -> currentLevel.getBlockList().get(0).breakBlock());
+      keyMap.put(KeyCode.RIGHT, game -> gamePaddle.moveRight());
+      keyMap.put(KeyCode.LEFT, game -> gamePaddle.moveLeft());
+      keyMap.put(KeyCode.D, game -> currentLevel.getBlockList().get(0).breakBlock());
       keyMap.put(KeyCode.DIGIT1, game -> game.setLevel(levelList.get(0)));
       keyMap.put(KeyCode.DIGIT2, game -> game.setLevel(levelList.get(1)));
       keyMap.put(KeyCode.DIGIT3, game -> game.setLevel(levelList.get(2)));
-      keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
-      keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
+      keyMap.put(KeyCode.P, game -> gamePaddle.increaseLength());
+      keyMap.put(KeyCode.Z, game -> gameBall.randomColor());
     }
   }
 
   private Level pickLevelType(String fileSource) throws Exception {
     Map<Integer, Level> levelTypeMap = new HashMap<>();
-    levelTypeMap.put(0,new BasicLevel(fileSource));
-    levelTypeMap.put(1,new ScrambleBlockLevel(fileSource));
-    levelTypeMap.put(2,new DescendLevel(fileSource));
-    return levelTypeMap.get(onLevelInt%levelTypeMap.size());
+    levelTypeMap.put(0, new BasicLevel(fileSource));
+    levelTypeMap.put(1, new ScrambleBlockLevel(fileSource));
+    levelTypeMap.put(2, new DescendLevel(fileSource));
+    return levelTypeMap.get(onLevelInt % levelTypeMap.size());
   }
 
   /**
@@ -355,7 +357,7 @@ public class Game extends Application {
     return currentLevel;
   }
 
-  public int getOnLevelInt(){
+  public int getOnLevelInt() {
     return onLevelInt;
   }
 }

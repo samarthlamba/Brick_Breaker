@@ -1,14 +1,13 @@
 package breakout;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
@@ -18,10 +17,10 @@ import javafx.scene.paint.Color;
  */
 public class SplashScreen {
 
+  private static final int BUTTON_HEIGHT_PADDING = 50;
   private final int gameWidth;
   private final int gameHeight;
   private final Scene splashScene;
-  private static final int BUTTON_HEIGHT_PADDING = 50;
   private final Button button;
 
   public SplashScreen(int width, int height) {
@@ -32,7 +31,7 @@ public class SplashScreen {
     button.setId("startButton");
     ImageView background = formatBackground();
     group.getChildren().add(button);
-    if(background!=null) {
+    if (background != null) {
       background.setId("splashBackground");
       group.getChildren().add(background);
     }
@@ -42,6 +41,7 @@ public class SplashScreen {
 
   /**
    * Gets the display for the splash screen
+   *
    * @return the scene the splash screen displays
    */
   public Scene getSplashScene() {
@@ -50,16 +50,18 @@ public class SplashScreen {
 
   /**
    * Gives an action to the button
+   *
    * @param e an event handler for the button to use on action.
    */
-  public void setButtonAction(EventHandler e) { //due to the nature of the action, we felt comfortable leaving this as raw use
+  public void setButtonAction(
+      EventHandler e) { //due to the nature of the action, we felt comfortable leaving this as raw use
     button.setOnAction(e);
   }
 
   private ImageView loadImage(String imageName) {
     FileInputStream inputstream;
     try {
-      inputstream = new FileInputStream(String.format("data/%s",imageName));
+      inputstream = new FileInputStream(String.format("data/%s", imageName));
       Image image = new Image(inputstream);
       return new ImageView(image);
     } catch (FileNotFoundException e) {
@@ -69,7 +71,7 @@ public class SplashScreen {
 
   private ImageView formatBackground() {
     ImageView background = loadImage("splashScreenDisplay.png");
-    if(background!=null) {
+    if (background != null) {
       background.setFitWidth(gameWidth / 2.0);
       background.setX(gameWidth / 4.0);
       background.setFitHeight(gameHeight / 2.0);
@@ -81,16 +83,15 @@ public class SplashScreen {
   private Button formatButton() {
     Button button = new Button("");
     ImageView buttonGraphics = loadImage("button.png");
-    if(buttonGraphics!=null) {
+    if (buttonGraphics != null) {
       button.setGraphic(buttonGraphics);
-    }
-    else{
+    } else {
       button.setText("Click here!");
       button.setTextFill(Color.WHITE);
     }
     button.setStyle("-fx-color: black");
-    button.setLayoutX(gameWidth/3.0);
-    button.setLayoutY(gameHeight-BUTTON_HEIGHT_PADDING);
+    button.setLayoutX(gameWidth / 3.0);
+    button.setLayoutY(gameHeight - BUTTON_HEIGHT_PADDING);
     return button;
   }
 }

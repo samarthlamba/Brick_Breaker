@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Level implementation that has the positions of its blocks scramble every NUM_CYCLES updates.
  */
-public class ScrambleBlockLevel extends Level{
+public class ScrambleBlockLevel extends Level {
 
   public ScrambleBlockLevel(String fileSource) throws IOException, URISyntaxException {
     super(fileSource);
@@ -17,7 +17,7 @@ public class ScrambleBlockLevel extends Level{
   @Override
   protected void doLevelMechanic() {
     List<AbstractBlock> blockList = this.getBlockList();
-    if(blockList.size()>1) {
+    if (blockList.size() > 1) {
       final double firstXPos = blockList.get(0).getDisplayObjectX();
       final double firstYPos = blockList.get(0).getDisplayObjectY();
       for (int k = 0; k < blockList.size() - 1; k++) {

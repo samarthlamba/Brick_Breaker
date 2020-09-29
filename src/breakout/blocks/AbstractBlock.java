@@ -13,12 +13,12 @@ import javafx.scene.Node;
  */
 public abstract class AbstractBlock {
 
+  private static final int POWERUP_CHANCE = 100;
   private int column;
   private int row;
   private int numRows;
   private int numColumns;
   private boolean isBroken;
-  private static final int POWERUP_CHANCE = 100;
 
   public AbstractBlock(int row, int column, int numRows, int numColumns) {
     this.row = row;
@@ -30,23 +30,28 @@ public abstract class AbstractBlock {
 
   /**
    * Used to get the X location of center of display object or equivalent
+   *
    * @return a double of the x coordinate of the display object
    */
   public abstract double getDisplayObjectX();
 
   /**
    * Used to set the x location of center of display object or equivalent.
+   *
    * @param xPos the position to set x coordinate to.
    */
   public abstract void setDisplayObjectX(double xPos);
+
   /**
    * Used to get the Y location of center of display object or equivalent
+   *
    * @return a double of the Y coordinate of the display object
    */
   public abstract double getDisplayObjectY();
 
   /**
    * Used to set the y location of center of display object or equivalent.
+   *
    * @param yPos the position to set y coordinate to.
    */
   public abstract void setDisplayObjectY(double yPos);
@@ -64,12 +69,14 @@ public abstract class AbstractBlock {
 
   /**
    * Used to get the node used to display the block on screen
+   *
    * @return a Node displayed by JavaFX.
    */
   public abstract Node getDisplayObject();
 
   /**
    * Called on destruction of the block to determine if it has a powerUp
+   *
    * @return true if the block should drop a powerup.
    */
   public boolean containsPowerUp() {
@@ -78,6 +85,7 @@ public abstract class AbstractBlock {
 
   /**
    * used to get column this block is in
+   *
    * @return the int of column this block is in
    */
   public int getColumn() {
@@ -86,6 +94,7 @@ public abstract class AbstractBlock {
 
   /**
    * used to get row this block is in
+   *
    * @return the int of row this block is in
    */
   public int getRow() {
@@ -93,8 +102,9 @@ public abstract class AbstractBlock {
   }
 
   /**
-   * used to get the number of rows on the level this block is in.
-   * The number of rows is used to determine height of the block.
+   * used to get the number of rows on the level this block is in. The number of rows is used to
+   * determine height of the block.
+   *
    * @return the int of number of rows on the level
    */
   public int getNumRows() {
@@ -102,8 +112,9 @@ public abstract class AbstractBlock {
   }
 
   /**
-   * used to get the number of columns on the level this block is in.
-   * The number of columns is used to determine width of the block.
+   * used to get the number of columns on the level this block is in. The number of columns is used
+   * to determine width of the block.
+   *
    * @return the number of columns on the level
    */
   public int getNumColumns() {
@@ -112,6 +123,7 @@ public abstract class AbstractBlock {
 
   /**
    * Used to check if the block has been broken so far
+   *
    * @return true if the block is broken, false else
    */
   public boolean isBroken() {
@@ -128,6 +140,7 @@ public abstract class AbstractBlock {
   /**
    * Called to spawn a powerup from this block. The list of available powerups here should be
    * updated if new powerups are added.
+   *
    * @return the powerup chosen randomly from the list of available powerups.
    */
   public PowerUp spawnPowerUp() {
