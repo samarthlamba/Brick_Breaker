@@ -15,6 +15,8 @@ public class ScrambleBlockLevel extends Level{
   protected void doLevelMechanic() {
     List<AbstractBlock> blockList = this.getBlockList();
     if(blockList.size()>1) {
+      final double firstXPos = blockList.get(0).getDisplayObjectX();
+      final double firstYPos = blockList.get(0).getDisplayObjectY();
       for (int k = 0; k < blockList.size() - 1; k++) {
         AbstractBlock thisBlock = blockList.get(k);
         AbstractBlock nextBlock = blockList.get(k + 1);
@@ -22,9 +24,8 @@ public class ScrambleBlockLevel extends Level{
         thisBlock.setDisplayObjectY(nextBlock.getDisplayObjectY());
       }
       AbstractBlock finalBlock = blockList.get(blockList.size() - 1);
-      AbstractBlock firstBlock = blockList.get(0);
-      finalBlock.setDisplayObjectX(firstBlock.getDisplayObjectX());
-      finalBlock.setDisplayObjectY(firstBlock.getDisplayObjectY());
+      finalBlock.setDisplayObjectX(firstXPos);
+      finalBlock.setDisplayObjectY(firstYPos);
     }
   }
 }

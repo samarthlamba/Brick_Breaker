@@ -85,16 +85,20 @@ public abstract class Level {
   /**
    *
    * @param group
-   * @param store
    */
-  public void removeBrokenBlocksFromGroup(BorderPane group, Store store){
+  public void removeBrokenBlocksFromGroup(BorderPane group){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(AbstractBlock::getDisplayObject)
         .collect(Collectors.toList());
     group.getChildren().removeAll(nodesToRemove);
     removeBrokenBlocks();
-    store.addToCurrentScore(blocksToRemove.size());
+  }
+
+  public void addScoreToStore(Store store) {
+    List<AbstractBlock> brokenBlocks = getBrokenBlocks();
+    store.addToCurrentScore(brokenBlocks.size());
+
   }
 
   public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
