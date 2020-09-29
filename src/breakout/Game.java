@@ -1,23 +1,23 @@
 package breakout;
 
 import breakout.level.BasicLevel;
+import breakout.level.DescendLevel;
 import breakout.level.Level;
 import breakout.level.ScrambleBlockLevel;
-import breakout.level.DescendLevel;
 import breakout.powerups.PowerUp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -38,12 +38,11 @@ public class Game extends Application {
   public static int HEIGHT = 800;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-  private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30);
+  private static final Font SUMMARY_FONT_SIZE = new Font(HEIGHT / 30.0);
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
-  private List<Class> availableLevelTypes = List.of(BasicLevel.class, ScrambleBlockLevel.class,
-      DescendLevel.class);
+  //we are ignoring this error as this allows for maximum flexibility
   private Map<KeyCode, Consumer<Game>> keyMap;
   private BorderPane currentGroup;
   private Level currentLevel;
@@ -51,10 +50,7 @@ public class Game extends Application {
   private Ball gameBall;
   private int onLevelInt = 0;
   private Label lives;
-  private Label highestScore;
-  private ImageView shop;
   private Label score;
-  private Label winLoss;
   private PhysicsEngine physicsEngine;
   private boolean isPaused = false;
   private boolean showStore = false;
@@ -111,7 +107,6 @@ public class Game extends Application {
     // make some shapes and set their properties
 
     // create a place to see the shapes
-    root.setCenter(initializeWinLossText());
     Scene scene = new Scene(root, width, height, Game.BACKGROUND);
     // respond to input
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -141,6 +136,7 @@ public class Game extends Application {
       currentGroup.getChildren().addAll(blocksForLevel);
     }
     if(physicsEngine != null) {
+      assert level != null;
       physicsEngine.setBlockList(level);
     }
     this.currentLevel = level;
@@ -159,7 +155,7 @@ public class Game extends Application {
   /**
    * // Handle the game's "rules" for every "moment"
    *
-   * @param elapsedTime
+   * @param elapsedTime amount of time gone
    */
   void step(double elapsedTime) {
     if (!isPaused) {
@@ -193,10 +189,10 @@ public class Game extends Application {
   private void updateStatusText() {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
-    levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
+    levelLabel.setText(String.format("Your level: %d", onLevelInt+1));
     if (gamePaddle.gameOver() || gamePaddle.getLives() <= 0) {
       Label finalLabel = new Label("So close, yet so far, friend");
-      finalLabel.setFont(new Font(HEIGHT/10));
+      finalLabel.setFont(new Font(HEIGHT/10.0));
       currentGroup.setCenter(finalLabel);
       store.updateHighScore();
     }
@@ -211,7 +207,6 @@ public class Game extends Application {
   private void removeStoreComponents() {
     currentGroup.getChildren().remove(lives);
     store.removeAllStoreItems(currentGroup);
-    currentGroup.getChildren().remove(shop);
   }
 
   /**
@@ -219,6 +214,7 @@ public class Game extends Application {
    */
   public void nextLevel() {
     onLevelInt++;
+    System.out.println(onLevelInt);
     removeStoreComponents();
     if (onLevelInt < levelList.size()) {
       setLevel(levelList.get(onLevelInt));
@@ -246,7 +242,7 @@ public class Game extends Application {
     if (onLevelInt > 0 && onLevelInt+1>= levelList.size() && currentLevel.getBlockList().isEmpty()){
 
       Label finalLabel = new Label("Oh my god! You won friend");
-      finalLabel.setFont(new Font(HEIGHT/10));
+      finalLabel.setFont(new Font(HEIGHT/10.0));
       currentGroup.setCenter(finalLabel);
 
       store.updateHighScore();
@@ -284,7 +280,7 @@ public class Game extends Application {
     String livesString = String.format("Lives left: %d", gamePaddle.getLives());
     String highestScoreString = String.format("Highest Score: %d", store.getHighScore());
     lives = new Label(livesString);
-    highestScore = new Label(highestScoreString);
+    Label highestScore = new Label(highestScoreString);
     score = new Label(String.format("Your Score: %d", store.getCurrentScore()));
     levelLabel = new Label(String.format("Your level: %d", onLevelInt+1));
     levelLabel.setFont(SUMMARY_FONT_SIZE);
@@ -295,12 +291,6 @@ public class Game extends Application {
     return gameStats;
   }
 
-  private Label initializeWinLossText() {
-    winLoss = new Label("You won");
-    winLoss.setFont(new Font(HEIGHT / 10));
-    winLoss.setVisible(false);
-    return winLoss;
-  }
 
   private void pause() {
     isPaused = !isPaused;
