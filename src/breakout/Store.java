@@ -124,7 +124,6 @@ public class Store {
   public void updateHighScore() { //test this? Might be weird testing it
     try {
       int highScore = getHighScore();
-      System.out.println(highScore + "   " + currentScore);
       if (currentScore > highScore) {
         Path pathToFile = Paths
             .get(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE).toURI());
@@ -143,7 +142,7 @@ public class Store {
       Path pathToFile = Paths
           .get(Main.class.getClassLoader().getResource(HIGHEST_SCORE_FILE).toURI());
       List<String> allLines = Files.readAllLines(pathToFile);
-      String line = allLines.get(0);
+      String line = allLines.get(0).trim();
       return Integer.parseInt(line);
     } catch (Exception e) {
       return 0;

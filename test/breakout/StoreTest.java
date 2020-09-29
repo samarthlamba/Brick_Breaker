@@ -39,7 +39,7 @@ public class StoreTest {
   @Test
   public void storeUpdateScores() throws IOException, URISyntaxException {
 
-    int oldHighScore = Integer.valueOf(readFile());
+    int oldHighScore = Integer.valueOf(readFile().trim());
     store.addToCurrentScore(oldHighScore);
 
     int newHighScore = store.getCurrentScore();
