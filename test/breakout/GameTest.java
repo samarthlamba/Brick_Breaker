@@ -285,8 +285,8 @@ public class GameTest extends DukeApplicationTest {
   @Test
   public void testLevelDisplay(){
     int currentLevel = myGame.getOnLevelInt();
-    myGame.nextLevel();
-    assertEquals(currentLevel-1, myGame.getOnLevelInt());
+    javafxRun(() -> myGame.nextLevel());
+    assertEquals(currentLevel+1, myGame.getOnLevelInt());
   }
 
 }
