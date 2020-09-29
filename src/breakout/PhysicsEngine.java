@@ -10,6 +10,9 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 
+/**
+ * This class is used to detect collision and interaction between various game objects.
+ */
 public class PhysicsEngine {
   private final Bounds dimensions;
   private final Paddle paddle;

@@ -1,7 +1,7 @@
 package breakout;
 
 
-import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,8 +11,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
+/**
+ * This class is created at the start of the game to display the rules. It has a single button that
+ * starts the game when preseed.
+ */
 public class SplashScreen {
 
   private final int gameWidth;
@@ -34,19 +37,24 @@ public class SplashScreen {
     splashScene.setFill(Color.BLACK);
   }
 
+  /**
+   * Gets the display for the splash screen
+   * @return the scene the splash screen displays
+   */
   public Scene getSplashScene() {
     return splashScene;
   }
 
-  public void setButtonToStartGame(Timeline t, Stage stage, Scene scene) {
-    button.setOnAction(e -> {
-      t.play();
-      stage.setScene(scene);
-    });
+  /**
+   * Gives an action to the button
+   * @param e an event handler for the button to use on action.
+   */
+  public void setButtonAction(EventHandler e) {
+    button.setOnAction(e);
   }
 
   private ImageView loadImage(String imageName) {
-    FileInputStream inputstream = null;
+    FileInputStream inputstream;
     try {
       inputstream = new FileInputStream(String.format("data/%s",imageName));
       Image image = new Image(inputstream);

@@ -4,6 +4,9 @@ import breakout.Game;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Baisc block that takes 1 hit and then is broken. Has a Rectangle for its DisplayObject.
+ */
 public class BasicBlock extends AbstractBlock {
 
   private Rectangle displayObject;

@@ -28,7 +28,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+/**
+ * Main game loop.
+ */
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
@@ -82,7 +84,10 @@ public class Game extends Application {
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
-    splashScreen.setButtonToStartGame(animation,primaryStage,myScene);
+    splashScreen.setButtonAction(e -> {
+      primaryStage.setScene(myScene);
+      animation.play();
+    });
   }
 
   Scene setupScene(int width, int height) {
@@ -207,6 +212,9 @@ public class Game extends Application {
     currentGroup.getChildren().remove(shop);
   }
 
+  /**
+   * Used to move the game to the next level.
+   */
   public void nextLevel() {
     onLevelInt++;
     removeStoreComponents();

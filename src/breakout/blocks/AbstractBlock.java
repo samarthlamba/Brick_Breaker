@@ -7,6 +7,10 @@ import breakout.powerups.PowerUp;
 import java.util.List;
 import javafx.scene.Node;
 
+/**
+ * This class represents an abstract block object that has some display object and can be hit and
+ * broken by the ball.
+ */
 public abstract class AbstractBlock {
 
   private int column;

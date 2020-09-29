@@ -6,6 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Powerup that increases paddle speed
+ */
 public class IncreasePaddleSpeedPowerUp extends PowerUp {
 
   public IncreasePaddleSpeedPowerUp(Node blockToRemove) {

@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * This class is the paddle controlled by the player.
+ */
 public class Paddle {
 
   public static final int PADDLE_EDGE = 15;

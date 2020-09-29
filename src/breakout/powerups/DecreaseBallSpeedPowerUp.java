@@ -6,6 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Powerup that decreases ball speed
+ */
 public class DecreaseBallSpeedPowerUp extends PowerUp {
 
   public DecreaseBallSpeedPowerUp(Node blockToRemove) {

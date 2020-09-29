@@ -4,6 +4,10 @@ import breakout.Game;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * Level variant that has blocks gradually move down the screen, at GAME.HEIGHT*DESCENT_RATE per
+ * NUM_CYCLES updates.
+ */
 public class DescendLevel extends Level{
   private static final double DESCENT_RATE = .1;
 

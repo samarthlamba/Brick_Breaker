@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+/**
+ * Level implementation that has the positions of its blocks scramble every NUM_CYCLES updates.
+ */
 public class ScrambleBlockLevel extends Level{
 
   public ScrambleBlockLevel(String fileSource) throws IOException, URISyntaxException {

@@ -20,6 +20,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
+/**
+ * This class represents a configuration of blocks that has some special mechanic. Block config
+ * is read from the file on the constructor.
+ */
 public abstract class Level {
 
   private final List<AbstractBlock> blockList = new ArrayList<>();
@@ -83,8 +87,9 @@ public abstract class Level {
 
 
   /**
-   *
-   * @param group
+   * Final method called on Level each step. Removes the display objects for each broken block from
+   * the given group, then remvoes the blocks from the list.
+   * @param group The collection of nodes to remove display objects from
    */
   public void removeBrokenBlocksFromGroup(BorderPane group){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
@@ -95,12 +100,22 @@ public abstract class Level {
     removeBrokenBlocks();
   }
 
+  /**
+   * Called to add the number of broken blocks to the store's score.
+   * @param store the store to give points to.
+   */
   public void addScoreToStore(Store store) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     store.addToCurrentScore(brokenBlocks.size());
-
   }
 
+  /**
+   * Called from game step function to spawn powerups (add them to list of
+   * current powerups) at each broken block and
+   * add their display objects to the given group
+   * @param group a collection of nodes to add display objects to
+   * @param currentPowerUps a list of current powerups to add newly spawned ones to
+   */
   public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     List<PowerUp> powerUps = new ArrayList<>();
@@ -156,6 +171,10 @@ public abstract class Level {
     return null;
   }
 
+  /**
+   * Used for testing to compare two levels by their ID
+   * @return the string used to create the levle, their "ID"
+   */
   public String getLevelId() {
     return levelId;
   }

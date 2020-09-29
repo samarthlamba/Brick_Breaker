@@ -8,6 +8,9 @@ import javafx.scene.shape.Circle;
 
 import java.util.Random;
 
+/**
+ * This class is the main game ball that bounces around the screen breaking blocks
+ */
 public class Ball {
 
   public final int ballRadius;
