@@ -15,8 +15,8 @@ public class Ball {
   private final Circle ballNode;
   private int currentXDirection = 1;
   private int currentYDirection = 1;
-  private final int initialWidth;
-  private final int initialHeight;
+  private final int gameWidth;
+  private final int gameHeight;
   private double speedX = sqrt(SPEED /2);
   private double speedY = sqrt(SPEED /2);
 
@@ -28,9 +28,9 @@ public class Ball {
    */
   public Ball(int width, int height) {
     ballRadius = width / 60;
-    initialWidth = width;
-    initialHeight = height;
-    ballNode = new Circle(width / 2, height / 2, ballRadius);
+    gameWidth = width;
+    gameHeight = height;
+    ballNode = new Circle(width / 2, 3*height / 4, ballRadius);
     ballNode.setId("ball");
     Paint ballColor = Color.RED;
     ballNode.setFill(ballColor);
@@ -63,8 +63,8 @@ public class Ball {
 
 
   public void reset() {
-    ballNode.setCenterX(initialWidth / 2);
-    ballNode.setCenterY(initialHeight / 2);
+    ballNode.setCenterX(gameWidth / 2);
+    ballNode.setCenterY(3*gameHeight / 4);
     this.speedX = 0;
     this.speedY = 0;
   }

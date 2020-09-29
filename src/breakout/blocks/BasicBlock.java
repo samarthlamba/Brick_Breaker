@@ -23,6 +23,26 @@ public class BasicBlock extends AbstractBlock {
   }
 
   @Override
+  public double getDisplayObjectX() {
+    return this.displayObject.getX();
+  }
+
+  @Override
+  public void setDisplayObjectX(double xPos) {
+    this.displayObject.setX(xPos);
+  }
+
+  @Override
+  public double getDisplayObjectY() {
+    return this.displayObject.getY();
+  }
+
+  @Override
+  public void setDisplayObjectY(double yPos) {
+    this.displayObject.setY(yPos);
+  }
+
+  @Override
   public void hit() {
     hitsRemaining--;
 

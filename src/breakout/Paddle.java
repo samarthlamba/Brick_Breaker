@@ -74,7 +74,6 @@ public class Paddle {
    */
   public void moveLeft() {
     this.paddleNode.setX(this.paddleNode.getX() - speed);
-    System.out.println(this.paddleNode.getX() + "    " + gameWidth);
     if ((this.paddleNode.getX()+this.paddleNode.getWidth())<0){
       this.paddleNode.setX(this.paddleNode.getX()+gameWidth+ this.paddleNode.getWidth());
     }

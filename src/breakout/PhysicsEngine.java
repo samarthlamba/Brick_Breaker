@@ -3,6 +3,7 @@ package breakout;
 import static java.lang.Math.abs;
 
 import breakout.blocks.AbstractBlock;
+import breakout.level.Level;
 import java.util.List;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -32,7 +33,7 @@ public class PhysicsEngine {
 
   private AbstractBlock getBlockAtBallPosition(Ball ball){
     for(AbstractBlock eachBlock : this.blockList){
-      if(eachBlock.getDisplayObject().getBoundsInLocal().intersects(ball.getBounds())) {
+      if(eachBlock.getDisplayObject().getBoundsInParent().intersects(ball.getBounds())) {
         return eachBlock;
       }
     }

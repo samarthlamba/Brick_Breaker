@@ -1,5 +1,6 @@
-package breakout;
+package breakout.level;
 
+import breakout.Store;
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.BasicBlock;
 import breakout.blocks.BossBlock;
@@ -19,10 +20,12 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
-public class Level {
+public abstract class Level {
 
   private final List<AbstractBlock> blockList = new ArrayList<>();
   private final String levelId;
+  protected int cycleCount = 0;
+  private final static int MAX_CYCLES = 1000;
 
   public Level(String fileSource) throws IOException, URISyntaxException {
     this.levelId = fileSource;
@@ -30,6 +33,19 @@ public class Level {
     List<String> allLines = Files.readAllLines(pathToFile);
     convertLinesToBlocks(allLines);
   }
+
+  /**
+   * Called in step method to make a level do its special mechanic periodically.
+   */
+  public void updateLevel() {
+    cycleCount++;
+    if(isTimeToUpdate()) {
+      doLevelMechanic();
+      cycleCount = 0;
+    }
+  }
+
+  protected abstract void doLevelMechanic();
 
   /**
    * Used to get the list of blocks currently in the level.
@@ -60,6 +76,11 @@ public class Level {
     }
     return objectsToDraw;
   }
+
+  private boolean isTimeToUpdate() {
+    return cycleCount>MAX_CYCLES;
+  }
+
 
   /**
    *
@@ -123,7 +144,7 @@ public class Level {
       return new BasicBlock(row, column, numberRows, numberColumns);
     }
     if(blockType.equals("S")){
-      return new ShieldBlock(row,column,numberColumns,numberColumns);
+      return new ShieldBlock(row,column,numberRows,numberColumns);
     }
     if(blockType.equals("B")){
       return new BossBlock(row, column, numberRows, numberColumns);

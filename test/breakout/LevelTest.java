@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.ShieldBlock;
+import breakout.level.BasicLevel;
+import breakout.level.DescendLevel;
+import breakout.level.Level;
+import breakout.level.ScrambleBlockLevel;
 import breakout.powerups.PowerUp;
 import com.sun.tools.javac.Main;
 import java.io.IOException;
@@ -16,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +41,7 @@ public class LevelTest {
   @BeforeEach
   public void setup() throws IOException, URISyntaxException {
     myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
-    testLevel = new Level("test.txt");
+    testLevel = new BasicLevel("test.txt");
     Paddle gamePaddle = new Paddle(600, 600);
     Ball gameBall = new Ball(600, 600);
     store = new Store(600, 600, gamePaddle, gameBall);
@@ -128,6 +133,47 @@ public class LevelTest {
     double initialPostion = testPowerUp.getDisplayCircle().getCenterY();
     testPowerUp.move();
     assertEquals(initialPostion+1, testPowerUp.getDisplayCircle().getCenterY());
+  }
+
+  @Test
+  public void testDescendLevelMovesDown() throws IOException, URISyntaxException {
+    final Level descend = new DescendLevel("test.txt");
+    final List<Double> initialXPos = descend.getBlockList().stream()
+        .map(block -> block.getDisplayObjectX()).collect(
+        Collectors.toList());
+    final List<Double> initialYPos = descend.getBlockList().stream()
+        .map(block -> block.getDisplayObjectY()).collect(
+            Collectors.toList());
+    for(int k=0; k<1000 ;k++) {
+      descend.updateLevel();
+    }
+    for(int j=0; j<descend.getBlockList().size();j++) {
+      final AbstractBlock thisBlock = descend.getBlockList().get(j);
+      assertEquals(initialXPos.get(j),thisBlock.getDisplayObjectX());
+      assertTrue(initialYPos.get(j) < thisBlock.getDisplayObjectY());
+    }
+  }
+
+  @Test
+  public void testScrambleBlockLevelChangesPosition() throws IOException, URISyntaxException {
+    final Level scramble = new ScrambleBlockLevel("test.txt");
+    final List<Double> initialXPos = scramble.getBlockList().stream()
+        .map(block -> block.getDisplayObjectX()).collect(
+            Collectors.toList());
+    final List<Double> initialYPos = scramble.getBlockList().stream()
+        .map(block -> block.getDisplayObjectY()).collect(
+            Collectors.toList());
+    for(int k=0; k<1000 ;k++) {
+      scramble.updateLevel();
+    }
+    for(int j=0; j<scramble.getBlockList().size()-1;j++) {
+      final AbstractBlock thisBlock = scramble.getBlockList().get(j);
+      assertEquals(initialXPos.get(j+1),thisBlock.getDisplayObjectX());
+      assertEquals(initialYPos.get(j+1),thisBlock.getDisplayObjectY());
+    }
+    final AbstractBlock finalBlock = scramble.getBlockList().get(scramble.getBlockList().size()-1);
+    assertEquals(initialXPos.get(0),finalBlock.getDisplayObjectX());
+    assertEquals(initialYPos.get(0),finalBlock.getDisplayObjectY());
   }
 
   @Test

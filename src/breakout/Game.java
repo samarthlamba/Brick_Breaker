@@ -1,5 +1,9 @@
 package breakout;
 
+import breakout.level.BasicLevel;
+import breakout.level.Level;
+import breakout.level.ScrambleBlockLevel;
+import breakout.level.DescendLevel;
 import breakout.powerups.PowerUp;
 import java.util.*;
 import java.util.function.Consumer;
@@ -35,12 +39,14 @@ public class Game extends Application {
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
+  private List<Class> availableLevelTypes = List.of(BasicLevel.class, ScrambleBlockLevel.class,
+      DescendLevel.class);
   private Map<KeyCode, Consumer<Game>> keyMap;
   private BorderPane currentGroup;
   private Level currentLevel;
   private Paddle gamePaddle;
   private Ball gameBall;
-  private int level = 1;
+  private int onLevelInt = 0;
   private Label lives;
   private ImageView shop;
   private Label score;
@@ -113,7 +119,7 @@ public class Game extends Application {
     Level level = null;
     List<Node> blocksForLevel;
     try {
-      level = new Level(fileSource);
+      level = pickLevelType(fileSource);
       blocksForLevel = level.getObjectsToDraw();
     } catch (Exception e) {
       blocksForLevel = Collections.emptyList();
@@ -202,10 +208,10 @@ public class Game extends Application {
   }
 
   public void nextLevel() {
-    level++;
+    onLevelInt++;
     removeStoreComponents();
-    if (level - 1 < levelList.size()) {
-      setLevel(levelList.get(level - 1));
+    if (onLevelInt < levelList.size()) {
+      setLevel(levelList.get(onLevelInt));
       physicsEngine.setBlockList(currentLevel);
       gameBall.reset();
     }
@@ -218,6 +224,7 @@ public class Game extends Application {
   }
 
   private void updateBlocks() {
+    currentLevel.updateLevel();
     currentLevel.updateAllBlocks();
     currentLevel.spawnPowerUps(currentGroup, currentPowerUps);
     currentLevel.removeBrokenBlocksFromGroup(currentGroup, store);
@@ -291,6 +298,14 @@ public class Game extends Application {
       keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
       keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
     }
+  }
+
+  private Level pickLevelType(String fileSource) throws Exception {
+    Map<Integer, Level> levelTypeMap = new HashMap<>();
+    levelTypeMap.put(0,new BasicLevel(fileSource));
+    levelTypeMap.put(1,new ScrambleBlockLevel(fileSource));
+    levelTypeMap.put(2,new DescendLevel(fileSource));
+    return levelTypeMap.get(onLevelInt%levelTypeMap.size());
   }
 
   /**

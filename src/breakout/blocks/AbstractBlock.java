@@ -25,6 +25,30 @@ public abstract class AbstractBlock {
   }
 
   /**
+   * Used to get the X location of center of display object or equivalent
+   * @return a double of the x coordinate of the display object
+   */
+  public abstract double getDisplayObjectX();
+
+  /**
+   * Used to set the x location of center of display object or equivalent.
+   * @param xPos the position to set x coordinate to.
+   */
+  public abstract void setDisplayObjectX(double xPos);
+  /**
+   * Used to get the Y location of center of display object or equivalent
+   * @return a double of the Y coordinate of the display object
+   */
+  public abstract double getDisplayObjectY();
+
+  /**
+   * Used to set the y location of center of display object or equivalent.
+   * @param yPos the position to set y coordinate to.
+   */
+  public abstract void setDisplayObjectY(double yPos);
+
+
+  /**
    * Called when the block is hit by the ball.
    */
   public abstract void hit();

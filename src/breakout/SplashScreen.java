@@ -70,7 +70,7 @@ public class SplashScreen {
     ImageView buttonGraphics = loadImage("button.png");
     button.setGraphic(buttonGraphics);
     button.setStyle("-fx-color: black");
-    button.setLayoutX(gameWidth/4 - 100);
+    button.setLayoutX(gameWidth/3);
     button.setLayoutY(gameHeight-50);
     return button;
   }
