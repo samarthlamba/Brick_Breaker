@@ -133,7 +133,6 @@ public class Store {
       }
     } catch (Exception e) {
       System.out.println("High Score file not present");
-      e.printStackTrace();
     }
   }
 
