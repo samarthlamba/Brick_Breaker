@@ -1,5 +1,6 @@
-package breakout;
+package breakout.level;
 
+import breakout.Store;
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.BasicBlock;
 import breakout.blocks.BossBlock;
@@ -19,10 +20,16 @@ import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 
-public class Level {
+/**
+ * This class represents a configuration of blocks that has some special mechanic. Block config
+ * is read from the file on the constructor.
+ */
+public abstract class Level {
 
   private final List<AbstractBlock> blockList = new ArrayList<>();
   private final String levelId;
+  protected int cycleCount = 0;
+  private final static int MAX_CYCLES = 1000;
 
   public Level(String fileSource) throws IOException, URISyntaxException {
     this.levelId = fileSource;
@@ -30,6 +37,19 @@ public class Level {
     List<String> allLines = Files.readAllLines(pathToFile);
     convertLinesToBlocks(allLines);
   }
+
+  /**
+   * Called in step method to make a level do its special mechanic periodically.
+   */
+  public void updateLevel() {
+    cycleCount++;
+    if(isTimeToUpdate()) {
+      doLevelMechanic();
+      cycleCount = 0;
+    }
+  }
+
+  protected abstract void doLevelMechanic();
 
   /**
    * Used to get the list of blocks currently in the level.
@@ -61,21 +81,41 @@ public class Level {
     return objectsToDraw;
   }
 
+  private boolean isTimeToUpdate() {
+    return cycleCount>MAX_CYCLES;
+  }
+
+
   /**
-   *
-   * @param group
-   * @param store
+   * Final method called on Level each step. Removes the display objects for each broken block from
+   * the given group, then remvoes the blocks from the list.
+   * @param group The collection of nodes to remove display objects from
    */
-  public void removeBrokenBlocksFromGroup(BorderPane group, Store store){
+  public void removeBrokenBlocksFromGroup(BorderPane group){
     List<AbstractBlock> blocksToRemove = getBrokenBlocks();
     List<Node> nodesToRemove = blocksToRemove.stream()
         .map(AbstractBlock::getDisplayObject)
         .collect(Collectors.toList());
     group.getChildren().removeAll(nodesToRemove);
     removeBrokenBlocks();
-    store.addToCurrentScore(blocksToRemove.size());
   }
 
+  /**
+   * Called to add the number of broken blocks to the store's score.
+   * @param store the store to give points to.
+   */
+  public void addScoreToStore(Store store) {
+    List<AbstractBlock> brokenBlocks = getBrokenBlocks();
+    store.addToCurrentScore(brokenBlocks.size());
+  }
+
+  /**
+   * Called from game step function to spawn powerups (add them to list of
+   * current powerups) at each broken block and
+   * add their display objects to the given group
+   * @param group a collection of nodes to add display objects to
+   * @param currentPowerUps a list of current powerups to add newly spawned ones to
+   */
   public void spawnPowerUps(BorderPane group,List<PowerUp> currentPowerUps) {
     List<AbstractBlock> brokenBlocks = getBrokenBlocks();
     List<PowerUp> powerUps = new ArrayList<>();
@@ -123,7 +163,7 @@ public class Level {
       return new BasicBlock(row, column, numberRows, numberColumns);
     }
     if(blockType.equals("S")){
-      return new ShieldBlock(row,column,numberColumns,numberColumns);
+      return new ShieldBlock(row,column,numberRows,numberColumns);
     }
     if(blockType.equals("B")){
       return new BossBlock(row, column, numberRows, numberColumns);
@@ -131,6 +171,10 @@ public class Level {
     return null;
   }
 
+  /**
+   * Used for testing to compare two levels by their ID
+   * @return the string used to create the levle, their "ID"
+   */
   public String getLevelId() {
     return levelId;
   }

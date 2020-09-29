@@ -6,40 +6,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import breakout.blocks.AbstractBlock;
 import breakout.blocks.ShieldBlock;
+import breakout.level.BasicLevel;
+import breakout.level.DescendLevel;
+import breakout.level.Level;
+import breakout.level.ScrambleBlockLevel;
 import breakout.powerups.PowerUp;
-import com.sun.tools.javac.Main;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class LevelTest {
   private Level testLevel;
-  private Circle gameBall;
-  private Rectangle gamePaddle;
-  private Store store;
-  private final Game myGame = new Game();
-  private Scene myScene;
 
   @BeforeEach
   public void setup() throws IOException, URISyntaxException {
-    myScene = myGame.setupScene(Game.WIDTH, Game.HEIGHT);
-    testLevel = new Level("test.txt");
-    Paddle gamePaddle = new Paddle(600, 600);
-    Ball gameBall = new Ball(600, 600);
-    store = new Store(600, 600, gamePaddle, gameBall);
+    testLevel = new BasicLevel("test.txt");
   }
 
   @Test
@@ -80,13 +69,14 @@ public class LevelTest {
     assertTrue(basicBlock.isBroken());
     assertEquals(1,group.getChildren().size());
 
-    testLevel.removeBrokenBlocksFromGroup(group, store);
+    testLevel.removeBrokenBlocksFromGroup(group);
 
     assertEquals(0,group.getChildren().size());
     assertEquals(initialSize-1,blockList.size());
     assertFalse(blockList.contains(basicBlock));
     assertFalse(group.getChildren().contains(basicBlock.getDisplayObject()));
   }
+
 
   @Test
   public void testCycleAllShieldBlocks() {
@@ -131,32 +121,44 @@ public class LevelTest {
   }
 
   @Test
-  public void testPointsIncrease(){
-    int currentScore = store.getCurrentScore();
-    store.addToCurrentScore(1);
-    assertEquals(currentScore, store.getCurrentScore()-1);
+  public void testDescendLevelMovesDown() throws IOException, URISyntaxException {
+    final Level descend = new DescendLevel("test.txt");
+    final List<Double> initialXPos = descend.getBlockList().stream()
+        .map(block -> block.getDisplayObjectX()).collect(
+        Collectors.toList());
+    final List<Double> initialYPos = descend.getBlockList().stream()
+        .map(block -> block.getDisplayObjectY()).collect(
+            Collectors.toList());
+    for(int k=0; k<10001 ;k++) {
+      descend.updateLevel();
+    }
+    for(int j=0; j<descend.getBlockList().size();j++) {
+      final AbstractBlock thisBlock = descend.getBlockList().get(j);
+      assertEquals(initialXPos.get(j),thisBlock.getDisplayObjectX());
+      assertTrue(initialYPos.get(j) < thisBlock.getDisplayObjectY());
+    }
   }
 
   @Test
-  public void storeUpdateScores() throws IOException, URISyntaxException {
-
-    int oldHighScore = Integer.valueOf(readFile());
-    store.addToCurrentScore(oldHighScore);
-
-    int newHighScore = store.getCurrentScore();
-    store.updateHighScore();
-    int scoreInFile = Integer.valueOf(readFile());
-    assertEquals(newHighScore, scoreInFile);
-    Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
-    PrintWriter prw = new PrintWriter(String.valueOf(pathToFile));
-    prw.println(oldHighScore);
-    prw.close();
-  }
-  public String readFile() throws IOException, URISyntaxException {
-    Path pathToFile = Paths.get(Main.class.getClassLoader().getResource("highestScore.txt").toURI());
-    List<String> allLines = Files.readAllLines(pathToFile);
-    String line = allLines.get(0);
-    return line;
+  public void testScrambleBlockLevelChangesPosition() throws IOException, URISyntaxException {
+    final Level scramble = new ScrambleBlockLevel("test.txt");
+    final List<Double> initialXPos = scramble.getBlockList().stream()
+        .map(block -> block.getDisplayObjectX()).collect(
+            Collectors.toList());
+    final List<Double> initialYPos = scramble.getBlockList().stream()
+        .map(block -> block.getDisplayObjectY()).collect(
+            Collectors.toList());
+    for(int k=0; k<1001 ;k++) {
+      scramble.updateLevel();
+    }
+    for(int j=0; j<scramble.getBlockList().size()-1;j++) {
+      final AbstractBlock thisBlock = scramble.getBlockList().get(j);
+      assertEquals(initialXPos.get(j+1),thisBlock.getDisplayObjectX());
+      assertEquals(initialYPos.get(j+1),thisBlock.getDisplayObjectY());
+    }
+    final AbstractBlock finalBlock = scramble.getBlockList().get(scramble.getBlockList().size()-1);
+    assertEquals(initialXPos.get(0),finalBlock.getDisplayObjectX());
+    assertEquals(initialYPos.get(0),finalBlock.getDisplayObjectY());
   }
 
 }

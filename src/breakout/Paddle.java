@@ -4,9 +4,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * This class is the paddle controlled by the player.
+ */
 public class Paddle {
 
   public static final int PADDLE_EDGE = 15;
+  private static final int PADDLE_WIDTH_RATIO = 5;
+  private static final int PADDLE_HEIGHT_RATIO = 25;
+  private static final int PADDLE_OFFSET = 35;
+  private static final int INITIAL_SPEED = 20;
+  private static final int SPEED_INCREMENT = 2;
   public final int paddleWidth;
   public final int paddleHeight;
   private double speed = 20;
@@ -23,10 +31,10 @@ public class Paddle {
    */
   public Paddle(int gameWidth, int gameHeight) {
     this.gameWidth = gameWidth;
-    paddleWidth = gameWidth / 5;
-    paddleHeight = gameHeight / 25;
+    paddleWidth = gameWidth / PADDLE_WIDTH_RATIO;
+    paddleHeight = gameHeight / PADDLE_HEIGHT_RATIO;
     paddleNode = new Rectangle(gameWidth / 2 - paddleWidth / 2, gameHeight - paddleHeight
-        - gameHeight / 35,
+        - gameHeight / PADDLE_OFFSET,
         paddleWidth, paddleHeight);
     paddleNode.setId("paddle");
     Paint paddleColor = Color.HOTPINK;
@@ -50,7 +58,7 @@ public class Paddle {
    * Used to reset the paddle back to its initial position, size, and speed.
    */
   public void reset() {
-    this.speed = 20;
+    this.speed = INITIAL_SPEED;
     this.paddleNode.setX(gameWidth/2 - paddleWidth /2);
     paddleNode.setArcWidth(PADDLE_EDGE);
     paddleNode.setArcHeight(PADDLE_EDGE);
@@ -74,7 +82,6 @@ public class Paddle {
    */
   public void moveLeft() {
     this.paddleNode.setX(this.paddleNode.getX() - speed);
-    System.out.println(this.paddleNode.getX() + "    " + gameWidth);
     if ((this.paddleNode.getX()+this.paddleNode.getWidth())<0){
       this.paddleNode.setX(this.paddleNode.getX()+gameWidth+ this.paddleNode.getWidth());
     }
@@ -121,8 +128,7 @@ public class Paddle {
    * Used to increase the paddle's length; called by cheat keys and powerups.
    */
   public void increaseLength(){
-    int INCREASE_PADDLE_LENGTH = 2;
-    this.paddleNode.setWidth(this.paddleNode.getWidth()+ INCREASE_PADDLE_LENGTH);
+    this.paddleNode.setWidth(this.paddleNode.getWidth()+ SPEED_INCREMENT);
   }
 
   /**

@@ -6,6 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Poweurp that increases paddle size
+ */
 public class IncreasePaddleSizePowerUp extends PowerUp {
 
   public IncreasePaddleSizePowerUp(Node blockToRemove) {

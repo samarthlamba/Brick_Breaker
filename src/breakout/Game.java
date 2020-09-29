@@ -1,5 +1,9 @@
 package breakout;
 
+import breakout.level.BasicLevel;
+import breakout.level.Level;
+import breakout.level.ScrambleBlockLevel;
+import breakout.level.DescendLevel;
 import breakout.powerups.PowerUp;
 import java.util.*;
 import java.util.function.Consumer;
@@ -24,7 +28,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+/**
+ * Main game loop.
+ */
 public class Game extends Application {
 
   public static final String TITLE = "Ultimate Breakout Game";
@@ -35,12 +41,14 @@ public class Game extends Application {
   public static final Paint BACKGROUND = Color.AZURE;
   private final List<PowerUp> currentPowerUps = new ArrayList<>();
   private List<String> levelList = List.of("level1.txt", "level2.txt", "level3.txt");
+  private List<Class> availableLevelTypes = List.of(BasicLevel.class, ScrambleBlockLevel.class,
+      DescendLevel.class);
   private Map<KeyCode, Consumer<Game>> keyMap;
   private BorderPane currentGroup;
   private Level currentLevel;
   private Paddle gamePaddle;
   private Ball gameBall;
-  private int level = 1;
+  private int onLevelInt = 0;
   private Label lives;
   private Label highestScore;
   private ImageView shop;
@@ -77,7 +85,10 @@ public class Game extends Application {
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames().add(frame);
-    splashScreen.setButtonToStartGame(animation,primaryStage,myScene);
+    splashScreen.setButtonAction(e -> {
+      primaryStage.setScene(myScene);
+      animation.play();
+    });
   }
 
   Scene setupScene(int width, int height) {
@@ -113,7 +124,7 @@ public class Game extends Application {
     Level level = null;
     List<Node> blocksForLevel;
     try {
-      level = new Level(fileSource);
+      level = pickLevelType(fileSource);
       blocksForLevel = level.getObjectsToDraw();
     } catch (Exception e) {
       blocksForLevel = Collections.emptyList();
@@ -159,7 +170,7 @@ public class Game extends Application {
   }
 
   private void handleMouseInput() {
-    gameBall.start();
+    gameBall.reinitializeSpeed();
   }
 
 
@@ -201,12 +212,14 @@ public class Game extends Application {
     currentGroup.getChildren().remove(shop);
   }
 
+  /**
+   * Used to move the game to the next level.
+   */
   public void nextLevel() {
-    gameBall.reset();
-    level++;
+    onLevelInt++;
     removeStoreComponents();
-    if (level - 1 < levelList.size()) {
-      setLevel(levelList.get(level - 1));
+    if (onLevelInt < levelList.size()) {
+      setLevel(levelList.get(onLevelInt));
       physicsEngine.setBlockList(currentLevel);
 
     }
@@ -219,9 +232,12 @@ public class Game extends Application {
   }
 
   private void updateBlocks() {
+    currentLevel.updateLevel();
     currentLevel.updateAllBlocks();
     currentLevel.spawnPowerUps(currentGroup, currentPowerUps);
-    currentLevel.removeBrokenBlocksFromGroup(currentGroup, store);
+    currentLevel.addScoreToStore(store);
+    currentLevel.removeBrokenBlocksFromGroup(currentGroup);
+    physicsEngine.checkForBlocksAtBottom();
     if (currentLevel.getBlockList().isEmpty() && !showStore) {
       changeStoreStatus();
       showStoreItems();
@@ -296,6 +312,14 @@ public class Game extends Application {
       keyMap.put(KeyCode.P,game -> gamePaddle.increaseLength());
       keyMap.put(KeyCode.Z,game -> gameBall.randomColor());
     }
+  }
+
+  private Level pickLevelType(String fileSource) throws Exception {
+    Map<Integer, Level> levelTypeMap = new HashMap<>();
+    levelTypeMap.put(0,new BasicLevel(fileSource));
+    levelTypeMap.put(1,new ScrambleBlockLevel(fileSource));
+    levelTypeMap.put(2,new DescendLevel(fileSource));
+    return levelTypeMap.get(onLevelInt%levelTypeMap.size());
   }
 
   /**

@@ -8,17 +8,22 @@ import javafx.scene.shape.Circle;
 
 import java.util.Random;
 
+/**
+ * This class is the main game ball that bounces around the screen breaking blocks
+ */
 public class Ball {
 
-  public final int ballRadius;
+  private final int ballRadius;
   private static final double SPEED = 480000;
+  private static final double SPEED_DECREMENT = .95;
   private final Circle ballNode;
   private int currentXDirection = 1;
   private int currentYDirection = 1;
-  private final int initialWidth;
-  private final int initialHeight;
+  private final int gameWidth;
+  private final int gameHeight;
   private double speedX = sqrt(SPEED /2);
   private double speedY = sqrt(SPEED /2);
+  private static final int RADIUS_RATIO = 60;
 
   /**
    * Initialized based on width of screen and height. Creates the circular ball
@@ -27,10 +32,10 @@ public class Ball {
    * @param height
    */
   public Ball(int width, int height) {
-    ballRadius = width / 60;
-    initialWidth = width;
-    initialHeight = height;
-    ballNode = new Circle(width / 2, height / 2, ballRadius);
+    ballRadius = width / RADIUS_RATIO;
+    gameWidth = width;
+    gameHeight = height;
+    ballNode = new Circle(width / 2, 3*height / 4, ballRadius);
     ballNode.setId("ball");
     Paint ballColor = Color.RED;
     ballNode.setFill(ballColor);
@@ -52,19 +57,13 @@ public class Ball {
    * Used to decrease the ball's speed. Used by powerups and cheat keys.
    */
   public void decreaseSpeed(){
-    this.speedX = this.speedX*0.95; //need to fix, temporary. was goin backwards when changing speed
-    this.speedY = this.speedY*0.95;
+    this.speedX = this.speedX*SPEED_DECREMENT; //need to fix, temporary. was goin backwards when changing speed
+    this.speedY = this.speedY*SPEED_DECREMENT;
   }
-
-  public void start(){
-    this.speedX = sqrt(SPEED /2);
-    this.speedY = sqrt(SPEED /2);
-  }
-
 
   public void reset() {
-    ballNode.setCenterX(initialWidth / 2);
-    ballNode.setCenterY(initialHeight / 2);
+    ballNode.setCenterX(gameWidth / 2);
+    ballNode.setCenterY(3*gameHeight / 4);
     this.speedX = 0;
     this.speedY = 0;
   }

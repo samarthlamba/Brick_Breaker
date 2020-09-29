@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import breakout.level.BasicLevel;
+import breakout.level.DescendLevel;
+import breakout.level.Level;
+import breakout.level.ScrambleBlockLevel;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,7 +51,7 @@ public class GameTest extends DukeApplicationTest {
   @Test
   public void testInitialPositions() {
     assertEquals(Game.WIDTH / 2, gameBall.getCenterX());
-    assertEquals(Game.HEIGHT / 2, gameBall.getCenterY());
+    assertEquals(3*Game.HEIGHT / 4, gameBall.getCenterY());
     assertEquals(Game.WIDTH / 60, gameBall.getRadius());
 
     assertEquals(Game.WIDTH / 2 - Game.WIDTH / 10, gamePaddle.getX());
@@ -61,7 +65,7 @@ public class GameTest extends DukeApplicationTest {
     final double initialXPos = gameBall.getCenterX();
     final double initialYPos = gameBall.getCenterY();
     assertEquals(Game.WIDTH / 2, initialXPos);
-    assertEquals(Game.HEIGHT / 2, initialYPos);
+    assertEquals(3*Game.HEIGHT / 4, initialYPos);
 
     javafxRun(() -> myGame.step(1.00));
 
@@ -191,9 +195,9 @@ public class GameTest extends DukeApplicationTest {
   @Test
   public void test123ChangeLevel() throws IOException, URISyntaxException {
     javafxRun(() -> myGame.setLevelList(List.of("level1.txt","level2.txt","level3.txt")));
-    final Level level1 = new Level("level1.txt");
-    final Level level2 = new Level("level2.txt");
-    final Level level3 = new Level("level3.txt");
+    final Level level1 = new BasicLevel("level1.txt");
+    final Level level2 = new BasicLevel("level2.txt");
+    final Level level3 = new BasicLevel("level3.txt");
 
     press(myScene,KeyCode.DIGIT2);
     assertEquals(level2.getLevelId(),myGame.getCurrentLevel().getLevelId());
@@ -244,5 +248,37 @@ public class GameTest extends DukeApplicationTest {
     press(myScene, KeyCode.N);
     Level secondLevel = myGame.getCurrentLevel();
     assertNotEquals(secondLevel, firstlevel);
+  }
+
+
+  @Test
+  public void testNextLevelChangesLevelType(){
+    javafxRun(() -> myGame.setLevelList(List.of("test.txt","test.txt","test.txt")));
+    Level firstlevel = myGame.getCurrentLevel();
+
+    javafxRun(() -> myGame.nextLevel());
+    Level secondLevel = myGame.getCurrentLevel();
+
+    javafxRun(() -> myGame.nextLevel());
+    Level thirdLevel = myGame.getCurrentLevel();
+
+    assertTrue(firstlevel instanceof BasicLevel);
+    assertTrue(secondLevel instanceof ScrambleBlockLevel);
+    assertTrue(thirdLevel instanceof DescendLevel);
+  }
+
+
+  @Test
+  public void testBlocksAtBottomCauseLoss() {
+    javafxRun(() -> myGame.setLevelList(List.of("test.txt","test.txt","test.txt")));
+    javafxRun(() -> myGame.nextLevel());
+    javafxRun(() -> myGame.nextLevel());
+    assertTrue(myGame.getCurrentLevel() instanceof DescendLevel);
+    for(int k = 0; k<10000;k++) {
+      myGame.getCurrentLevel().updateLevel();
+    }
+    javafxRun(() -> myGame.step(1.00));
+
+    assertTrue(myGame.getPaddle().getLives() <3);
   }
 }

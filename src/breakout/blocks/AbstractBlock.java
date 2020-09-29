@@ -7,6 +7,10 @@ import breakout.powerups.PowerUp;
 import java.util.List;
 import javafx.scene.Node;
 
+/**
+ * This class represents an abstract block object that has some display object and can be hit and
+ * broken by the ball.
+ */
 public abstract class AbstractBlock {
 
   private int column;
@@ -23,6 +27,30 @@ public abstract class AbstractBlock {
     this.numColumns = numColumns;
     this.isBroken = false;
   }
+
+  /**
+   * Used to get the X location of center of display object or equivalent
+   * @return a double of the x coordinate of the display object
+   */
+  public abstract double getDisplayObjectX();
+
+  /**
+   * Used to set the x location of center of display object or equivalent.
+   * @param xPos the position to set x coordinate to.
+   */
+  public abstract void setDisplayObjectX(double xPos);
+  /**
+   * Used to get the Y location of center of display object or equivalent
+   * @return a double of the Y coordinate of the display object
+   */
+  public abstract double getDisplayObjectY();
+
+  /**
+   * Used to set the y location of center of display object or equivalent.
+   * @param yPos the position to set y coordinate to.
+   */
+  public abstract void setDisplayObjectY(double yPos);
+
 
   /**
    * Called when the block is hit by the ball.

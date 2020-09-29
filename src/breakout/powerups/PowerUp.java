@@ -8,6 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+/**
+ * This class is an abstract powerup. All powerups are circles with a color that drop down the screen
+ * and do something on a game object (ball or paddle, currently).
+ */
 public abstract class PowerUp {
 
   private final Circle displayCircle;

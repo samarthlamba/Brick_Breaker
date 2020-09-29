@@ -3,12 +3,17 @@ package breakout;
 import static java.lang.Math.abs;
 
 import breakout.blocks.AbstractBlock;
+import breakout.level.Level;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 
+/**
+ * This class is used to detect collision and interaction between various game objects.
+ */
 public class PhysicsEngine {
   private final Bounds dimensions;
   private final Paddle paddle;
@@ -30,9 +35,17 @@ public class PhysicsEngine {
     checkPaddleCollision(ball);
   }
 
+  public void checkForBlocksAtBottom() {
+    blockList.stream().forEach(block -> {
+      if (atBottom(block.getDisplayObject())) {
+        paddle.decreaseLives();
+      }
+    });
+  }
+
   private AbstractBlock getBlockAtBallPosition(Ball ball){
     for(AbstractBlock eachBlock : this.blockList){
-      if(eachBlock.getDisplayObject().getBoundsInLocal().intersects(ball.getBounds())) {
+      if(eachBlock.getDisplayObject().getBoundsInParent().intersects(ball.getBounds())) {
         return eachBlock;
       }
     }

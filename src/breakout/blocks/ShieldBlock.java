@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
 
+/**
+ * Variation of basic block that can only be hit if its shields are down, after .update() has
+ * been called NUM_CYCLES times. Then it can be hit for the next NUM_CYCLES updates
+ */
 public class ShieldBlock extends BasicBlock{
   private static final int NUM_CYCLES = 1000;
   private boolean isShielded;
