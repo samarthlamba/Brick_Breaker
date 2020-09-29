@@ -30,9 +30,11 @@ public class SplashScreen {
     button = formatButton();
     button.setId("startButton");
     ImageView background = formatBackground();
-    background.setId("splashBackground");
+    if(background!=null) {
+      background.setId("splashBackground");
+      group.getChildren().add(background);
+    }
     group.getChildren().add(button);
-    group.getChildren().add(background);
     splashScene = new Scene(group, width, height);
     splashScene.setFill(Color.BLACK);
   }
@@ -66,17 +68,25 @@ public class SplashScreen {
 
   private ImageView formatBackground() {
     ImageView background = loadImage("splashScreenDisplay.png");
-    background.setFitWidth(gameWidth/2);
-    background.setX(gameWidth/4);
-    background.setFitHeight(gameHeight/2);
-    background.setY(gameHeight/4);
+    if(background!=null) {
+      background.setFitWidth(gameWidth / 2);
+      background.setX(gameWidth / 4);
+      background.setFitHeight(gameHeight / 2);
+      background.setY(gameHeight / 4);
+    }
     return background;
   }
 
   private Button formatButton() {
     Button button = new Button("");
     ImageView buttonGraphics = loadImage("button.png");
-    button.setGraphic(buttonGraphics);
+    if(buttonGraphics!=null) {
+      button.setGraphic(buttonGraphics);
+    }
+    else{
+      button.setText("Click here!");
+      button.setTextFill(Color.WHITE);
+    }
     button.setStyle("-fx-color: black");
     button.setLayoutX(gameWidth/3);
     button.setLayoutY(gameHeight-50);
