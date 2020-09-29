@@ -170,7 +170,7 @@ public class Game extends Application {
   }
 
   private void handleMouseInput() {
-    gameBall.start();
+    gameBall.reinitializeSpeed();
   }
 
 

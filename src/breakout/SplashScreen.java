@@ -21,6 +21,7 @@ public class SplashScreen {
   private final int gameWidth;
   private final int gameHeight;
   private final Scene splashScene;
+  private static final int BUTTON_HEIGHT_PADDING = 50;
   private Button button;
 
   public SplashScreen(int width, int height) {
@@ -89,7 +90,7 @@ public class SplashScreen {
     }
     button.setStyle("-fx-color: black");
     button.setLayoutX(gameWidth/3);
-    button.setLayoutY(gameHeight-50);
+    button.setLayoutY(gameHeight+BUTTON_HEIGHT_PADDING);
     return button;
   }
 }
