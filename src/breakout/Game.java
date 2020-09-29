@@ -36,6 +36,9 @@ public class Game extends Application {
   public static final String TITLE = "Ultimate Breakout Game";
   public static int WIDTH = 1200;
   public static int HEIGHT = 800;
+  private static final Font FONT_SUMMARY_STATS = new Font(HEIGHT / 30);
+  private static final Font FONT_WINNING_STATEMENT = new Font(HEIGHT / 10);
+  private static final double SCREEN_SIZE_MULTIPLIER = 0.8;
   public static final int FRAMES_PER_SECOND = 120;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final Paint BACKGROUND = Color.AZURE;
@@ -59,6 +62,7 @@ public class Game extends Application {
   private boolean showStore = false;
   private Store store;
   private Timeline animation;
+  private Label levelLabel;
 
   /**
    * Start the program.
@@ -75,8 +79,8 @@ public class Game extends Application {
   @Override
   public void start(Stage primaryStage) {
     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    WIDTH = (int) (screenBounds.getWidth() * 0.8);
-    HEIGHT = (int) (screenBounds.getHeight() * 0.8);
+    WIDTH = (int) (screenBounds.getWidth() * SCREEN_SIZE_MULTIPLIER);
+    HEIGHT = (int) (screenBounds.getHeight() * SCREEN_SIZE_MULTIPLIER);
     Scene myScene = setupScene(WIDTH, HEIGHT);
     SplashScreen splashScreen = new SplashScreen(WIDTH,HEIGHT);
     primaryStage.setScene(splashScreen.getSplashScene());
@@ -159,15 +163,19 @@ public class Game extends Application {
    * @param elapsedTime
    */
   void step(double elapsedTime) {
-    if (!isPaused) {
+    if (!isPaused && !showStore) {
       updateBallAndPaddle(elapsedTime);
       updateBlocks();
       updatePowerUps();
       updateStatusText();
 
     }
-    if (showStore) {
+    else if (gamePaddle.gameOver()){
+      updateStatusText();
+    }
+    else {
       store.monitorPurchases(currentGroup);
+      updateStatusText();
     }
   }
 
@@ -193,6 +201,7 @@ public class Game extends Application {
   private void updateStatusText() {
     lives.setText(String.format("Lives left: %d", gamePaddle.getLives()));
     score.setText(String.format("Score: %d", store.getCurrentScore()));
+    levelLabel.setText(String.format("Your level %d", onLevelInt+1));
     if (gamePaddle.gameOver()) {
       winLoss.setText("You lose");
       winLoss.setVisible(true);
@@ -224,6 +233,10 @@ public class Game extends Application {
 
     }
     currentGroup.setTop(lives);
+  }
+
+  public int getOnLevelInt(){
+    return this.onLevelInt;
   }
 
   private void updateBallAndPaddle(double elapsedTime) {
@@ -272,16 +285,18 @@ public class Game extends Application {
     lives = new Label(livesString);
     highestScore = new Label(highestScoreString);
     score = new Label(String.format("Your Score: %d", store.getCurrentScore()));
-    lives.setFont(new Font(HEIGHT / 30));
-    score.setFont(new Font(HEIGHT / 30));
-    highestScore.setFont(new Font(HEIGHT / 30));
-    gameStats.getChildren().addAll(lives, score, highestScore);
+    levelLabel = new Label(String.format("Your level %d", onLevelInt+1));
+    levelLabel.setFont(FONT_SUMMARY_STATS);
+    lives.setFont(FONT_SUMMARY_STATS);
+    score.setFont(FONT_SUMMARY_STATS);
+    highestScore.setFont(FONT_SUMMARY_STATS);
+    gameStats.getChildren().addAll(lives, score, highestScore, levelLabel);
     return gameStats;
   }
 
   private Label initializeWinLossText() {
     winLoss = new Label("You won");
-    winLoss.setFont(new Font(HEIGHT / 10));
+    winLoss.setFont(FONT_WINNING_STATEMENT);
     winLoss.setVisible(false);
     return winLoss;
   }

@@ -281,4 +281,12 @@ public class GameTest extends DukeApplicationTest {
 
     assertTrue(myGame.getPaddle().getLives() <3);
   }
+
+  @Test
+  public void testLevelDisplay(){
+    int currentLevel = myGame.getOnLevelInt();
+    myGame.nextLevel();
+    assertEquals(currentLevel-1, myGame.getOnLevelInt());
+  }
+
 }
