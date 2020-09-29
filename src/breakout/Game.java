@@ -362,4 +362,8 @@ public class Game extends Application {
   public Level getCurrentLevel() {
     return currentLevel;
   }
+
+  public int getOnLevelInt(){
+    return onLevelInt;
+  }
 }
