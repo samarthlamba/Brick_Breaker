@@ -39,6 +39,13 @@ public class Store {
   private Label notEnoughMoney;
   private BorderPane storeDisplayPane;
 
+  /**
+   * Initialization for the store class. Creates the store
+   * @param width is the size of the game
+   * @param height is the height of the game
+   * @param paddleNode is the paddleNode being used in the game (to add PowerUps and similar)
+   * @param ballNode is the ball object of the game (to slow it down)
+   */
   public Store(double width, double height, Paddle paddleNode, Ball ballNode) {
     this.sceneHeight = height;
     this.sceneWidth = width;
@@ -58,15 +65,26 @@ public class Store {
 
   }
 
+  /**
+   * gets the current score for the game
+   * @return integer value for the current score
+   */
   public int getCurrentScore() {
     return this.currentScore;
   }
 
+  /**
+   * adds values to the current score as a way to add bonus or subtract points
+   * @param amount integer value. Positive to add and negative to subtract
+   */
   public void addToCurrentScore(int amount) {
     this.currentScore = this.currentScore + amount;
   }
 
-
+  /**
+   * Combines and showacses the content for the store
+   * @return returns borderPane which is all the content for the store
+   */
   public BorderPane showStoreContent() {
     storeDisplayPane = new BorderPane();
     try {
@@ -86,6 +104,10 @@ public class Store {
     return storeDisplayPane;
   }
 
+  /**
+   * Checks to see if the user has enough money and is trying to make purchases. When they have not enough money, outputs that
+   * @param root requires the group to change and assert different items
+   */
   public void monitorPurchases(BorderPane root) {
     initializeMoneyText(root);
     if (currentScore < COST) {
@@ -117,12 +139,20 @@ public class Store {
     }
   }
 
+  /**
+   * Removes all store attributes as added in storeDisplayRoot.
+   * @param root the group from the main class
+   */
   public void removeAllStoreItems(BorderPane root) {
     root.getChildren().remove(this.storeDisplayPane);
 
   }
 
-  public void updateHighScore() { //test this? Might be weird testing it
+  /**
+   * Updates the high score if the current score is larger than the highest score recorded in HIGHEST_SCORE_FILE
+   * If file doesn't exist, doesn't update the score.
+   */
+  public void updateHighScore() {
     try {
       int highScore = getHighScore();
       if (currentScore > highScore) {
@@ -139,6 +169,10 @@ public class Store {
     }
   }
 
+  /**
+   * gets the highest score as recorded in the HIGHEST_SCORE_FILE
+   * @return the integer value from the file. If file doesn't exist, returns 0 as the highest score.
+   */
   public int getHighScore() {
     try {
       Path pathToFile = Paths
