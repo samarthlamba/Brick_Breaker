@@ -27,7 +27,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Main game loop.
+ * Main game loop. Acts as the "brain" of the game. Calls other classes and runs the program.
+ * Someone can run this to run the entire game.
+ * The main failure case is if the screen of a person is too small and the default 1200x800.
+ *
  */
 public class Game extends Application {
 
