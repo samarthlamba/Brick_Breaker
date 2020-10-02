@@ -2,18 +2,19 @@
 ### Names: Matt Bowman, Sam Lamba
 ## Team Roles and Responsibilities
 
+Due to the size of the team and the nature of the project, we were all working in mulitple different "roles." Sometimes person A was the time keeper soemtimes they were the refactorer, debugger and so forth. Most of the classes we wrote was edited and helped in debugging and incorporated together due to the nature of the team. Below is the key classes and associated owners for the class. The game class was heavily edited by both individuals. 
  * Team Member #1: Matt
- Block, Level, Splash Screen, some core Game functionality
+ Block, Level, Splash Screen, Physics Engine, core Game functionality, refactoring, bugs finding
 
- * Team Member #2
- Ball, Paddle, Store, Powerups, some core game functionality
+ * Team Member #2 Sam
+ Ball, Paddle, Store, Powerups, Physics Engine, core Game functionality, refactoring, bugs finding
 
 
 ## Design goals
-We wanted to make a simple game that was easy to make larger and add more complex, fun features to.
+We wanted to make a simple game that was easy to make larger and add more complex, fun features to. We wanted to allow for the game to be easily add-able to and ensure that items were neatly organized. 
 
 #### What Features are Easy to Add
-Adding new levels, blocks, powerups, cheat keys/key inputs, and types of level should be very easy.
+Adding new levels, blocks, powerups, cheat keys/key inputs, and types of level should be very easy to add due to the design changes made. In addition, adding items in store should also be quite easy.
 
 ## High-level Design
 
@@ -22,7 +23,7 @@ The main game loop is called in Game.java. We have some boilerplate code that ma
 is the step() method. This calls a few key update methods that update various game objects. Update methods are private method which call
 other classes as needed.
 
-The Physics Engine class is created at the game start and is used to check collision between game objects, primarily the ball and other objects. It is called most critically in updateBallAndPaddle() to see if the ball should bounce. We also update the list of blocks the physics engine keeps track of every time a major change in the block list of the level takes place, like when the level changes.
+The Physics Engine class is created at the game start and is used to check collision between game objects, primarily the ball and other objects. It is called most critically in updateBallAndPaddle() to see if the ball should bounce. We also update the list of blocks the physics engine keeps track of every time a major change in the block list of the level takes place, like when the level changes. In addition, the Physics Engine uses mathematics to change the ball's X and Y velocity if the ball hits the edge. This imiates a sharper path that would happen in real life. 
 
 The Level class and its extensions keep track of the list of blocks active on the screen and perform modifications to them. Since blocks are closely
 associated with powerups, Levels also add powerups to the screen. Extensions of the Abstract Level class have a special mechanic that makes
@@ -34,7 +35,7 @@ has one current implementation, the BasicBlock and its extensions. Basic Blocks 
 The Powerup class represents a powerup. Powerups have a fixed chance of being droped from any AbstractBlock when it is broken. They are created at the previous location of the block, and are represented on screen by a circle. Powerups are updated in the updatePowerup method, which is called every step. All powerups in the game are kept track of in a list of current Powerups.
 
 ## Assumptions that Affect the Design
-One assumption we made was that the image files we use to display the store and splash screen are present when the game runs.
+One assumption we made was that the image files we use to display the store and splash screen are present when the game runs. If the image file for store isn't available, then it will work, and just won't display the store image. All functionality will work. Similarly, if the highest score txt file isn't present, it will assume the highest score is 0 and not write anything to the file. 
 
 It is also assumed that the format of the Level text files will be a comma-separated list of characters representing currently accepted blocks.
 #### Features Affected by Assumptions
@@ -70,6 +71,8 @@ passing in the list.
 
 To add a new key input (including cheat keys), add a new entry to the keyMap() by
 calling .put(KeyCode, (game) -> FUNCTION) in initializeKeyMap().
+
+To add new items to store, simply add more Buttons to the KeyMap in the initializePowers method and define what the button does as the value. This shoudl automatically add the item. If multiple items need to be added that may go off screen, button positioning will need to be changed and moved to fit into the screen. 
 
 #### Other Features not yet Done
 Instead of having splash screen/store display a static image, the code in their constructor could be changed to read text in from a file specified on their initialization as a JavaFX Text object rather than an ImageView. It seemed unlikely that we would change the basic rules of the game so that we needed a new rules screen, so we didn't make this a priority, and it would require a lot of effort to change.
