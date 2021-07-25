@@ -1,9 +1,14 @@
-game
+Breakout Game
 ====
 
-This project implements the game of Breakout.
+This project implements a simple version of the game of Breakout. It uses dataFiles to create levels and has multiple levels with different difficulties. It has powerups, speicial type of bricks etc.
 
-Name: Matt Bowman (mab181), Sam Lamba (sl562)
+Here is a short demo of the game:
+
+
+Uploading Ultimate Breakout Game.mp4…
+
+
 
 ### Timeline
 
@@ -49,7 +54,7 @@ Known Bugs:
 Someitmes the ball can bounce into a block or paddle if it hits it at the right angle.
 
 
-Extra credit:
+Extras:
 We added a store between levels to serve as a transition, as well as
 a starting splash screen that tells the rules of the game.
 
