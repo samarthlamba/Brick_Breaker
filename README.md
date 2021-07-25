@@ -1,12 +1,18 @@
 Breakout Game
 ====
 
-This project implements a simple version of the game of Breakout. It uses dataFiles to create levels and has multiple levels with different difficulties. It has powerups, speicial type of bricks etc.
+This project implements a simple version of the game of Breakout. It uses dataFiles to create levels and has multiple levels with different difficulties. It has powerups, speicial type of bricks, cheat codes etc.
 
 Here is a short demo of the game:
 
 
-Uploading Ultimate Breakout Game.mp4…
+
+
+https://user-images.githubusercontent.com/48296928/126911887-814d75bc-eadb-471a-9937-60c8c16612ec.mp4
+
+
+
+
 
 
 
